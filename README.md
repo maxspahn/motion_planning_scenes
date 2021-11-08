@@ -23,3 +23,9 @@ involve orientation that are generally hard to obtain and hardly human understan
 ## Structure (Beta)
 
 ![Structure (by mermaid)](./assets/overview.svg)
+
+## Installation
+
+```bash
+pip3 install -e .
+```
