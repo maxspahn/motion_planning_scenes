@@ -36,3 +36,10 @@ class SphereObstacle(CollisionObstacle):
 
     def toDict(self):
         return self._contentDict
+
+    def renderGym(self, viewer):
+        from gym.envs.classic_control import rendering
+        x = self.position()
+        tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
+        joint = viewer.draw_circle(self.radius())
+        joint.add_attr(tf)

@@ -19,6 +19,9 @@ setuptools.setup(
     ],
     install_requires=['numpy',
                       'casadi',
-                      'matplotlib']
+                      'matplotlib'],
+    extras_require={
+        'gymRender' : ['gym'],
+    },
 )
 
