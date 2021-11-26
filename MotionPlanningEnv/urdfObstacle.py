@@ -1,6 +1,7 @@
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
 
+
 class UrdfObstacle(CollisionObstacle):
     def __init__(self, name, obstDict):
         super().__init__(name, obstDict)
@@ -16,8 +17,6 @@ class UrdfObstacle(CollisionObstacle):
         return self._contentDict['urdf']
 
     def checkGeometryCompleteness(self):
-        incomplete = False
-        missingKeys = ""
         if 'position' not in self.geometry():
             raise ComponentIncompleteError("Missing position in geometry for urdf obstacle")
 
