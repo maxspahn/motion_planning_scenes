@@ -5,8 +5,8 @@ class SphereObstacleMissmatchDimensionError(Exception):
     pass
 
 class SphereObstacle(CollisionObstacle):
-    def __init__(self, name, obstDict):
-        super().__init__(name, obstDict)
+    def __init__(self, **kwargs):
+        super().__init__( **kwargs)
         self._geometry_keys = ['position', 'radius']
         self.checkCompleteness()
         self.checkDimensionality()

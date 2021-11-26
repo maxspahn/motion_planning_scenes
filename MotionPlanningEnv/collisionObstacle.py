@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
 
 class CollisionObstacle(MotionPlanningComponent):
-    def __init__(self, name, obstDict):
+    def __init__(self, **kwargs):
         self._required_keys = [
             'dim',
             'type',
             'geometry',
         ]
-        super().__init__(name, obstDict)
+        super().__init__(**kwargs)
 
     def dim(self):
         return self._contentDict['dim']
