@@ -2,8 +2,8 @@ from MotionPlanningGoal.subGoal import SubGoal
 
 
 class StaticSubGoal(SubGoal):
-    def __init__(self, name, goalDict):
-        super().__init__(name, goalDict)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.checkCompleteness()
         self.checkDimensionality()
 

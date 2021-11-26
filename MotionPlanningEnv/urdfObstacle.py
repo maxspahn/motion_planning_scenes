@@ -3,8 +3,8 @@ from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncomple
 
 
 class UrdfObstacle(CollisionObstacle):
-    def __init__(self, name, obstDict):
-        super().__init__(name, obstDict)
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
         self.checkCompleteness()
         self.checkUrdfFile()
         self.checkGeometryCompleteness()

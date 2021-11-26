@@ -7,7 +7,7 @@ class SubGoalMissmatchDimensionError(Exception):
 
 
 class SubGoal(MotionPlanningComponent):
-    def __init__(self, name, goalDict):
+    def __init__(self, **kwargs):
         self._required_keys = [
             "m",
             "w",
@@ -17,7 +17,7 @@ class SubGoal(MotionPlanningComponent):
             "child_link",
             "desired_position",
         ]
-        super().__init__(name, goalDict)
+        super().__init__(**kwargs)
 
     def checkDimensionality(self):
         if self.m() != len(self.getDesiredPosition()):

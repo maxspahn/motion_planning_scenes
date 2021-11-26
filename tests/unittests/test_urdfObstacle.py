@@ -11,7 +11,15 @@ def test_urdfObstacle():
         "geometry": {"position": [0.1, 0.2, 0.4]},
         "urdf": "sphere_015.urdf",
     }
-    sphereObst = UrdfObstacle("simpleUrdf", obstDict)
+    sphereObst = UrdfObstacle(name="simpleUrdf", contentDict=obstDict)
+    assert "simpleUrdf" == sphereObst.name()
+    assert [0.1, 0.2, 0.4] == sphereObst.position()
+    assert "sphere_015.urdf" == sphereObst.urdf()
+
+
+def test_yamlLoad():
+    yamlFile = 'yamlExamples/urdfSphere.yaml'
+    sphereObst = UrdfObstacle(fileName=yamlFile)
     assert "simpleUrdf" == sphereObst.name()
     assert [0.1, 0.2, 0.4] == sphereObst.position()
     assert "sphere_015.urdf" == sphereObst.urdf()

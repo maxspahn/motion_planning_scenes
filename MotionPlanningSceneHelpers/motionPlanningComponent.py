@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
+import yaml
 
 class ComponentIncompleteError(Exception):
     pass
 
 class MotionPlanningComponent(ABC):
 
-    def __init__(self, name, contentDict):
-        self._contentDict = contentDict
-        self._name = name
+    def __init__(self, **kwargs):
+        if 'contentDict' in kwargs and 'name' in kwargs:
+            self._contentDict = kwargs.get('contentDict')
+            self._name = kwargs.get('name')
+        elif 'fileName' in kwargs:
+            with open(kwargs.get('fileName'), 'r') as stream:
+                self._contentDict = yaml.safe_load(stream)
+            self._name = self._contentDict['name']
 
     def checkCompleteness(self):
         incomplete = False
