@@ -16,11 +16,12 @@ class SubGoal(MotionPlanningComponent):
             "parent_link",
             "child_link",
             "desired_position",
+            "epsilon",
         ]
         super().__init__(**kwargs)
 
     def checkDimensionality(self):
-        if self.m() != len(self.getDesiredPosition()):
+        if self.m() != len(self.position()):
             raise SubGoalMissmatchDimensionError(
                 "Dimension mismatch between goal and m"
             )
@@ -31,6 +32,9 @@ class SubGoal(MotionPlanningComponent):
 
     def isPrimeGoal(self):
         return self._contentDict["prime"]
+
+    def epsilon(self):
+        return self._contentDict['epsilon']
 
     def indices(self):
         return self._contentDict["indices"]
@@ -52,14 +56,10 @@ class SubGoal(MotionPlanningComponent):
         pass
 
     @abstractmethod
-    def getDesiredPosition(self):
+    def position(self, **kwargs):
         pass
 
     @abstractmethod
-    def evaluate(self, t):
-        pass
-
-    @abstractmethod
-    def generateRandomPosition(self):
+    def shuffle(self):
         pass
 
