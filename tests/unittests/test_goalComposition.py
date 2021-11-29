@@ -56,6 +56,8 @@ def test_goalCompositionMulti():
     subGoal1 = goalComposition.getGoalByName("subgoal1")
     assert "subgoal1" == subGoal1.name()
     assert subGoal1.position() == [-0.21, 0.2]
+    subGoals = goalComposition.subGoals()
+    assert len(subGoals) == 2
 
 
 def test_errorMultiplePrimeGoals():

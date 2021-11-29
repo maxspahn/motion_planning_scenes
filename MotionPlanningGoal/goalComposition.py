@@ -34,7 +34,7 @@ class GoalComposition(MotionPlanningComponent):
         return self.getGoalByIndex(self._primeGoalIndex)
 
     def subGoals(self):
-        return self._subGoals()
+        return self._subGoals
 
     def getGoalByName(self, name):
         for subGoal in self._subGoals:
