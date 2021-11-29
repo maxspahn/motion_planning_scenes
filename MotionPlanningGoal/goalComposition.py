@@ -46,6 +46,7 @@ class GoalComposition(MotionPlanningComponent):
 
     def toDict(self):
         compositionDict = {}
-        for subGoal in self._subGoals():
-            compositionDict[subGoal.name()] = subGoal
+        for subGoal in self._subGoals:
+            compositionDict[subGoal.name()] = subGoal.toDict()
+        return compositionDict
 

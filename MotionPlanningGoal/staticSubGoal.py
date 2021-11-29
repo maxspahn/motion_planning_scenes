@@ -11,7 +11,7 @@ class StaticSubGoal(SubGoal):
         return self._contentDict['type']
 
     def toDict(self):
-        return {}
+        return self._contentDict
 
     def position(self, **kwargs):
         return self._contentDict['desired_position']
