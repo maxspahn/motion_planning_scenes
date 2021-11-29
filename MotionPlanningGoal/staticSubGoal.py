@@ -13,11 +13,15 @@ class StaticSubGoal(SubGoal):
     def toDict(self):
         return {}
 
-    def getDesiredPosition(self):
+    def position(self, **kwargs):
         return self._contentDict['desired_position']
 
-    def evaluate(self, t):
-        return self._contentDict['desired_position']
-
-    def generateRandomPosition(self):
+    def shuffle(self):
         self._pos = [0.0, 0.0]
+
+    def renderGym(self, viewer):
+        from gym.envs.classic_control import rendering
+        x = self.position()
+        tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
+        joint = viewer.draw_circle(0.1, color=[0.1, 0.1, 0.1])
+        joint.add_attr(tf)
