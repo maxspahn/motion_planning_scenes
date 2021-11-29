@@ -17,6 +17,7 @@ class SubGoal(MotionPlanningComponent):
             "child_link",
             "desired_position",
             "epsilon",
+            "type",
         ]
         super().__init__(**kwargs)
 
