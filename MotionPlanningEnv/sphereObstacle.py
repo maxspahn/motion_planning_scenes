@@ -37,6 +37,17 @@ class SphereObstacle(CollisionObstacle):
     def toDict(self):
         return self._contentDict
 
+    def toCSV(self, fileName, samples=100):
+        import numpy as np
+        import csv
+        theta = np.arange(-np.pi, np.pi, step=np.pi/samples)
+        x = self.position()[0] + (self.radius()-0.1) * np.cos(theta)
+        y = self.position()[1] + (self.radius()-0.1) * np.sin(theta)
+        with open(fileName, mode='w') as file:
+            csv_writer = csv.writer(file, delimiter=',')
+            for i in range(2*samples):
+                csv_writer.writerow([x[i], y[i]])
+
     def renderGym(self, viewer):
         from gym.envs.classic_control import rendering
         x = self.position()
