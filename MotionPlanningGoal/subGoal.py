@@ -16,6 +16,7 @@ class SubGoal(MotionPlanningComponent):
             "parent_link",
             "child_link",
             "desired_position",
+            "epsilon",
         ]
         super().__init__(**kwargs)
 
@@ -31,6 +32,9 @@ class SubGoal(MotionPlanningComponent):
 
     def isPrimeGoal(self):
         return self._contentDict["prime"]
+
+    def epsilon(self):
+        return self._contentDict['epsilon']
 
     def indices(self):
         return self._contentDict["indices"]

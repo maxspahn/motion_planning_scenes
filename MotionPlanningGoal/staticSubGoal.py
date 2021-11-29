@@ -23,5 +23,5 @@ class StaticSubGoal(SubGoal):
         from gym.envs.classic_control import rendering
         x = self.position()
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
-        joint = viewer.draw_circle(0.1, color=[0.1, 0.1, 0.1])
+        joint = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
         joint.add_attr(tf)
