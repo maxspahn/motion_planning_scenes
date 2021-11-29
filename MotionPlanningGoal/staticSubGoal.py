@@ -8,7 +8,7 @@ class StaticSubGoal(SubGoal):
         self.checkDimensionality()
 
     def type(self):
-        return 'static'
+        return self._contentDict['type']
 
     def toDict(self):
         return {}
