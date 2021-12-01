@@ -50,3 +50,10 @@ class GoalComposition(MotionPlanningComponent):
             compositionDict[subGoal.name()] = subGoal.toDict()
         return compositionDict
 
+    def shuffle(self):
+        for subGoal in self._subGoals:
+            subGoal.shuffle()
+
+    def renderGym(self, viewer):
+        self.primeGoal().renderGym(viewer)
+

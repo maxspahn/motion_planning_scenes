@@ -25,7 +25,8 @@ def test_goalComposition():
     assert subGoal0.indices() == [0, 1]
 
 
-def test_goalCompositionMulti():
+@pytest.fixture
+def multiGoalDict():
     goalDict = {
         "subgoal0": {
             "m": 2,
@@ -50,14 +51,30 @@ def test_goalCompositionMulti():
             "type": "staticSubGoal",
         },
     }
+    return goalDict
+
+
+def test_goalCompositionMulti(multiGoalDict):
     goalComposition = GoalComposition(
-        name="example_static_subGoal", contentDict=goalDict
+        name="example_static_subGoal", contentDict=multiGoalDict
     )
     subGoal1 = goalComposition.getGoalByName("subgoal1")
     assert "subgoal1" == subGoal1.name()
     assert subGoal1.position() == [-0.21, 0.2]
     subGoals = goalComposition.subGoals()
     assert len(subGoals) == 2
+
+
+def test_shuffleGoalComposition(multiGoalDict):
+    goalComposition = GoalComposition(
+        name="example_static_subGoal", contentDict=multiGoalDict
+    )
+    # verification that returns are actually only pointers
+    subGoal1 = goalComposition.getGoalByName('subgoal1')
+    assert subGoal1.position() == [-0.21, 0.2]
+    goalComposition.shuffle()
+    assert goalComposition.getGoalByName('subgoal1').position() != [-0.21, 0.2]
+    assert subGoal1.position() != [-0.21, 0.2]
 
 
 def test_errorMultiplePrimeGoals():
