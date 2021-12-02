@@ -1,4 +1,6 @@
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle
+import os
+
+from MotionPlanningEnv.collisionObstacle import CollisionObstacle, DimensionNotSuitableForBullet
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
 
 
@@ -25,3 +27,8 @@ class UrdfObstacle(CollisionObstacle):
 
     def toDict(self):
         return self._contentDict
+
+    def add2Bullet(self, pybullet):
+        if self.dim() != 3:
+            raise DimensionNotSuitableForBullet("Pybullet only supports three dimensional obstacles")
+        pybullet.loadURDF(fileName=self.urdf(), basePosition=self.position())

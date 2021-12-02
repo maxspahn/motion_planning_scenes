@@ -1,4 +1,4 @@
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle
+from MotionPlanningEnv.collisionObstacle import CollisionObstacle, DimensionNotSuitableForBullet
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
 
 class SphereObstacleMissmatchDimensionError(Exception):
@@ -37,6 +37,12 @@ class SphereObstacle(CollisionObstacle):
     def toDict(self):
         return self._contentDict
 
+    def movable(self):
+        if 'movable' in self._contentDict:
+            return self._contentDict['movable']
+        else:
+            return False
+
     def toCSV(self, fileName, samples=100):
         import numpy as np
         import csv
@@ -54,3 +60,19 @@ class SphereObstacle(CollisionObstacle):
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)
+
+    def add2Bullet(self, pybullet):
+        if self.dim() != 3:
+            raise DimensionNotSuitableForBullet("Pybullet only supports three dimensional obstacles")
+        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
+        visualShapeId = -1
+        basePosition = self.position()
+        baseOrientation = [0, 0, 0, 1]
+        mass = int(self.movable())
+        visualShapeId = -1
+
+        pybullet.createMultiBody(mass,
+              collisionShape,
+              visualShapeId,
+              basePosition,
+              baseOrientation)
