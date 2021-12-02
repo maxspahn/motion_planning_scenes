@@ -1,5 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
+
+
+class DimensionNotSuitableForBullet(Exception):
+    pass
+
 
 class CollisionObstacle(MotionPlanningComponent):
     def __init__(self, **kwargs):
