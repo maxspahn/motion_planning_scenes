@@ -4,6 +4,10 @@ import yaml
 class ComponentIncompleteError(Exception):
     pass
 
+
+class DimensionNotSuitableForBullet(Exception):
+    pass
+
 class MotionPlanningComponent(ABC):
 
     def __init__(self, **kwargs):

@@ -1,5 +1,6 @@
 import numpy as np
 from MotionPlanningGoal.subGoal import SubGoal
+from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForBullet
 
 
 class StaticSubGoal(SubGoal):
@@ -39,3 +40,21 @@ class StaticSubGoal(SubGoal):
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
         joint.add_attr(tf)
+
+    def add2Bullet(self, pybullet):
+        if self.m() != 3:
+            raise DimensionNotSuitableForBullet("Pybullet only supports three dimensional obstacles")
+        rgbaColor = [0.0, 1.0, 0.0, 1.0]
+        visualShapeId = pybullet.createVisualShape(pybullet.GEOM_SPHERE, rgbaColor=rgbaColor, radius=self.epsilon())
+        collisionShape = -1
+        basePosition = self.position()
+        baseOrientation = [0, 0, 0, 1]
+        mass = 0
+
+        pybullet.createMultiBody(
+                    mass,
+                    collisionShape,
+                    visualShapeId,
+                    basePosition,
+                    baseOrientation,
+        )

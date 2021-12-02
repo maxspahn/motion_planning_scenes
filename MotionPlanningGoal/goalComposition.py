@@ -57,3 +57,6 @@ class GoalComposition(MotionPlanningComponent):
     def renderGym(self, viewer):
         self.primeGoal().renderGym(viewer)
 
+    def add2Bullet(self, pybullet):
+        self.primeGoal().add2Bullet(pybullet)
+

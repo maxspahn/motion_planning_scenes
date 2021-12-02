@@ -1,7 +1,7 @@
 import os
 
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, DimensionNotSuitableForBullet
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
+from MotionPlanningEnv.collisionObstacle import CollisionObstacle
+from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForBullet
 
 
 class UrdfObstacle(CollisionObstacle):
