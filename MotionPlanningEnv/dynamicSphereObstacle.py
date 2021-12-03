@@ -78,8 +78,17 @@ class DynamicSphereObstacle(CollisionObstacle):
         mass = int(self.movable())
         visualShapeId = -1
 
-        pybullet.createMultiBody(mass,
+        self._bulletId = pybullet.createMultiBody(mass,
               collisionShape,
               visualShapeId,
               basePosition,
               baseOrientation)
+
+    def updateBulletPosition(self, pybullet, **kwargs):
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        pos = self.position(t=t)
+        ori = [0, 0, 0, 1]
+        pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)

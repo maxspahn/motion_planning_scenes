@@ -23,3 +23,6 @@ class CollisionObstacle(MotionPlanningComponent):
     @abstractmethod
     def position(self, **kwargs):
         pass
+
+    def updateBulletPosition(self, pybullet, **kwargs):
+        pass
