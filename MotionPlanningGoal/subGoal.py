@@ -15,7 +15,6 @@ class SubGoal(MotionPlanningComponent):
             "indices",
             "parent_link",
             "child_link",
-            "desired_position",
             "epsilon",
             "type",
         ]
@@ -52,8 +51,10 @@ class SubGoal(MotionPlanningComponent):
     def weight(self):
         return self._contentDict["w"]
 
-    @abstractmethod
     def type(self):
+        return self._contentDict['type']
+
+    def updateBulletPosition(self, pybullet, **kwargs):
         pass
 
     @abstractmethod

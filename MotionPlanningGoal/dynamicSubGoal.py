@@ -1,41 +1,38 @@
 import numpy as np
 from MotionPlanningGoal.subGoal import SubGoal
 from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
+from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 
 
-class StaticSubGoal(SubGoal):
+class DynamicSubGoal(SubGoal):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.checkCompleteness()
+        self._traj = AnalyticTrajectory(self.m(), traj=self._contentDict['trajectory'])
+        self._traj.concretize()
         self.checkDimensionality()
 
-    def limitLow(self):
-        if 'low' in self._contentDict:
-            return np.array(self._contentDict['low'])
-        else:
-            return np.ones(self.m()) * -1
-
-    def limitHigh(self):
-        if 'high' in self._contentDict:
-            return np.array(self._contentDict['high'])
-        else:
-            return np.ones(self.m()) * 1
+    def traj(self):
+        return self._traj
 
     def toDict(self):
         return self._contentDict
 
     def position(self, **kwargs):
-        return self._contentDict['desired_position']
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        return self._traj.evaluate(t)[0]
 
     def shuffle(self):
-        randomPos = np.random.uniform(self.limitLow(), self.limitHigh(), self.m())
-        self._contentDict['desired_position'] = randomPos.tolist()
+        pass
 
     def renderGym(self, viewer, **kwargs):
         from gym.envs.classic_control import rendering
         if self.m() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
-        x = self.position()
+        x = self.position(t=kwargs.get('t'))
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
         joint.add_attr(tf)
@@ -50,10 +47,19 @@ class StaticSubGoal(SubGoal):
         baseOrientation = [0, 0, 0, 1]
         mass = 0
 
-        pybullet.createMultiBody(
+        self._bulletId = pybullet.createMultiBody(
                     mass,
                     collisionShape,
                     visualShapeId,
                     basePosition,
                     baseOrientation,
         )
+
+    def updateBulletPosition(self, pybullet, **kwargs):
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        pos = self.position(t=t)
+        ori = [0, 0, 0, 1]
+        pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)

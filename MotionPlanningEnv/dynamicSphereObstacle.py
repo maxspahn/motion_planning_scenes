@@ -6,6 +6,7 @@ from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 class DynamicSphereObstacleMissmatchDimensionError(Exception):
     pass
 
+
 class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
