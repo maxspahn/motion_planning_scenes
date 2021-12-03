@@ -1,21 +1,25 @@
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 
-class SphereObstacleMissmatchDimensionError(Exception):
+
+class DynamicSphereObstacleMissmatchDimensionError(Exception):
     pass
 
-class SphereObstacle(CollisionObstacle):
+class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
-        self._geometry_keys = ['position', 'radius']
+        self._geometry_keys = ['trajectory', 'radius']
         self.checkCompleteness()
         self.checkDimensionality()
         self.checkGeometryCompleteness()
+        self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+        self._traj.concretize()
 
     def checkDimensionality(self):
-        if self.dim() != len(self.position()):
-            raise SphereObstacleMissmatchDimensionError(
-                "Dimension mismatch between position array and dimension"
+        if self.dim() != len(self.geometry()['trajectory']):
+            raise DynamicSphereObstacleMissmatchDimensionError(
+                "Dimension mismatch between trajectory array and dimension"
             )
 
     def checkGeometryCompleteness(self):
@@ -29,7 +33,11 @@ class SphereObstacle(CollisionObstacle):
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
 
     def position(self, **kwargs):
-        return self.geometry()['position']
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        return self._traj.evaluate(t)[0]
 
     def radius(self):
         return self.geometry()['radius']
@@ -38,10 +46,7 @@ class SphereObstacle(CollisionObstacle):
         return self._contentDict
 
     def movable(self):
-        if 'movable' in self._contentDict:
-            return self._contentDict['movable']
-        else:
-            return False
+        return False
 
     def toCSV(self, fileName, samples=100):
         import numpy as np
@@ -56,9 +61,9 @@ class SphereObstacle(CollisionObstacle):
 
     def renderGym(self, viewer, **kwargs):
         from gym.envs.classic_control import rendering
+        x = self.position(t=kwargs.get('t'))
         if self.dim() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
-        x = self.position()
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)

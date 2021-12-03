@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 import yaml
 
+
 class ComponentIncompleteError(Exception):
     pass
 
 
-class DimensionNotSuitableForBullet(Exception):
+class DimensionNotSuitableForEnv(Exception):
     pass
+
 
 class MotionPlanningComponent(ABC):
 

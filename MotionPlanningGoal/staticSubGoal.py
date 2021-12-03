@@ -1,6 +1,6 @@
 import numpy as np
 from MotionPlanningGoal.subGoal import SubGoal
-from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForBullet
+from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
 
 
 class StaticSubGoal(SubGoal):
@@ -36,6 +36,8 @@ class StaticSubGoal(SubGoal):
 
     def renderGym(self, viewer):
         from gym.envs.classic_control import rendering
+        if self.m() != 2:
+            raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position()
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
@@ -43,7 +45,7 @@ class StaticSubGoal(SubGoal):
 
     def add2Bullet(self, pybullet):
         if self.m() != 3:
-            raise DimensionNotSuitableForBullet("Pybullet only supports three dimensional obstacles")
+            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         rgbaColor = [0.0, 1.0, 0.0, 0.3]
         visualShapeId = pybullet.createVisualShape(pybullet.GEOM_SPHERE, rgbaColor=rgbaColor, radius=self.epsilon())
         collisionShape = -1
