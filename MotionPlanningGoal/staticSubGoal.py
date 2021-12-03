@@ -44,17 +44,18 @@ class StaticSubGoal(SubGoal):
     def add2Bullet(self, pybullet):
         if self.m() != 3:
             raise DimensionNotSuitableForBullet("Pybullet only supports three dimensional obstacles")
-        rgbaColor = [0.0, 1.0, 0.0, 1.0]
+        rgbaColor = [0.0, 1.0, 0.0, 0.3]
         visualShapeId = pybullet.createVisualShape(pybullet.GEOM_SPHERE, rgbaColor=rgbaColor, radius=self.epsilon())
         collisionShape = -1
         basePosition = self.position()
         baseOrientation = [0, 0, 0, 1]
         mass = 0
 
-        pybullet.createMultiBody(
+        bullet_id = pybullet.createMultiBody(
                     mass,
                     collisionShape,
                     visualShapeId,
                     basePosition,
                     baseOrientation,
         )
+        #pybullet.resetBasePositionAndOrientation(bullet_id, [0.0, 0.0, 1.0], [0.0, 0.0, 0.0, 1.0])
