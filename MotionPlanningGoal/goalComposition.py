@@ -44,6 +44,12 @@ class GoalComposition(MotionPlanningComponent):
     def getGoalByIndex(self, index):
         return self._subGoals[index]
 
+    def evaluate(self, **kwargs):
+        evals = []
+        for subGoal in self._subGoals:
+            evals += subGoal.evaluate(**kwargs)
+        return evals
+
     def toDict(self):
         compositionDict = {}
         for subGoal in self._subGoals:

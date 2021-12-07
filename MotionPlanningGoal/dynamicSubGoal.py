@@ -19,11 +19,11 @@ class DynamicSubGoal(SubGoal):
         return self._contentDict
 
     def position(self, **kwargs):
-        if 't' not in kwargs:
-            t = 0.0
-        else:
-            t = kwargs.get('t')
-        return self._traj.evaluate(t)[0]
+        return self.evaluate(**kwargs)[0]
+
+    def evaluate(self, **kwargs):
+        t = kwargs.get('t') if 't' in kwargs else 0.0
+        return self._traj.evaluate(t=t)
 
     def shuffle(self):
         pass

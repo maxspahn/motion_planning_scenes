@@ -26,4 +26,4 @@ class AnalyticTrajectory(ReferenceTrajectory):
         x = np.array(fun[0])[:, 0]
         v = np.array(fun[1])[:, 0]
         a = np.array(fun[2])[:, 0]
-        return x, v, a
+        return [x, v, a]
