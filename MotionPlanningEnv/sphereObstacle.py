@@ -1,16 +1,22 @@
+import numpy as np
+from copy import deepcopy
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 
+
 class SphereObstacleMissmatchDimensionError(Exception):
     pass
+
 
 class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self._geometry_keys = ['position', 'radius']
         self.checkCompleteness()
-        self.checkDimensionality()
         self.checkGeometryCompleteness()
+        self._position = [float(val) for val in self._contentDict['geometry']['position']]
+        self._radius = float(self._contentDict['geometry']['radius'])
+        self.checkDimensionality()
 
     def checkDimensionality(self):
         if self.dim() != len(self.position()):
@@ -28,14 +34,35 @@ class SphereObstacle(CollisionObstacle):
         if incomplete:
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
 
+    def limitLow(self):
+        if 'low' in self._contentDict:
+            return [np.array(self._contentDict['low']['position']), float(self._contentDict['low']['radius'])]
+        else:
+            return [np.ones(self.dim()) * -1, 0]
+
+    def limitHigh(self):
+        if 'high' in self._contentDict:
+            return [np.array(self._contentDict['high']['position']), float(self._contentDict['high']['radius'])]
+        else:
+            return [np.ones(self.dim()) * 1, 1]
+
     def position(self, **kwargs):
-        return self.geometry()['position']
+        return self._position
 
     def radius(self):
-        return self.geometry()['radius']
+        return self._radius
 
     def toDict(self):
-        return self._contentDict
+        contentDict = deepcopy(self._contentDict)
+        contentDict['geometry']['position'] = self._position
+        contentDict['geometry']['radius'] = self._radius
+        return contentDict
+
+    def shuffle(self):
+        randomPos = np.random.uniform(self.limitLow()[0], self.limitHigh()[0], self.dim())
+        randomRadius = np.random.uniform(self.limitLow()[1], self.limitHigh()[1], 1)
+        self._position = randomPos.tolist()
+        self._radius = float(randomRadius)
 
     def movable(self):
         if 'movable' in self._contentDict:

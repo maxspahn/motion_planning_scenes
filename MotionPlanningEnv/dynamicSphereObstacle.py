@@ -23,6 +23,9 @@ class DynamicSphereObstacle(CollisionObstacle):
                 "Dimension mismatch between trajectory array and dimension"
             )
 
+    def traj(self):
+        return self._traj
+
     def checkGeometryCompleteness(self):
         incomplete = False
         missingKeys = ""

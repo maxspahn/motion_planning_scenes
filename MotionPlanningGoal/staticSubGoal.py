@@ -22,7 +22,7 @@ class StaticSubGoal(SubGoal):
             return np.ones(self.m()) * 1
 
     def evaluate(self, **kwargs):
-        return self.position(**kwargs)
+        return []
 
     def toDict(self):
         return self._contentDict
