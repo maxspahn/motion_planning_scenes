@@ -13,7 +13,7 @@ class SubGoalCreator(object):
     def createSubGoal(self, subGoalType, name, contentDict):
         if subGoalType == 'staticSubGoal':
             return StaticSubGoal(name=name, contentDict=contentDict)
-        elif subGoalType == 'dynamicSubGoal':
+        elif subGoalType == 'analyticSubGoal' or subGoalType == 'splineSubGoal':
             return DynamicSubGoal(name=name, contentDict=contentDict)
         else:
             raise UnknownSubGoalType("SubGoalType %s is not known" % subGoalType)
