@@ -1,6 +1,7 @@
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
+from MotionPlanningSceneHelpers.splineTrajectory import SplineTrajectory
 
 
 class DynamicSphereObstacleMissmatchDimensionError(Exception):
@@ -14,11 +15,18 @@ class DynamicSphereObstacle(CollisionObstacle):
         self.checkCompleteness()
         self.checkDimensionality()
         self.checkGeometryCompleteness()
-        self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+        if self.type() == 'splineSphere':
+            self._traj = SplineTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+        elif self.type() == 'sphere' or self.type() == 'analyticSphere':
+            self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
         self._traj.concretize()
 
     def checkDimensionality(self):
-        if self.dim() != len(self.geometry()['trajectory']):
+        if self.type() == 'splineSphere':
+            dim_verification = len(self.geometry()['trajectory']['controlPoints'][0])
+        elif self.type() == 'sphere' or self.type() == 'analyticSphere':
+            dim_verification = len(self.geometry()['trajectory'])
+        if self.dim() != dim_verification:
             raise DynamicSphereObstacleMissmatchDimensionError(
                 "Dimension mismatch between trajectory array and dimension"
             )

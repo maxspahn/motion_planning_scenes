@@ -1,14 +1,17 @@
-import numpy as np
 from MotionPlanningGoal.subGoal import SubGoal
 from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
+from MotionPlanningSceneHelpers.splineTrajectory import SplineTrajectory
 
 
 class DynamicSubGoal(SubGoal):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.checkCompleteness()
-        self._traj = AnalyticTrajectory(self.m(), traj=self._contentDict['trajectory'])
+        if self.type() == 'splineSubGoal':
+            self._traj = SplineTrajectory(self.m(), traj=self._contentDict['trajectory'])
+        elif self.type() == 'analyticSubGoal':
+            self._traj = AnalyticTrajectory(self.m(), traj=self._contentDict['trajectory'])
         self._traj.concretize()
         self.checkDimensionality()
 

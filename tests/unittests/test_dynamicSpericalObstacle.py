@@ -20,3 +20,17 @@ def test_circleObstacle():
     pos_t_12 = dynamicSphereObst.position(t=1.2)
     assert pos_t_12[0] == 0.1 * 1.2
     assert pos_t_12[1] == 0.2 * 1.2
+
+
+def test_splineObstacle():
+    splineDict = {'degree': 2, 'controlPoints': [[1.0, 0.0], [2.0, 0.0],[2.0, 1.0]], 'duration': 10}
+    obstDict = {
+        "dim": 2,
+        "type": "splineSphere",
+        "geometry": {"trajectory": splineDict, "radius": 0.2},
+    }
+    dynamicSphereObst = DynamicSphereObstacle(
+        name="dynamicSphere", contentDict=obstDict
+    )
+    assert "dynamicSphere" == dynamicSphereObst.name()
+    assert 0.2 == dynamicSphereObst.radius()

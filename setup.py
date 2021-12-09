@@ -18,5 +18,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["numpy", "casadi", "matplotlib", "pyyaml"],
-    extras_require={"gymRender": ["gym"],},
+    extras_require={"gymRender": ["gym"], "splines": ['geomdl']},
 )
