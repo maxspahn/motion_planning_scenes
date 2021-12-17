@@ -8,6 +8,10 @@ class DynamicSphereObstacleMissmatchDimensionError(Exception):
     pass
 
 
+class TypeNotSupportedError(Exception):
+    pass
+
+
 class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
@@ -17,15 +21,17 @@ class DynamicSphereObstacle(CollisionObstacle):
         self.checkGeometryCompleteness()
         if self.type() == 'splineSphere':
             self._traj = SplineTrajectory(self.dim(), traj=self.geometry()['trajectory'])
-        elif self.type() == 'sphere' or self.type() == 'analyticSphere':
+        elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
             self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
         self._traj.concretize()
 
     def checkDimensionality(self):
         if self.type() == 'splineSphere':
             dim_verification = len(self.geometry()['trajectory']['controlPoints'][0])
-        elif self.type() == 'sphere' or self.type() == 'analyticSphere':
+        elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
             dim_verification = len(self.geometry()['trajectory'])
+        else:
+            raise TypeNotSupportedError(f"Obstacle type {self.type()} not supported")
         if self.dim() != dim_verification:
             raise DynamicSphereObstacleMissmatchDimensionError(
                 "Dimension mismatch between trajectory array and dimension"
