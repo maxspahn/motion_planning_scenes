@@ -91,11 +91,14 @@ class SphereObstacle(CollisionObstacle):
         joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.dim() != 3:
+        if self.dim() == 2:
+            basePosition = self.position() + [0.0]
+        elif self.dim() == 3:
+            basePosition = self.position()
+        else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
         visualShapeId = -1
-        basePosition = self.position()
         baseOrientation = [0, 0, 0, 1]
         mass = int(self.movable())
         visualShapeId = -1

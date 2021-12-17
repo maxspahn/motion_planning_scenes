@@ -41,7 +41,11 @@ class DynamicSubGoal(SubGoal):
         joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.m() != 3:
+        if self.m() == 2 and self.indices() == [0, 1]:
+            basePosition = self.position() + [0.0]
+        elif self.m() == 3:
+            basePosition = self.position()
+        else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         rgbaColor = [0.0, 1.0, 0.0, 0.3]
         visualShapeId = pybullet.createVisualShape(pybullet.GEOM_SPHERE, rgbaColor=rgbaColor, radius=self.epsilon())
@@ -63,6 +67,8 @@ class DynamicSubGoal(SubGoal):
             t = 0.0
         else:
             t = kwargs.get('t')
-        pos = self.position(t=t)
+        pos = self.position(t=t).tolist()
+        if self.m() == 2 and self.indices() == [0, 1]:
+            pos += [0.0]
         ori = [0, 0, 0, 1]
         pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)
