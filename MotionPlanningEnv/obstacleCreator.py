@@ -13,7 +13,9 @@ class ObstacleCreator(object):
     def createObstacle(self, obstacleType, name, contentDict):
         if obstacleType == "sphereObstacle":
             return SphereObstacle(name=name, contentDict=contentDict)
-        elif obstacleType == "analyticSphereObstacle":
+        elif obstacleType == "analyticSphere":
+            return DynamicSphereObstacle(name=name, contentDict=contentDict)
+        elif obstacleType == "splineSphere":
             return DynamicSphereObstacle(name=name, contentDict=contentDict)
         else:
             raise UnknownObstacleType("ObstacleType %s is not know" % obstacleType)
