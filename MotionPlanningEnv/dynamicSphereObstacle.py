@@ -23,12 +23,16 @@ class DynamicSphereObstacle(CollisionObstacle):
             self._traj = SplineTrajectory(self.dim(), traj=self.geometry()['trajectory'])
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
             self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+        elif self.type() == 'analyticSphere':
+            self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
         self._traj.concretize()
 
     def checkDimensionality(self):
         if self.type() == 'splineSphere':
             dim_verification = len(self.geometry()['trajectory']['controlPoints'][0])
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
+            dim_verification = len(self.geometry()['trajectory'])
+        elif self.type() == 'analyticSphere':
             dim_verification = len(self.geometry()['trajectory'])
         else:
             raise TypeNotSupportedError(f"Obstacle type {self.type()} not supported")
