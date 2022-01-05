@@ -16,6 +16,7 @@ numpy = "^1.15.0"
 casadi = "3.5"
 PyYAML = "^6.0"
 geomdl = "^5.3.1"
+pytest = "^6.2.5"
 
 [tool.poetry.dev-dependencies]
 
