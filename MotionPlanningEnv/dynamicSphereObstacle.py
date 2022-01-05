@@ -91,7 +91,11 @@ class DynamicSphereObstacle(CollisionObstacle):
         joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.dim() != 3:
+        if self.dim() == 2:
+            basePosition = self.position() + [0.0]
+        elif self.dim() == 3:
+            basePosition = self.position()
+        else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
         visualShapeId = -1
@@ -111,6 +115,8 @@ class DynamicSphereObstacle(CollisionObstacle):
             t = 0.0
         else:
             t = kwargs.get('t')
-        pos = self.position(t=t)
+        pos = self.position(t=t).tolist()
+        if self.dim() == 2:
+            pos += [0.0]
         ori = [0, 0, 0, 1]
         pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)

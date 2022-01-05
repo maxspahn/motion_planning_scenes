@@ -44,12 +44,15 @@ class StaticSubGoal(SubGoal):
         joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.m() != 3:
+        if self.m() == 2 and self.indices() == [0, 1]:
+            basePosition = self.position() + [0.0]
+        elif self.m() == 3:
+            basePosition = self.position()
+        else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         rgbaColor = [0.0, 1.0, 0.0, 0.3]
         visualShapeId = pybullet.createVisualShape(pybullet.GEOM_SPHERE, rgbaColor=rgbaColor, radius=self.epsilon())
         collisionShape = -1
-        basePosition = self.position()
         baseOrientation = [0, 0, 0, 1]
         mass = 0
 
