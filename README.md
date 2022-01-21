@@ -27,5 +27,16 @@ involve orientation that are generally hard to obtain and hardly human understan
 ## Installation
 
 ```bash
-pip3 install -e .
+pip3 install .
 ```
+
+## Poetry
+This package is build using [poetry](https://python-poetry.org/docs/). 
+Poetry generates a virtual environment automatically.
+If you have poetry installed you can test it through:
+```bash
+poetry install
+poetry shell
+```
+Then you are in a virtual environment in which you can test this specific package.
+Read more about poetry on the [documentation website](https://python-poetry.org/docs/).
