@@ -73,7 +73,7 @@ class SphereObstacle(CollisionObstacle):
     def toCSV(self, fileName, samples=100):
         import numpy as np
         import csv
-        theta = np.arange(-np.pi, np.pi, step=np.pi/samples)
+        theta = np.arange(-np.pi, np.pi + np.pi/samples, step=np.pi/samples)
         x = self.position()[0] + (self.radius()-0.1) * np.cos(theta)
         y = self.position()[1] + (self.radius()-0.1) * np.sin(theta)
         with open(fileName, mode='w') as file:
