@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from copy import deepcopy
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
@@ -107,8 +108,14 @@ class SphereObstacle(CollisionObstacle):
         visualShapeId = -1
         baseOrientation = [0, 0, 0, 1]
         mass = int(self.movable())
-        visualShapeId = -1
-
+        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        visualShapeId = pybullet.createVisualShape(
+            pybullet.GEOM_MESH,
+            fileName='sphere_smooth.obj',
+            rgbaColor=[1.0, 0.0, 0.0, 1.0],
+            specularColor=[1.0, 0.5, 0.5],
+            meshScale=[self.radius(), self.radius(), self.radius()]
+        )
         pybullet.createMultiBody(mass,
               collisionShape,
               visualShapeId,
