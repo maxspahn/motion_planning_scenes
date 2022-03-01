@@ -1,3 +1,4 @@
+import os
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
@@ -111,12 +112,23 @@ class DynamicSphereObstacle(CollisionObstacle):
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
-        visualShapeId = -1
+        collisionShape = pybullet.createCollisionShape(
+            pybullet.GEOM_SPHERE, 
+            radius=self.radius(),
+            rgbaColor=[1.0, 0.0, 0.0, 1.0]
+        )
         basePosition = self.position()
         baseOrientation = [0, 0, 0, 1]
         mass = int(self.movable())
-        visualShapeId = -1
+
+        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        visualShapeId = pybullet.createVisualShape(
+            pybullet.GEOM_MESH,
+            fileName='sphere_smooth.obj',
+            rgbaColor=[1.0, 0.0, 0.0, 1.0],
+            specularColor=[1.0, 0.5, 0.5],
+            meshScale=[self.radius(), self.radius(), self.radius()]
+        )
 
         self._bulletId = pybullet.createMultiBody(mass,
               collisionShape,
