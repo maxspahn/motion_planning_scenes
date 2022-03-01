@@ -4,9 +4,6 @@ name: Testing motion planning scenes
 
 # Controls when the workflow will run
 on: 
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
