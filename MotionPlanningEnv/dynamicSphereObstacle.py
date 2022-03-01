@@ -115,7 +115,6 @@ class DynamicSphereObstacle(CollisionObstacle):
         collisionShape = pybullet.createCollisionShape(
             pybullet.GEOM_SPHERE, 
             radius=self.radius(),
-            rgbaColor=[1.0, 0.0, 0.0, 1.0]
         )
         basePosition = self.position()
         baseOrientation = [0, 0, 0, 1]
