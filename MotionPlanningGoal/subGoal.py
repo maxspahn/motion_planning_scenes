@@ -62,6 +62,14 @@ class SubGoal(MotionPlanningComponent):
         pass
 
     @abstractmethod
+    def velocity(self, **kwargs):
+        pass
+
+    @abstractmethod
+    def acceleration(self, **kwargs):
+        pass
+
+    @abstractmethod
     def shuffle(self):
         pass
 

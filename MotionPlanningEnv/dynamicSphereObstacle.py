@@ -61,6 +61,20 @@ class DynamicSphereObstacle(CollisionObstacle):
             t = kwargs.get('t')
         return self._traj.evaluate(t)[0]
 
+    def velocity(self, **kwargs):
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        return self._traj.evaluate(t)[1]
+        
+    def acceleration(self, **kwargs):
+        if 't' not in kwargs:
+            t = 0.0
+        else:
+            t = kwargs.get('t')
+        return self._traj.evaluate(t)[2]
+
     def radius(self):
         return self.geometry()['radius']
 

@@ -49,6 +49,12 @@ class SphereObstacle(CollisionObstacle):
     def position(self, **kwargs):
         return self._position
 
+    def velocity(self, **kwargs):
+        return np.zeros(self.dim())
+
+    def acceleration(self, **kwargs):
+        return np.zeros(self.dim())
+
     def radius(self):
         return self._radius
 

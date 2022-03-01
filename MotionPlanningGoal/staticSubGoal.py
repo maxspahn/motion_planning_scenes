@@ -30,6 +30,12 @@ class StaticSubGoal(SubGoal):
     def position(self, **kwargs):
         return self._contentDict['desired_position']
 
+    def velocity(self, **kwargs):
+        return np.zeros(self.dim())
+
+    def acceleration(self, **kwargs):
+        return np.zeros(self.dim())
+
     def shuffle(self):
         randomPos = np.random.uniform(self.limitLow(), self.limitHigh(), self.m())
         self._contentDict['desired_position'] = randomPos.tolist()

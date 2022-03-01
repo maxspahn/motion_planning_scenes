@@ -24,6 +24,12 @@ class DynamicSubGoal(SubGoal):
     def position(self, **kwargs):
         return self.evaluate(**kwargs)[0]
 
+    def velocity(self, **kwargs):
+        return self.evaluate(**kwargs)[1]
+
+    def acceleration(self, **kwargs):
+        return self.evaluate(**kwargs)[2]
+
     def evaluate(self, **kwargs):
         t = kwargs.get('t') if 't' in kwargs else 0.0
         return self._traj.evaluate(t=t)

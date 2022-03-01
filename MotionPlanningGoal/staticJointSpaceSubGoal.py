@@ -42,6 +42,12 @@ class StaticJointSpaceSubGoal(SubGoal):
     def position(self, **kwargs):
         return self._contentDict['desired_position']
 
+    def velocity(self, **kwargs):
+        return np.zeros(m)
+
+    def acceleration(self, **kwargs):
+        return np.zeros(m)
+
     def shuffle(self):
         randomPos = np.random.uniform(self.limitLow(), self.limitHigh(), self.m())
         self._contentDict['desired_position'] = randomPos.tolist()

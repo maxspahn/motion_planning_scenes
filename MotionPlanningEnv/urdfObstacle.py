@@ -25,6 +25,12 @@ class UrdfObstacle(CollisionObstacle):
     def position(self):
         return self.geometry()['position']
 
+    def velocity(self):
+        return np.zeros(3)
+
+    def acceleration(self):
+        return np.zeros(3)
+
     def toDict(self):
         return self._contentDict
 
