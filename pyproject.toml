@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "motion_planning_scenes"
-version = "0.1.9"
+version = "0.1.11"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
 packages = [
@@ -12,14 +12,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-numpy = [
-    {version = "^1.15.0", python = "<3.10"},
-    {version = "^1.21", python = ">=3.10"},
-]
-casadi = [
-    {version = "3.5.6.pre2", python = ">=3.10"},
-    {version = "<=3.5.5", python = "<3.10"},
-]
+numpy = "^1.19.0"
+casadi = "3.5.6.pre2"
 PyYAML = "^6.0"
 geomdl = "^5.3.1"
 pytest = "^6.2.5"
