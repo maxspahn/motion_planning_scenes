@@ -37,8 +37,7 @@ class DynamicSubGoal(SubGoal):
     def shuffle(self):
         pass
 
-    def renderGym(self, viewer, **kwargs):
-        from gym.envs.classic_control import rendering
+    def renderGym(self, viewer, rendering, **kwargs):
         if self.m() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position(t=kwargs.get('t'))
