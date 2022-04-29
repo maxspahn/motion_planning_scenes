@@ -44,9 +44,11 @@ class StaticSubGoal(SubGoal):
         if self.m() == 1:
             start_point = [-5.0, 5.0]
             end_point = [5.0, 5.0]
-            start_point[self.indices()] = self.position()
-            end_point[self.indices()] = self.position()
-            line = viewer.draw_line(start_position, end_position)
+            x = -5
+            start_point = eval(self.position())
+            x = 5
+            end_point = eval(self.position())
+            line = viewer.draw_line(start_point, end_point, color=[0.0, 1.0, 0.0])
         elif self.m() == 2:
             x = self.position()
             tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
