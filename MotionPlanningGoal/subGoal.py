@@ -21,6 +21,8 @@ class SubGoal(MotionPlanningComponent):
         super().__init__(**kwargs)
 
     def checkDimensionality(self):
+        if isinstance(self.position(), str):
+            return
         if self.m() != len(self.position()):
             raise SubGoalMissmatchDimensionError(
                 "Dimension mismatch between goal and m"
