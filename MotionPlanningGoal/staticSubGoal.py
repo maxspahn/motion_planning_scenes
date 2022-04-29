@@ -41,12 +41,13 @@ class StaticSubGoal(SubGoal):
         self._contentDict['desired_position'] = randomPos.tolist()
 
     def renderGym(self, viewer, rendering, **kwargs):
-        if self.m() != 2:
+        if self.m() != 2 or self.m() != 1:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position()
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
         joint.add_attr(tf)
+
 
     def add2Bullet(self, pybullet):
         if self.m() == 2 and self.indices() == [0, 1]:
