@@ -96,8 +96,7 @@ class DynamicSphereObstacle(CollisionObstacle):
             for i in range(2*samples):
                 csv_writer.writerow([x[i], y[i]])
 
-    def renderGym(self, viewer, **kwargs):
-        from gym.envs.classic_control import rendering
+    def renderGym(self, viewer, rendering, **kwargs):
         x = self.position(t=kwargs.get('t'))
         if self.dim() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")

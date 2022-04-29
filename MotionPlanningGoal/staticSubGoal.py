@@ -40,8 +40,7 @@ class StaticSubGoal(SubGoal):
         randomPos = np.random.uniform(self.limitLow(), self.limitHigh(), self.m())
         self._contentDict['desired_position'] = randomPos.tolist()
 
-    def renderGym(self, viewer, **kwargs):
-        from gym.envs.classic_control import rendering
+    def renderGym(self, viewer, rendering, **kwargs):
         if self.m() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position()

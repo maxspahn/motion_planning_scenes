@@ -88,8 +88,7 @@ class SphereObstacle(CollisionObstacle):
             for i in range(2*samples):
                 csv_writer.writerow([x[i], y[i]])
 
-    def renderGym(self, viewer, **kwargs):
-        from gym.envs.classic_control import rendering
+    def renderGym(self, viewer, rendering, **kwargs):
         if self.dim() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position()
