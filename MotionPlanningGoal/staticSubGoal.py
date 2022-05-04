@@ -1,6 +1,7 @@
 import numpy as np
 from MotionPlanningGoal.subGoal import SubGoal
 from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
+from pyquaternion import Quaternion
 
 
 class StaticSubGoal(SubGoal):
@@ -42,14 +43,18 @@ class StaticSubGoal(SubGoal):
 
     def angle(self):
         if 'angle' in self._contentDict:
-            return float(self._contentDict['angle'])
+            return self._contentDict['angle']
         else:
-            return 0.0
+            return None
 
     def renderGym(self, viewer, rendering, **kwargs):
         coordinate_system_1 = viewer.draw_line([-3, 0], [3, 0], color=[0.0, 0.0, 0.0])
         coordinate_system_2 = viewer.draw_line([0, -3], [0, 3], color=[0.0, 0.0, 0.0])
-        tf2 = rendering.Transform(rotation=self.angle())
+        angle = self.angle()
+        if angle:
+            tf2 = rendering.Transform(rotation=self.angle())
+        else:
+            tf2 = rendering.Transform()
         coordinate_system_1.add_attr(tf2)
         coordinate_system_2.add_attr(tf2)
         if self.m() == 1:
@@ -73,8 +78,8 @@ class StaticSubGoal(SubGoal):
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
 
 
-    def add2Bullet(self, pybullet):
-        if self.m() == 2 and self.indices() == [0, 1]:
+    def add2Bullet(self, pybullet, position=[0.0, 0.0, 0.0]):
+        if self.m() == 2:
             basePosition = self.position() + [0.0]
         elif self.m() == 3:
             basePosition = self.position()
@@ -92,4 +97,40 @@ class StaticSubGoal(SubGoal):
                     visualShapeId,
                     basePosition,
                     baseOrientation,
+        )
+
+        if self.angle():
+            for i in range(3):
+                self.addAxisComponent(pybullet, i, position)
+
+    def addAxisComponent(self, pybullet, i, goal_position):
+        rgbaColor = [0.0, 0.0, 0.0, 0.3]
+        angles = self.angle()
+        if not angles:
+            angles = Quaternion([1, 0., 0, 0])
+        else:
+            angles = Quaternion(angles).normalised
+        print(angles)
+        orientation = Quaternion([1, 0, 0, 0])
+        orientation[i+1] = 1.0
+        orientation = orientation.normalised
+        position = np.array([goal_position[0], goal_position[1], goal_position[2]])
+        orientation = angles * orientation
+        orientation_array = [orientation[1], orientation[2], orientation[3], orientation[0]]
+        offset_array = [np.array([0.00, 0.00, -0.05]), np.array([0.0, 0.0, 0.05]), np.array([0.0, 0.0, 0.05])]
+
+        position += orientation.rotate(offset_array[i])
+        index_map = [1, 0, 2]
+        rgbaColor[index_map[i]] = 1.0
+        visual_shape_id = pybullet.createVisualShape(
+            pybullet.GEOM_CYLINDER, rgbaColor=rgbaColor,radius=0.01, length=0.1
+        )
+        collisionShape = -1
+        mass = 0
+        pybullet.createMultiBody(
+                    mass,
+                    collisionShape,
+                    visual_shape_id,
+                    position,
+                    orientation_array,
         )

@@ -61,10 +61,12 @@ class GoalComposition(MotionPlanningComponent):
             subGoal.shuffle()
 
     def renderGym(self, viewer, rendering, **kwargs):
-        self.primeGoal().renderGym(viewer, rendering, **kwargs)
+        for subGoal in self._subGoals:
+            subGoal.renderGym(viewer, rendering, **kwargs)
 
     def add2Bullet(self, pybullet):
-        self.primeGoal().add2Bullet(pybullet)
+        for subGoal in self._subGoals:
+            subGoal.add2Bullet(pybullet, position=self.primeGoal().position())
 
     def updateBulletPosition(self, pybullet, **kwargs):
         self.primeGoal().updateBulletPosition(pybullet, **kwargs)
