@@ -46,7 +46,10 @@ class DynamicSubGoal(SubGoal):
     def renderGym(self, viewer, rendering, **kwargs):
         coordinate_system_1 = viewer.draw_line([-3, 0], [3, 0], color=[0.0, 0.0, 0.0])
         coordinate_system_2 = viewer.draw_line([0, -3], [0, 3], color=[0.0, 0.0, 0.0])
-        tf2 = rendering.Transform(rotation=self.angle())
+        angle = self.angle()
+        if not angle:
+            angle = 0.0
+        tf2 = rendering.Transform(rotation=angle)
         coordinate_system_1.add_attr(tf2)
         coordinate_system_2.add_attr(tf2)
         if self.m() == 1:
