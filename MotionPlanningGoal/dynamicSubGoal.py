@@ -59,12 +59,12 @@ class DynamicSubGoal(SubGoal):
             end_point[self.indices()[0]] = 0.0
             goal = viewer.draw_line(start_point, end_point, color=[0.0, 1.0, 0.0])
             translation = [0.0, 0.0]
-            translation[self.indices()[0]] = self.position()[0]
+            translation[self.indices()[0]] = self.position(t=kwargs.get('t'))[0]
             tf = rendering.Transform(translation=translation)
             goal.add_attr(tf)
             goal.add_attr(tf2)
         elif self.m() == 2:
-            x = self.position(kwargs.get('t'))
+            x = self.position(t=kwargs.get('t'))
             goal = viewer.draw_circle(self.epsilon(), color=[0.0, 1.0, 0.0])
             tf = rendering.Transform(translation=(x[0], x[1]))
             goal.add_attr(tf)
