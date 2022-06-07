@@ -55,5 +55,5 @@ class StaticJointSpaceSubGoal(SubGoal):
     def renderGym(self, viewer, **kwargs):
         raise JointSpaceGoalsNotSupportedError()
 
-    def add2Bullet(self, pybullet):
+    def add2Bullet(self, pybullet, **kwargs):
         raise JointSpaceGoalsNotSupportedError()

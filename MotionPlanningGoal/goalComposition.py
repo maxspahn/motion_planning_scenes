@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
 from MotionPlanningGoal.subGoalCreator import SubGoalCreator
+from MotionPlanningGoal.staticJointSpaceSubGoal import JointSpaceGoalsNotSupportedError
 
 
 class MultiplePrimeGoalsError(Exception):
@@ -62,11 +63,17 @@ class GoalComposition(MotionPlanningComponent):
 
     def renderGym(self, viewer, rendering, **kwargs):
         for subGoal in self._subGoals:
-            subGoal.renderGym(viewer, rendering, **kwargs)
+            try:
+                subGoal.renderGym(viewer, rendering, **kwargs)
+            except JointSpaceGoalsNotSupportedError as e:
+                print(f"Skipping visualization of joint space goal.")
 
     def add2Bullet(self, pybullet):
         for subGoal in self._subGoals:
-            subGoal.add2Bullet(pybullet, position=self.primeGoal().position())
+            try:
+                subGoal.add2Bullet(pybullet, position=self.primeGoal().position())
+            except JointSpaceGoalsNotSupportedError as e:
+                print(f"Skipping visualization of joint space goal.")
 
     def updateBulletPosition(self, pybullet, **kwargs):
         self.primeGoal().updateBulletPosition(pybullet, **kwargs)
