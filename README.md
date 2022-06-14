@@ -1,4 +1,4 @@
-> :warning **For Embotech Forces PRO user**: You need to use this branch as the newer casadi versions are
+> :warning: **For Embotech Forces PRO user**: You need to use this branch as the newer casadi versions are
 not supported in Forces PRO.
 # Motion Planning Scenes
 
