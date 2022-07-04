@@ -114,7 +114,7 @@ class DynamicSubGoal(SubGoal):
         if not angles:
             angles = Quaternion([1, 0., 0, 0])
         else:
-            angles = Quaternion(angles).normalised
+            angles = Quaternion(angles).inverse
         orientation = Quaternion([1, 0, 0, 0])
         orientation[i+1] = 1.0
         orientation = orientation.normalised
