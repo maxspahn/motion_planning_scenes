@@ -39,10 +39,12 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     ------------
 
     geometry : GeometryConfig : Geometry of the obstacle
-    low: GeometryConfig : Lower limit for randomization
-    high: GeometryConfig : Upper limit for randomization
+    movable : bool : Flag indicating whether an obstacle can be pushed around
+    low : GeometryConfig : Lower limit for randomization
+    high : GeometryConfig : Upper limit for randomization
     """
     geometry: GeometryConfig
+    movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
@@ -112,10 +114,7 @@ class SphereObstacle(CollisionObstacle):
         self._radius = float(randomRadius)
 
     def movable(self):
-        if 'movable' in self._contentDict:
-            return self._contentDict['movable']
-        else:
-            return False
+        return self._config.movable
 
     def toCSV(self, fileName, samples=100):
         import numpy as np
