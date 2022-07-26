@@ -3,18 +3,20 @@ import pytest
 from MotionPlanningGoal.goalComposition import GoalComposition, MultiplePrimeGoalsError
 
 
-def test_goalComposition():
+def test_goalComposition_single():
     goalDict = {
-        "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
-            "indices": [0, 1],
-            "parent_link": 0,
-            "child_link": 3,
-            "desired_position": [0.01, 0.2],
-            "epsilon": 0.2,
-            "type": "staticSubGoal",
+        "sub_goals": {
+            "subgoal0": {
+                "m": 2,
+                "w": 5.0,
+                "prime": True,
+                "indices": [0, 1],
+                "parent_link": 0,
+                "child_link": 3,
+                "desired_position": [0.01, 0.2],
+                "epsilon": 0.2,
+                "type": "staticSubGoal",
+            }
         }
     }
     goalComposition = GoalComposition(
@@ -28,28 +30,30 @@ def test_goalComposition():
 @pytest.fixture
 def multiGoalDict():
     goalDict = {
-        "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
-            "indices": [0, 1],
-            "parent_link": 0,
-            "child_link": 3,
-            "desired_position": [0.01, 0.2],
-            "epsilon": 0.2,
-            "type": "staticSubGoal",
-        },
-        "subgoal1": {
-            "m": 2,
-            "w": 5.0,
-            "prime": False,
-            "indices": [0, 1],
-            "parent_link": 0,
-            "child_link": 3,
-            "desired_position": [-0.21, 0.2],
-            "epsilon": 0.2,
-            "type": "staticSubGoal",
-        },
+        "sub_goals": {
+            "subgoal0": {
+                "m": 2,
+                "w": 5.0,
+                "prime": True,
+                "indices": [0, 1],
+                "parent_link": 0,
+                "child_link": 3,
+                "desired_position": [0.01, 0.2],
+                "epsilon": 0.2,
+                "type": "staticSubGoal",
+            },
+            "subgoal1": {
+                "m": 2,
+                "w": 5.0,
+                "prime": False,
+                "indices": [0, 1],
+                "parent_link": 0,
+                "child_link": 3,
+                "desired_position": [-0.21, 0.2],
+                "epsilon": 0.2,
+                "type": "staticSubGoal",
+            },
+        }
     }
     return goalDict
 
@@ -79,28 +83,30 @@ def test_shuffleGoalComposition(multiGoalDict):
 
 def test_errorMultiplePrimeGoals():
     goalDict = {
-        "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
-            "indices": [0, 1],
-            "parent_link": 0,
-            "child_link": 3,
-            "desired_position": [0.01, 0.2],
-            "epsilon": 0.2,
-            "type": "staticSubGoal",
-        },
-        "subgoal1": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
-            "indices": [0, 1],
-            "parent_link": 0,
-            "child_link": 3,
-            "desired_position": [-0.21, 0.2],
-            "epsilon": 0.2,
-            "type": "staticSubGoal",
-        },
+        "sub_goals": {
+            "subgoal0": {
+                "m": 2,
+                "w": 5.0,
+                "prime": True,
+                "indices": [0, 1],
+                "parent_link": 0,
+                "child_link": 3,
+                "desired_position": [0.01, 0.2],
+                "epsilon": 0.2,
+                "type": "staticSubGoal",
+            },
+            "subgoal1": {
+                "m": 2,
+                "w": 5.0,
+                "prime": True,
+                "indices": [0, 1],
+                "parent_link": 0,
+                "child_link": 3,
+                "desired_position": [-0.21, 0.2],
+                "epsilon": 0.2,
+                "type": "staticSubGoal",
+            },
+        }
     }
     with pytest.raises(MultiplePrimeGoalsError) as e_info:
         GoalComposition(name="example_static_subGoal", contentDict=goalDict)

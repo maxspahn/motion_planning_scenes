@@ -1,9 +1,35 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
+from dataclasses import dataclass
+
+from typing import List
 
 
 class SubGoalMissmatchDimensionError(Exception):
     pass
+
+
+@dataclass
+class SubGoalConfig:
+    """Configuration dataclass for sub goal.
+
+    This configuration class holds information about the 
+    the weight, accuracy required, type and position in the 
+    kinematic chain.
+
+    Parameters:
+    ------------
+
+    dim : int : Dimension of the obstacle
+    type : str : Type of the obstacle
+    """
+    m: int
+    w: float
+    type: str
+    indices: List[int]
+    epsilon: float
+    prime: bool
+
 
 
 class SubGoal(MotionPlanningComponent):
@@ -13,8 +39,6 @@ class SubGoal(MotionPlanningComponent):
             "w",
             "prime",
             "indices",
-            "parent_link",
-            "child_link",
             "epsilon",
             "type",
         ]
@@ -33,28 +57,22 @@ class SubGoal(MotionPlanningComponent):
             )
 
     def isPrimeGoal(self):
-        return self._contentDict["prime"]
+        return self._config.prime
 
     def epsilon(self):
-        return self._contentDict['epsilon']
+        return self._config.epsilon
 
     def indices(self):
-        return self._contentDict["indices"]
+        return self._config.indices
 
     def m(self):
-        return self._contentDict["m"]
-
-    def parentLink(self):
-        return self._contentDict["parent_link"]
-
-    def childLink(self):
-        return self._contentDict["child_link"]
+        return self._config.m
 
     def weight(self):
-        return self._contentDict["w"]
+        return self._config.w
 
     def type(self):
-        return self._contentDict['type']
+        return self._config.type
 
     def updateBulletPosition(self, pybullet, **kwargs):
         pass

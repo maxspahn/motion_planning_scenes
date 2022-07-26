@@ -1,8 +1,15 @@
+from dataclasses import dataclass
+from typing import List, Optional, Dict, Any
+import numpy as np
 import os
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+from copy import deepcopy
+from omegaconf import OmegaConf
+
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 from MotionPlanningSceneHelpers.splineTrajectory import SplineTrajectory
+from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
+from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+
 
 
 class DynamicSphereObstacleMissmatchDimensionError(Exception):
@@ -12,16 +19,55 @@ class DynamicSphereObstacleMissmatchDimensionError(Exception):
 class TypeNotSupportedError(Exception):
     pass
 
+@dataclass
+class GeometryConfig:
+    """Configuration dataclass for geometry.
+
+    This configuration class holds information about position
+    and radius of a dynamic sphere obstacle.
+
+    Parameters:
+    ------------
+
+    trajectory: Any: Trajectory description of the obstacle. Can be either a spline or
+        a analytic trajectory.
+    radius: float: Radius of the obstacle
+    """
+    trajectory: Any
+    radius: float
+
+
+@dataclass
+class DynamicSphereObstacleConfig(CollisionObstacleConfig):
+    """Configuration dataclass for sphere obstacle.
+
+    This configuration class holds information about the position, size 
+    and randomization of a dynamic spherical obstacle.
+
+    Parameters:
+    ------------
+
+    geometry : GeometryConfig : Geometry of the obstacle
+    low: GeometryConfig : Lower limit for randomization
+    high: GeometryConfig : Upper limit for randomization
+    """
+    geometry: GeometryConfig
+    low: Optional[GeometryConfig] = None
+    high: Optional[GeometryConfig] = None
+
 
 class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self._geometry_keys = ['trajectory', 'radius']
+        schema = OmegaConf.structured(DynamicSphereObstacleConfig)
+        config = OmegaConf.create(self._content_dict)
+        self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
         self.checkDimensionality()
         self.checkGeometryCompleteness()
         if self.type() == 'splineSphere':
-            self._traj = SplineTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+            self._traj = SplineTrajectory(self.dim(), traj=self._config.geometry.trajectory)
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
             self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
         elif self.type() == 'analyticSphere':

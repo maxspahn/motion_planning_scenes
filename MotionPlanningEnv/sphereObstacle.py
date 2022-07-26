@@ -1,22 +1,62 @@
+from dataclasses import dataclass
 import numpy as np
 import os
 from copy import deepcopy
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle
+from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 
+from omegaconf import OmegaConf
+from typing import List, Optional, Dict
 
 class SphereObstacleMissmatchDimensionError(Exception):
     pass
 
+@dataclass
+class GeometryConfig:
+    """Configuration dataclass for geometry.
+
+    This configuration class holds information about position
+    and radius of a sphere obstacle.
+
+    Parameters:
+    ------------
+
+    position: list: Position of the obstacle
+    radius: float: Radius of the obstacle
+    """
+    position: List[float]
+    radius: float
+
+
+@dataclass
+class SphereObstacleConfig(CollisionObstacleConfig):
+    """Configuration dataclass for sphere obstacle.
+
+    This configuration class holds information about the position, size 
+    and randomization of a spherical obstacle.
+
+    Parameters:
+    ------------
+
+    geometry : GeometryConfig : Geometry of the obstacle
+    low: GeometryConfig : Lower limit for randomization
+    high: GeometryConfig : Upper limit for randomization
+    """
+    geometry: GeometryConfig
+    low: Optional[GeometryConfig] = None
+    high: Optional[GeometryConfig] = None
 
 class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self._geometry_keys = ['position', 'radius']
+        schema = OmegaConf.structured(SphereObstacleConfig)
+        config = OmegaConf.create(self._content_dict)
+        self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
         self.checkGeometryCompleteness()
-        self._position = [float(val) for val in self._contentDict['geometry']['position']]
-        self._radius = float(self._contentDict['geometry']['radius'])
+        self._radius = self._config.geometry.radius
+        self._position = self._config.geometry.position
         self.checkDimensionality()
 
     def checkDimensionality(self):
@@ -36,14 +76,14 @@ class SphereObstacle(CollisionObstacle):
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
 
     def limitLow(self):
-        if 'low' in self._contentDict:
-            return [np.array(self._contentDict['low']['position']), float(self._contentDict['low']['radius'])]
+        if self._config.low:
+            return [np.array(self._config.low.position), self._config.low.radius]
         else:
             return [np.ones(self.dim()) * -1, 0]
 
     def limitHigh(self):
-        if 'high' in self._contentDict:
-            return [np.array(self._contentDict['high']['position']), float(self._contentDict['high']['radius'])]
+        if self._config.high:
+            return [np.array(self._config.high.position), self._config.high.radius]
         else:
             return [np.ones(self.dim()) * 1, 1]
 

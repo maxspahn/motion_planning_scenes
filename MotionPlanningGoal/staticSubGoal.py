@@ -1,24 +1,60 @@
 import numpy as np
-from MotionPlanningGoal.subGoal import SubGoal
+from MotionPlanningGoal.subGoal import SubGoal, SubGoalConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
 from pyquaternion import Quaternion
+
+from omegaconf import OmegaConf
+from typing import List, Optional
+from dataclasses import dataclass
+
+@dataclass
+class StaticSubGoalConfig(SubGoalConfig):
+    """Configuration dataclass for static sub goal.
+
+    This configuration class holds information about the 
+    the weight, accuracy required, type and position in the 
+    kinematic chain.
+
+    Parameters:
+    ------------
+
+    dim : int : Dimension of the obstacle
+    type : str : Type of the obstacle
+    """
+    parent_link: str
+    child_link: str
+    desired_position: List[float]
+    angle: Optional[List[float]] = None
+    low: Optional[List[float]] = None
+    high: Optional[List[float]] = None
+
 
 
 class StaticSubGoal(SubGoal):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        schema = OmegaConf.structured(StaticSubGoalConfig)
+        config = OmegaConf.create(self._content_dict)
+        self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
         self.checkDimensionality()
 
+    def parentLink(self):
+        return self._config.parentLink
+
+    def childLink(self):
+        return self._config.childLink
+
+
     def limitLow(self):
-        if 'low' in self._contentDict:
-            return np.array(self._contentDict['low'])
+        if self._config.low:
+            return np.array(self._config.low)
         else:
             return np.ones(self.m()) * -1
 
     def limitHigh(self):
-        if 'high' in self._contentDict:
-            return np.array(self._contentDict['high'])
+        if self._config.high:
+            return np.array(self._config.high)
         else:
             return np.ones(self.m()) * 1
 
@@ -26,10 +62,10 @@ class StaticSubGoal(SubGoal):
         return []
 
     def toDict(self):
-        return self._contentDict
+        return OmegaConf.to_container(self._config)
 
     def position(self, **kwargs):
-        return self._contentDict['desired_position']
+        return self._config.desired_position
 
     def velocity(self, **kwargs):
         return np.zeros(self.dim())
@@ -39,13 +75,10 @@ class StaticSubGoal(SubGoal):
 
     def shuffle(self):
         randomPos = np.random.uniform(self.limitLow(), self.limitHigh(), self.m())
-        self._contentDict['desired_position'] = randomPos.tolist()
+        self._config.desired_position = randomPos.tolist()
 
     def angle(self):
-        if 'angle' in self._contentDict:
-            return self._contentDict['angle']
-        else:
-            return None
+        return self._config.angle
 
     def renderGym(self, viewer, rendering, **kwargs):
         coordinate_system_1 = viewer.draw_line([-3, 0], [3, 0], color=[0.0, 0.0, 0.0])
