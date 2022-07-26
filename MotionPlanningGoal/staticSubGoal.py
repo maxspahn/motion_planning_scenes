@@ -4,7 +4,7 @@ from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuita
 from pyquaternion import Quaternion
 
 from omegaconf import OmegaConf
-from typing import List, Optional
+from typing import List, Optional, Any
 from dataclasses import dataclass
 
 @dataclass
@@ -29,7 +29,7 @@ class StaticSubGoalConfig(SubGoalConfig):
     parent_link: str
     child_link: str
     desired_position: List[float]
-    angle: Optional[List[float]] = None
+    angle: Optional[Any] = None
     low: Optional[List[float]] = None
     high: Optional[List[float]] = None
 

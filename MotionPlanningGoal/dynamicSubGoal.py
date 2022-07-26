@@ -1,17 +1,49 @@
-from MotionPlanningGoal.subGoal import SubGoal
+from dataclasses import dataclass
+from typing import List, Optional, Dict, Any
+from omegaconf import OmegaConf
+from MotionPlanningGoal.subGoal import SubGoal, SubGoalConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import DimensionNotSuitableForEnv
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 from MotionPlanningSceneHelpers.splineTrajectory import SplineTrajectory
+
+@dataclass
+class DynamicSubGoalConfig(SubGoalConfig):
+    """Configuration dataclass for static sub goal.
+
+    This configuration class holds information about the 
+    the weight, accuracy required, type and position in the 
+    kinematic chain.
+
+    Parameters:
+    ------------
+
+    parent_link: str : Name of the link that specifies the frame in which the goal is defined
+    child_link: str : Name of the link that should match the desired position
+    trajectory: Any: Trajectory of the goal, either defined by a spline or an analytic equation.
+    angle list : Additional rotation from the parent_link frame given by a quaternion
+    low : list : Lower limit for randomization
+    high : list : Upper limit for randomization
+
+    """
+    parent_link: str
+    child_link: str
+    trajectory: Any
+    angle: Optional[Any] = None
+    low: Optional[List[float]] = None
+    high: Optional[List[float]] = None
 
 
 class DynamicSubGoal(SubGoal):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        schema = OmegaConf.structured(DynamicSubGoalConfig)
+        config = OmegaConf.create(self._content_dict)
+        self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
         if self.type() == 'splineSubGoal':
-            self._traj = SplineTrajectory(self.m(), traj=self._contentDict['trajectory'])
+            self._traj = SplineTrajectory(self.m(), traj=self._config.trajectory)
         elif self.type() == 'analyticSubGoal':
-            self._traj = AnalyticTrajectory(self.m(), traj=self._contentDict['trajectory'])
+            self._traj = AnalyticTrajectory(self.m(), traj=self._config.trajectory)
         self._traj.concretize()
         self.checkDimensionality()
 
@@ -19,7 +51,7 @@ class DynamicSubGoal(SubGoal):
         return self._traj
 
     def toDict(self):
-        return self._contentDict
+        return OmegaConf.to_container(self._config)
 
     def position(self, **kwargs):
         return self.evaluate(**kwargs)[0]
@@ -38,10 +70,7 @@ class DynamicSubGoal(SubGoal):
         pass
 
     def angle(self):
-        if 'angle' in self._contentDict:
-            return self._contentDict['angle']
-        else:
-            return None
+        return self._config.angle
 
     def renderGym(self, viewer, rendering, **kwargs):
         coordinate_system_1 = viewer.draw_line([-3, 0], [3, 0], color=[0.0, 0.0, 0.0])

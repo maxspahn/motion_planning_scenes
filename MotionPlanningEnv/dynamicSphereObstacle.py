@@ -126,7 +126,7 @@ class DynamicSphereObstacle(CollisionObstacle):
         return self.geometry()['radius']
 
     def toDict(self):
-        return self._contentDict
+        return OmegaConf.to_container(self._config)
 
     def movable(self):
         return False
