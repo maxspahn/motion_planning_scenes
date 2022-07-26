@@ -45,10 +45,10 @@ class StaticSubGoal(SubGoal):
         self.checkDimensionality()
 
     def parentLink(self):
-        return self._config.parentLink
+        return self._config.parent_link
 
     def childLink(self):
-        return self._config.childLink
+        return self._config.child_link
 
 
     def limitLow(self):

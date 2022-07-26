@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from MotionPlanningGoal.staticSubGoal import StaticSubGoalConfig
+from MotionPlanningGoal.staticSubGoal import SubGoalConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
 from MotionPlanningGoal.subGoalCreator import SubGoalCreator
 from MotionPlanningGoal.staticJointSpaceSubGoal import JointSpaceGoalsNotSupportedError
@@ -11,39 +11,22 @@ from typing import List, Optional, Dict
 class MultiplePrimeGoalsError(Exception):
     pass
 
-@dataclass
-class GoalCompositionConfig:
-    """Configuration dataclass for goal composition.
-
-    This configuration class holds all the sub goals 
-    in one dictionary.
-
-    Parameters:
-    ------------
-
-    sub_goal: dict : Map containing all sub goals
-    """
-    sub_goals: Dict[str, StaticSubGoalConfig]
-
-
 class GoalComposition(MotionPlanningComponent):
     def __init__(self, **kwargs):
         self._required_keys = [
             "subgoal0",
         ]
         super().__init__(**kwargs)
-        schema = OmegaConf.structured(GoalCompositionConfig)
-        config = OmegaConf.create(self._content_dict)
-        self._config = OmegaConf.merge(schema, config)
+        self._config = OmegaConf.create(self._content_dict)
         self._primeGoalIndex = -1
         self._subGoals = []
         self._subGoalCreator = SubGoalCreator()
         self.parseSubGoals()
 
     def parseSubGoals(self):
-        for subGoalName in self._config.sub_goals.keys():
-            subGoalType = self._config.sub_goals[subGoalName].type
-            subGoalDict = self._config.sub_goals[subGoalName]
+        for subGoalName in self._config.keys():
+            subGoalType = self._config[subGoalName].type
+            subGoalDict = self._config[subGoalName]
             subGoal = self._subGoalCreator.createSubGoal(subGoalType, subGoalName, subGoalDict)
             if subGoal.isPrimeGoal():
                 if self._primeGoalIndex >= 0:
