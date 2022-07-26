@@ -69,9 +69,9 @@ class DynamicSphereObstacle(CollisionObstacle):
         if self.type() == 'splineSphere':
             self._traj = SplineTrajectory(self.dim(), traj=self._config.geometry.trajectory)
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
-            self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+            self._traj = AnalyticTrajectory(self.dim(), traj=self._config.geometry.trajectory)
         elif self.type() == 'analyticSphere':
-            self._traj = AnalyticTrajectory(self.dim(), traj=self.geometry()['trajectory'])
+            self._traj = AnalyticTrajectory(self.dim(), traj=self._config.geometry.trajectory)
         self._traj.concretize()
 
     def checkDimensionality(self):

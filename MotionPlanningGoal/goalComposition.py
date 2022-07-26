@@ -13,17 +13,15 @@ class MultiplePrimeGoalsError(Exception):
 
 @dataclass
 class GoalCompositionConfig:
-    """Configuration dataclass for static joint space sub goal.
+    """Configuration dataclass for goal composition.
 
-    This configuration class holds information about the 
-    the weight, accuracy required, type and position in the 
-    kinematic chain.
+    This configuration class holds all the sub goals 
+    in one dictionary.
 
     Parameters:
     ------------
 
-    dim : int : Dimension of the obstacle
-    type : str : Type of the obstacle
+    sub_goal: dict : Map containing all sub goals
     """
     sub_goals: Dict[str, StaticSubGoalConfig]
 

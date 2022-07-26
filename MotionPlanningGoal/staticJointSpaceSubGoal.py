@@ -14,17 +14,16 @@ class StaticJointSpaceSubGoalConfig(SubGoalConfig):
     """Configuration dataclass for static joint space sub goal.
 
     This configuration class holds information about the 
-    the weight, accuracy required, type and position in the 
-    kinematic chain.
+    the desired joint configuration and the limits for randomization.
 
     Parameters:
     ------------
 
-    dim : int : Dimension of the obstacle
-    type : str : Type of the obstacle
+    desired_position : list : Goal configuration of the robot
+    low : list : Lower limit for randomization
+    high : list : Upper limit for randomization
     """
     desired_position: List[float]
-    angle: Optional[List[float]] = None
     low: Optional[List[float]] = None
     high: Optional[List[float]] = None
 

@@ -18,8 +18,13 @@ class StaticSubGoalConfig(SubGoalConfig):
     Parameters:
     ------------
 
-    dim : int : Dimension of the obstacle
-    type : str : Type of the obstacle
+    parent_link: str : Name of the link that specifies the frame in which the goal is defined
+    child_link: str : Name of the link that should match the desired position
+    desired_position : list : Goal state of the concerned link
+    angle list : Additional rotation from the parent_link frame given by a quaternion
+    low : list : Lower limit for randomization
+    high : list : Upper limit for randomization
+
     """
     parent_link: str
     child_link: str

@@ -20,8 +20,12 @@ class SubGoalConfig:
     Parameters:
     ------------
 
-    dim : int : Dimension of the obstacle
-    type : str : Type of the obstacle
+    m: int: Dimension of the sub goal
+    w: float: Weight of the sub goal
+    type: str: Type of the sub goal
+    indices: list: Indices of a forward map to be considered
+    epsilon: float: Required accuracy of the sub goal
+    prime: bool: Flag for primary goal
     """
     m: int
     w: float

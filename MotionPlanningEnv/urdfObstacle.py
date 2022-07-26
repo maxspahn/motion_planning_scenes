@@ -6,20 +6,18 @@ import numpy as np
 
 from dataclasses import dataclass
 from omegaconf import OmegaConf
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 @dataclass
 class GeometryConfig:
-    """Configuration dataclass for geometry.
+    """Configuration dataclass for geometry for urdf obstacles.
 
-    This configuration class holds information about position
-    and radius of a sphere obstacle.
+    This configuration class holds information about position.
 
     Parameters:
     ------------
 
     position: list: Position of the obstacle
-    radius: float: Radius of the obstacle
     """
     position: List[float]
 
