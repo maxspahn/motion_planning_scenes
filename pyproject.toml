@@ -11,9 +11,9 @@ packages = [
   
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6,<3.10"
 numpy = "^1.19.0"
-casadi = "3.5.6.pre2"
+casadi = "^3.5.4,!=3.5.5.post1,!=3.5.5.post2"
 PyYAML = "^6.0"
 geomdl = "^5.3.1"
 pytest = "^6.2.5"
