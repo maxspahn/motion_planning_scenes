@@ -47,6 +47,12 @@ class DynamicSubGoal(SubGoal):
         self._traj.concretize()
         self.checkDimensionality()
 
+    def parentLink(self):
+        return self._config.parent_link
+
+    def childLink(self):
+        return self._config.child_link
+
     def traj(self):
         return self._traj
 

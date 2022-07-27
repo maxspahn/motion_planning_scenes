@@ -26,8 +26,8 @@ class StaticSubGoalConfig(SubGoalConfig):
     high : list : Upper limit for randomization
 
     """
-    parent_link: str
-    child_link: str
+    parent_link: Any
+    child_link: Any
     desired_position: List[float]
     angle: Optional[Any] = None
     low: Optional[List[float]] = None
@@ -83,7 +83,10 @@ class StaticSubGoal(SubGoal):
         self._config.desired_position = randomPos.tolist()
 
     def angle(self):
-        return self._config.angle
+        if isinstance(self._config.angle, float):
+            return self._config.angle
+        if self._config.angle:
+            return list(self._config.angle)
 
     def renderGym(self, viewer, rendering, **kwargs):
         coordinate_system_1 = viewer.draw_line([-3, 0], [3, 0], color=[0.0, 0.0, 0.0])

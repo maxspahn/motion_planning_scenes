@@ -23,7 +23,8 @@ def test_goalComposition_single():
     subGoal0 = goalComposition.primeGoal()
     assert "subgoal0" == subGoal0.name()
     assert subGoal0.indices() == [0, 1]
-    assert subGoal0.parentLink() == '0'
+    assert subGoal0.parentLink() == 0
+    assert isinstance(subGoal0.parentLink(), int)
 
 
 @pytest.fixture
