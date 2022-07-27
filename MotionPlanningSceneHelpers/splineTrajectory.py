@@ -32,7 +32,8 @@ class SplineTrajectory(ReferenceTrajectory):
             )
         self._traj = BSpline.Curve()
         self._traj.degree = self._trajDict["degree"]
-        self._traj.ctrlpts = self._trajDict["controlPoints"]
+        list_ctrlpts = [list(val) for val in self._trajDict["controlPoints"]]
+        self._traj.ctrlpts = list_ctrlpts
         self._traj.knotvector = utilities.generate_knot_vector(
             self._traj.degree, len(self._traj.ctrlpts)
         )

@@ -67,8 +67,6 @@ def test_errorRaiseMissmatichDimension():
         "prime": True,
         "epsilon": 0.2,
         "indices": [0],
-        "parent_link": 0,
-        "child_link": 3,
         "desired_position": [0.01, 0.2],
         "type": "staticJointSpaceSubGoal",
     }

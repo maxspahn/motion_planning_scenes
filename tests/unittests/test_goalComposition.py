@@ -3,7 +3,7 @@ import pytest
 from MotionPlanningGoal.goalComposition import GoalComposition, MultiplePrimeGoalsError
 
 
-def test_goalComposition():
+def test_goalComposition_single():
     goalDict = {
         "subgoal0": {
             "m": 2,
@@ -23,6 +23,8 @@ def test_goalComposition():
     subGoal0 = goalComposition.primeGoal()
     assert "subgoal0" == subGoal0.name()
     assert subGoal0.indices() == [0, 1]
+    assert subGoal0.parentLink() == 0
+    assert isinstance(subGoal0.parentLink(), int)
 
 
 @pytest.fixture
