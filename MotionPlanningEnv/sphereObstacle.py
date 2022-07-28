@@ -102,7 +102,7 @@ class SphereObstacle(CollisionObstacle):
         return self._radius
 
     def toDict(self):
-        contentDict = deepcopy(self._contentDict)
+        contentDict = deepcopy(self._content_dict)
         contentDict['geometry']['position'] = self._position
         contentDict['geometry']['radius'] = self._radius
         return contentDict
