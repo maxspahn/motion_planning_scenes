@@ -57,8 +57,6 @@ class SphereObstacle(CollisionObstacle):
         self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
         self.checkGeometryCompleteness()
-        self._radius = self._config.geometry.radius
-        self._position = self._config.geometry.position
         self.checkDimensionality()
 
     def checkDimensionality(self):
@@ -90,7 +88,7 @@ class SphereObstacle(CollisionObstacle):
             return [np.ones(self.dim()) * 1, 1]
 
     def position(self, **kwargs):
-        return self._position
+        return self._config.geometry.position
 
     def velocity(self, **kwargs):
         return np.zeros(self.dim())
@@ -99,19 +97,16 @@ class SphereObstacle(CollisionObstacle):
         return np.zeros(self.dim())
 
     def radius(self):
-        return self._radius
+        return self._config.geometry.radius
 
     def toDict(self):
-        contentDict = deepcopy(self._contentDict)
-        contentDict['geometry']['position'] = self._position
-        contentDict['geometry']['radius'] = self._radius
-        return contentDict
+        return OmegaConf.to_container(self._config)
 
     def shuffle(self):
         randomPos = np.random.uniform(self.limitLow()[0], self.limitHigh()[0], self.dim())
         randomRadius = np.random.uniform(self.limitLow()[1], self.limitHigh()[1], 1)
-        self._position = randomPos.tolist()
-        self._radius = float(randomRadius)
+        self._config.geometry.position = randomPos.tolist()
+        self._config.geometry.radius = float(randomRadius)
 
     def movable(self):
         return self._config.movable

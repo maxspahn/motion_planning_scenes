@@ -54,7 +54,7 @@ class UrdfObstacle(CollisionObstacle):
         self.checkGeometryCompleteness()
 
     def checkUrdfFile(self):
-        if 'urdf' not in self._contentDict:
+        if 'urdf' not in self._content_dict:
             raise ComponentIncompleteError("Missing urdf file")
 
     def urdf(self):
@@ -74,7 +74,7 @@ class UrdfObstacle(CollisionObstacle):
         return np.zeros(3)
 
     def toDict(self):
-        return self._contentDict
+        return OmegaConf.to_container(self._config)
 
     def add2Bullet(self, pybullet):
         if self._config.dim != 3:

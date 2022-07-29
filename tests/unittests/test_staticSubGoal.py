@@ -48,6 +48,13 @@ def test_shuffleGoal(simpleGoalDict):
     assert simpleStaticSubGoal.position()[1] >= -2
     assert simpleStaticSubGoal.position()[1] <= -1
 
+def test_saving_sub_goal(simpleGoalDict):
+    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", contentDict=simpleGoalDict)
+    simpleStaticSubGoal.shuffle()
+    goal_dict_after =simpleStaticSubGoal.toDict()
+    assert isinstance(goal_dict_after, dict)
+    assert goal_dict_after['desired_position'][0] != 0.01
+
 
 def test_errorRaiseIncompleteDict():
     goalDict = {
