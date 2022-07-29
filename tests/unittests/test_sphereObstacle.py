@@ -31,3 +31,12 @@ def test_errorRaiseMissmatichDimension():
     with pytest.raises(SphereObstacleMissmatchDimensionError) as e_info:
         sphereObst = SphereObstacle(name='simpleSphere', contentDict=obstDict)
 
+def test_saving_obstacle():
+    obstDict = {'dim': 3, 'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    sphereObst = SphereObstacle(name='simpleSphere', contentDict=obstDict)
+    sphereObst.shuffle()
+    obst_dict_after = sphereObst.toDict()
+    print(obst_dict_after)
+    assert isinstance(obst_dict_after, dict)
+    assert obst_dict_after['geometry']['position'][0] != 0.1
+

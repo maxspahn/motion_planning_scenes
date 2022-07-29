@@ -74,7 +74,7 @@ class UrdfObstacle(CollisionObstacle):
         return np.zeros(3)
 
     def toDict(self):
-        return self._content_dict
+        return OmegaConf.to_container(self._config)
 
     def add2Bullet(self, pybullet):
         if self._config.dim != 3:
