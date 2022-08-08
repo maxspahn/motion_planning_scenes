@@ -1,15 +1,20 @@
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Any
-import numpy as np
+from typing import Optional, Any
 import os
-from copy import deepcopy
+import numpy as np
+import csv
 from omegaconf import OmegaConf
 
 from MotionPlanningSceneHelpers.analyticTrajectory import AnalyticTrajectory
 from MotionPlanningSceneHelpers.splineTrajectory import SplineTrajectory
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
-
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    ComponentIncompleteError,
+    DimensionNotSuitableForEnv,
+)
+from MotionPlanningEnv.collisionObstacle import (
+    CollisionObstacle,
+    CollisionObstacleConfig,
+)
 
 
 class DynamicSphereObstacleMissmatchDimensionError(Exception):
@@ -18,6 +23,7 @@ class DynamicSphereObstacleMissmatchDimensionError(Exception):
 
 class TypeNotSupportedError(Exception):
     pass
+
 
 @dataclass
 class GeometryConfig:
@@ -29,10 +35,13 @@ class GeometryConfig:
     Parameters:
     ------------
 
-    trajectory: Any: Trajectory description of the obstacle. Can be either a spline or
+    trajectory: Any
+        trajectory description of the obstacle. Can be either a spline or
         a analytic trajectory.
-    radius: float: Radius of the obstacle
+    radius: float
+        radius of the obstacle
     """
+
     trajectory: Any
     radius: float
 
@@ -41,7 +50,7 @@ class GeometryConfig:
 class DynamicSphereObstacleConfig(CollisionObstacleConfig):
     """Configuration dataclass for sphere obstacle.
 
-    This configuration class holds information about the position, size 
+    This configuration class holds information about the position, size
     and randomization of a dynamic spherical obstacle.
 
     Parameters:
@@ -51,6 +60,7 @@ class DynamicSphereObstacleConfig(CollisionObstacleConfig):
     low: GeometryConfig : Lower limit for randomization
     high: GeometryConfig : Upper limit for randomization
     """
+
     geometry: GeometryConfig
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
@@ -62,28 +72,37 @@ class DynamicSphereObstacle(CollisionObstacle):
         super().__init__(schema, **kwargs)
         self.check_completeness()
         self.check_dimensionality()
-        if self.type() == 'splineSphere':
-            self._traj = SplineTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
-        elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
-            self._traj = AnalyticTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
-        elif self.type() == 'analyticSphere':
-            self._traj = AnalyticTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
+        if self.type() == "splineSphere":
+            self._traj = SplineTrajectory(
+                self.dimension(), traj=self._config.geometry.trajectory
+            )
+        elif self.type() == "sphere" or self.type() == "analyticSphereObstacle":
+            self._traj = AnalyticTrajectory(
+                self.dimension(), traj=self._config.geometry.trajectory
+            )
+        elif self.type() == "analyticSphere":
+            self._traj = AnalyticTrajectory(
+                self.dimension(), traj=self._config.geometry.trajectory
+            )
         self._traj.concretize()
 
     def check_dimensionality(self):
-        if self.type() == 'splineSphere':
-            dim_verification = len(self.geometry()['trajectory']['controlPoints'][0])
-        elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
-            dim_verification = len(self.geometry()['trajectory'])
-        elif self.type() == 'analyticSphere':
-            dim_verification = len(self.geometry()['trajectory'])
+        if self.type() == "splineSphere":
+            dim_verification = len(
+                self.geometry()["trajectory"]["controlPoints"][0]
+            )
+        elif self.type() == "sphere" or self.type() == "analyticSphereObstacle":
+            dim_verification = len(self.geometry()["trajectory"])
+        elif self.type() == "analyticSphere":
+            dim_verification = len(self.geometry()["trajectory"])
         else:
-            raise TypeNotSupportedError(f"Obstacle type {self.type()} not supported")
+            raise TypeNotSupportedError(
+                f"Obstacle type {self.type()} not supported"
+            )
         if self.dimension() != dim_verification:
             raise DynamicSphereObstacleMissmatchDimensionError(
                 "Dimension mismatch between trajectory array and dimension"
             )
-
 
     def dimension(self):
         if self.type() in ["sphere", "analyticSphere"]:
@@ -91,106 +110,107 @@ class DynamicSphereObstacle(CollisionObstacle):
         elif self.type() in ["splineSphere"]:
             return len(self._config.geometry.trajectory.controlPoints[0])
 
-
     def traj(self):
         return self._traj
 
-    def checkGeometryCompleteness(self):
+    def check_geometry_completeness(self):
         incomplete = False
-        missingKeys = ""
+        missing_keys = ""
         for key in self._geometry_keys:
             if key not in self.geometry():
                 incomplete = True
-                missingKeys += key + ", "
+                missing_keys += key + ", "
         if incomplete:
-            raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
+            raise ComponentIncompleteError(
+                f"Missing keys in geometry: {missing_keys[:-2]}"
+            )
 
     def position(self, **kwargs):
-        if 't' not in kwargs:
+        if "t" not in kwargs:
             t = 0.0
         else:
-            t = kwargs.get('t')
+            t = kwargs.get("t")
         return self._traj.evaluate(t)[0]
 
     def velocity(self, **kwargs):
-        if 't' not in kwargs:
+        if "t" not in kwargs:
             t = 0.0
         else:
-            t = kwargs.get('t')
+            t = kwargs.get("t")
         return self._traj.evaluate(t)[1]
-        
+
     def acceleration(self, **kwargs):
-        if 't' not in kwargs:
+        if "t" not in kwargs:
             t = 0.0
         else:
-            t = kwargs.get('t')
+            t = kwargs.get("t")
         return self._traj.evaluate(t)[2]
 
     def radius(self):
-        return self.geometry()['radius']
+        return self.geometry()["radius"]
 
-    def toDict(self):
-        return OmegaConf.to_container(self._config)
 
     def movable(self):
         return False
 
-    def toCSV(self, fileName, samples=100):
-        import numpy as np
-        import csv
-        theta = np.arange(-np.pi, np.pi, step=np.pi/samples)
-        x = self.position()[0] + (self.radius()-0.1) * np.cos(theta)
-        y = self.position()[1] + (self.radius()-0.1) * np.sin(theta)
-        with open(fileName, mode='w') as file:
-            csv_writer = csv.writer(file, delimiter=',')
-            for i in range(2*samples):
+    def csv(self, file_name, samples=100):
+        theta = np.arange(-np.pi, np.pi, step=np.pi / samples)
+        x = self.position()[0] + (self.radius() - 0.1) * np.cos(theta)
+        y = self.position()[1] + (self.radius() - 0.1) * np.sin(theta)
+        with open(file_name, mode="w") as file:
+            csv_writer = csv.writer(file, delimiter=",")
+            for i in range(2 * samples):
                 csv_writer.writerow([x[i], y[i]])
 
     def render_gym(self, viewer, rendering, **kwargs):
-        x = self.position(t=kwargs.get('t'))
+        x = self.position(t=kwargs.get("t"))
         if self.dimension() != 2:
-            raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
+            raise DimensionNotSuitableForEnv(
+                "PlanarGym only supports two dimensional obstacles"
+            )
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)
 
     def add_to_bullet(self, pybullet):
         if self.dimension() == 2:
-            basePosition = self.position() + [0.0]
+            base_position= self.position() + [0.0]
         elif self.dimension() == 3:
-            basePosition = self.position()
+            base_position= self.position()
         else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        collisionShape = pybullet.createCollisionShape(
-            pybullet.GEOM_SPHERE, 
+            raise DimensionNotSuitableForEnv(
+                "Pybullet only supports three dimensional obstacles"
+            )
+        collision_shape = pybullet.createCollisionShape(
+            pybullet.GEOM_SPHERE,
             radius=self.radius(),
         )
-        basePosition = self.position()
-        baseOrientation = [0, 0, 0, 1]
+        base_position = self.position()
+        base_orientation = [0, 0, 0, 1]
         mass = int(self.movable())
 
-        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
-        visualShapeId = pybullet.createVisualShape(
+        pybullet.setAdditionalSearchPath(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+        visual_shape_id = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='sphere_smooth.obj',
+            fileName="sphere_smooth.obj",
             rgbaColor=[1.0, 0.0, 0.0, 1.0],
             specularColor=[1.0, 0.5, 0.5],
-            meshScale=[self.radius(), self.radius(), self.radius()]
+            meshScale=[self.radius(), self.radius(), self.radius()],
         )
 
-        self._bulletId = pybullet.createMultiBody(mass,
-              collisionShape,
-              visualShapeId,
-              basePosition,
-              baseOrientation)
+        self._bullet_id = pybullet.createMultiBody(
+            mass, collision_shape, visual_shape_id, base_position, base_orientation
+        )
 
     def update_bullet_position(self, pybullet, **kwargs):
-        if 't' not in kwargs:
+        if "t" not in kwargs:
             t = 0.0
         else:
-            t = kwargs.get('t')
+            t = kwargs.get("t")
         pos = self.position(t=t).tolist()
         if self.dimension() == 2:
             pos += [0.0]
         ori = [0, 0, 0, 1]
-        pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)
+        pybullet.resetBasePositionAndOrientation(self._bullet_id, pos, ori)

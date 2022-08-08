@@ -7,8 +7,8 @@ from dataclasses import dataclass
 class CollisionObstacleConfig:
     """Configuration dataclass for sphere obstacle.
 
-    This configuration class holds information about the dimension and 
-    the type of collision obstacle.
+    This configuration class holds information about the dimension and the type
+    of collision obstacle.
 
     Parameters:
     ------------

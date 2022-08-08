@@ -1,12 +1,19 @@
 import os
 
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+from MotionPlanningEnv.collisionObstacle import (
+    CollisionObstacle,
+    CollisionObstacleConfig,
+)
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    ComponentIncompleteError,
+    DimensionNotSuitableForEnv,
+)
 import numpy as np
 
 from dataclasses import dataclass
 from omegaconf import OmegaConf
 from typing import List, Optional
+
 
 @dataclass
 class GeometryConfig:
@@ -19,6 +26,7 @@ class GeometryConfig:
 
     position: list: Position of the obstacle
     """
+
     position: List[float]
 
 
@@ -26,7 +34,7 @@ class GeometryConfig:
 class UrdfObstacleConfig(CollisionObstacleConfig):
     """Configuration dataclass for sphere obstacle.
 
-    This configuration class holds information about the position, size 
+    This configuration class holds information about the position, size
     and randomization of a spherical obstacle.
 
     Parameters:
@@ -38,6 +46,7 @@ class UrdfObstacleConfig(CollisionObstacleConfig):
     high: GeometryConfig : Upper limit for randomization
 
     """
+
     urdf: str
     geometry: GeometryConfig
     low: Optional[GeometryConfig] = None
@@ -45,21 +54,13 @@ class UrdfObstacleConfig(CollisionObstacleConfig):
 
 
 class UrdfObstacle(CollisionObstacle):
-    def __init__(self,**kwargs):
+    def __init__(self, **kwargs):
         schema = OmegaConf.structured(UrdfObstacleConfig)
         super().__init__(schema, **kwargs)
         self.check_completeness()
 
-    def checkUrdfFile(self):
-        if 'urdf' not in self._content_dict:
-            raise ComponentIncompleteError("Missing urdf file")
-
     def urdf(self):
         return self._config.urdf
-
-    def checkGeometryCompleteness(self):
-        if 'position' not in self.geometry():
-            raise ComponentIncompleteError("Missing position in geometry for urdf obstacle")
 
     def position(self):
         return self._config.geometry.position
@@ -75,5 +76,7 @@ class UrdfObstacle(CollisionObstacle):
 
     def add_to_bullet(self, pybullet):
         if self.dimension() != 3:
-            raise DimensionNotSuitableForEnv("Pybullet only supports two dimensional obstacles")
+            raise DimensionNotSuitableForEnv(
+                "Pybullet only supports two dimensional obstacles"
+            )
         pybullet.loadURDF(fileName=self.urdf(), basePosition=self.position())
