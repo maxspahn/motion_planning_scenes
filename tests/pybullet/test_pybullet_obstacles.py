@@ -17,7 +17,7 @@ def bullet():
     p.setAdditionalSearchPath(pybullet_data.getDataPath()) #used by loadURDF
     p.setGravity(0,0,-10)
     planeId = p.loadURDF("plane.urdf")
-    p.setAdditionalSearchPath(os.path.dirname(__file__) + "/models")
+    #p.setAdditionalSearchPath(os.path.dirname(__file__) + "/models")
     return p
 
 @pytest.fixture
@@ -26,7 +26,7 @@ def bullet_gui():
     p.setAdditionalSearchPath(pybullet_data.getDataPath()) #used by loadURDF
     p.setGravity(0,0,-10)
     planeId = p.loadURDF("plane.urdf")
-    p.setAdditionalSearchPath(os.path.dirname(__file__) + "/models")
+    #p.setAdditionalSearchPath(os.path.dirname(__file__) + "/models")
     return p
 
 def test_sphereObstacle(bullet):
@@ -53,7 +53,7 @@ def test_urdfObstacle(bullet):
     obstDict = {
         "type": "sphere",
         "geometry": {"position": [0.1, 0.2, 0.4]},
-        "urdf": "duck.urdf",
+        "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
     sphereObst.add_to_bullet(bullet)
@@ -68,7 +68,7 @@ def test_urdfObstacle_gui(bullet_gui):
     obstDict = {
         "type": "sphere",
         "geometry": {"position": [0.1, 0.2, 0.4]},
-        "urdf": "duck.urdf",
+        "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
     sphereObst.add_to_bullet(bullet_gui)
