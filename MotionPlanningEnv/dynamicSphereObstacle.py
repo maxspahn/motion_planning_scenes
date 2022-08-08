@@ -58,23 +58,19 @@ class DynamicSphereObstacleConfig(CollisionObstacleConfig):
 
 class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
-        self._geometry_keys = ['trajectory', 'radius']
         schema = OmegaConf.structured(DynamicSphereObstacleConfig)
-        config = OmegaConf.create(self._content_dict)
-        self._config = OmegaConf.merge(schema, config)
-        self.checkCompleteness()
-        self.checkDimensionality()
-        self.checkGeometryCompleteness()
+        super().__init__(schema, **kwargs)
+        self.check_completeness()
+        self.check_dimensionality()
         if self.type() == 'splineSphere':
-            self._traj = SplineTrajectory(self.dim(), traj=self._config.geometry.trajectory)
+            self._traj = SplineTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
-            self._traj = AnalyticTrajectory(self.dim(), traj=self._config.geometry.trajectory)
+            self._traj = AnalyticTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
         elif self.type() == 'analyticSphere':
-            self._traj = AnalyticTrajectory(self.dim(), traj=self._config.geometry.trajectory)
+            self._traj = AnalyticTrajectory(self.dimension(), traj=self._config.geometry.trajectory)
         self._traj.concretize()
 
-    def checkDimensionality(self):
+    def check_dimensionality(self):
         if self.type() == 'splineSphere':
             dim_verification = len(self.geometry()['trajectory']['controlPoints'][0])
         elif self.type() == 'sphere' or self.type() == 'analyticSphereObstacle':
@@ -83,10 +79,18 @@ class DynamicSphereObstacle(CollisionObstacle):
             dim_verification = len(self.geometry()['trajectory'])
         else:
             raise TypeNotSupportedError(f"Obstacle type {self.type()} not supported")
-        if self.dim() != dim_verification:
+        if self.dimension() != dim_verification:
             raise DynamicSphereObstacleMissmatchDimensionError(
                 "Dimension mismatch between trajectory array and dimension"
             )
+
+
+    def dimension(self):
+        if self.type() in ["sphere", "analyticSphere"]:
+            return len(self._config.geometry.trajectory)
+        elif self.type() in ["splineSphere"]:
+            return len(self._config.geometry.trajectory.controlPoints[0])
+
 
     def traj(self):
         return self._traj
@@ -142,18 +146,18 @@ class DynamicSphereObstacle(CollisionObstacle):
             for i in range(2*samples):
                 csv_writer.writerow([x[i], y[i]])
 
-    def renderGym(self, viewer, rendering, **kwargs):
+    def render_gym(self, viewer, rendering, **kwargs):
         x = self.position(t=kwargs.get('t'))
-        if self.dim() != 2:
+        if self.dimension() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)
 
-    def add2Bullet(self, pybullet):
-        if self.dim() == 2:
+    def add_to_bullet(self, pybullet):
+        if self.dimension() == 2:
             basePosition = self.position() + [0.0]
-        elif self.dim() == 3:
+        elif self.dimension() == 3:
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
@@ -180,13 +184,13 @@ class DynamicSphereObstacle(CollisionObstacle):
               basePosition,
               baseOrientation)
 
-    def updateBulletPosition(self, pybullet, **kwargs):
+    def update_bullet_position(self, pybullet, **kwargs):
         if 't' not in kwargs:
             t = 0.0
         else:
             t = kwargs.get('t')
         pos = self.position(t=t).tolist()
-        if self.dim() == 2:
+        if self.dimension() == 2:
             pos += [0.0]
         ori = [0, 0, 0, 1]
         pybullet.resetBasePositionAndOrientation(self._bulletId, pos, ori)

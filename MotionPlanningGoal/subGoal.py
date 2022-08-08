@@ -1,5 +1,7 @@
 from abc import abstractmethod
-from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    MotionPlanningComponent,
+)
 from dataclasses import dataclass
 
 from typing import List
@@ -13,8 +15,8 @@ class SubGoalMissmatchDimensionError(Exception):
 class SubGoalConfig:
     """Configuration dataclass for sub goal.
 
-    This configuration class holds information about the 
-    the weight, accuracy required, type and position in the 
+    This configuration class holds information about the
+    the weight, accuracy required, type and position in the
     kinematic chain.
 
     Parameters:
@@ -27,41 +29,25 @@ class SubGoalConfig:
     epsilon: float: Required accuracy of the sub goal
     prime: bool: Flag for primary goal
     """
-    m: int
-    w: float
+
+    weight: float
     type: str
     indices: List[int]
     epsilon: float
-    prime: bool
-
+    is_primary_goal: bool
 
 
 class SubGoal(MotionPlanningComponent):
-    def __init__(self, **kwargs):
-        self._required_keys = [
-            "m",
-            "w",
-            "prime",
-            "indices",
-            "epsilon",
-            "type",
-        ]
-        super().__init__(**kwargs)
-
-    def checkDimensionality(self):
+    def check_dimensionality(self):
         if isinstance(self.position(), str):
             return
-        if self.m() != len(self.position()):
+        if len(self.indices()) != len(self.position()):
             raise SubGoalMissmatchDimensionError(
-                "Dimension mismatch between goal and m"
-            )
-        if self.m() != len(self.indices()):
-            raise SubGoalMissmatchDimensionError(
-                "Dimension mismatch between indices and m"
+                "Dimension mismatch between goal and indices"
             )
 
-    def isPrimeGoal(self):
-        return self._config.prime
+    def is_primary_goal(self):
+        return self._config.is_primary_goal
 
     def epsilon(self):
         return self._config.epsilon
@@ -69,16 +55,16 @@ class SubGoal(MotionPlanningComponent):
     def indices(self):
         return self._config.indices
 
-    def m(self):
-        return self._config.m
+    def dimension(self):
+        return len(self.indices())
 
     def weight(self):
-        return self._config.w
+        return self._config.weight
 
     def type(self):
         return self._config.type
 
-    def updateBulletPosition(self, pybullet, **kwargs):
+    def update_bullet_position(self, pybullet, **kwargs):
         pass
 
     @abstractmethod
@@ -96,4 +82,3 @@ class SubGoal(MotionPlanningComponent):
     @abstractmethod
     def shuffle(self):
         pass
-

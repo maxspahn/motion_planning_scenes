@@ -50,20 +50,12 @@ class SphereObstacleConfig(CollisionObstacleConfig):
 
 class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
-        self._geometry_keys = ['position', 'radius']
         schema = OmegaConf.structured(SphereObstacleConfig)
-        config = OmegaConf.create(self._content_dict)
-        self._config = OmegaConf.merge(schema, config)
-        self.checkCompleteness()
-        self.checkGeometryCompleteness()
-        self.checkDimensionality()
+        super().__init__(schema, **kwargs)
+        self.check_completeness()
 
-    def checkDimensionality(self):
-        if self.dim() != len(self.position()):
-            raise SphereObstacleMissmatchDimensionError(
-                "Dimension mismatch between position array and dimension"
-            )
+    def dimension(self):
+        return len(self._config.geometry.position)
 
     def checkGeometryCompleteness(self):
         incomplete = False
@@ -79,31 +71,28 @@ class SphereObstacle(CollisionObstacle):
         if self._config.low:
             return [np.array(self._config.low.position), self._config.low.radius]
         else:
-            return [np.ones(self.dim()) * -1, 0]
+            return [np.ones(self.dimension()) * -1, 0]
 
     def limitHigh(self):
         if self._config.high:
             return [np.array(self._config.high.position), self._config.high.radius]
         else:
-            return [np.ones(self.dim()) * 1, 1]
+            return [np.ones(self.dimension()) * 1, 1]
 
     def position(self, **kwargs):
         return self._config.geometry.position
 
     def velocity(self, **kwargs):
-        return np.zeros(self.dim())
+        return np.zeros(self.dimension())
 
     def acceleration(self, **kwargs):
-        return np.zeros(self.dim())
+        return np.zeros(self.dimension())
 
     def radius(self):
         return self._config.geometry.radius
 
-    def toDict(self):
-        return OmegaConf.to_container(self._config)
-
     def shuffle(self):
-        randomPos = np.random.uniform(self.limitLow()[0], self.limitHigh()[0], self.dim())
+        randomPos = np.random.uniform(self.limitLow()[0], self.limitHigh()[0], self.dimension())
         randomRadius = np.random.uniform(self.limitLow()[1], self.limitHigh()[1], 1)
         self._config.geometry.position = randomPos.tolist()
         self._config.geometry.radius = float(randomRadius)
@@ -123,17 +112,17 @@ class SphereObstacle(CollisionObstacle):
                 csv_writer.writerow([x[i], y[i]])
 
     def renderGym(self, viewer, rendering, **kwargs):
-        if self.dim() != 2:
+        if self.dimension() != 2:
             raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
         x = self.position()
         tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)
 
-    def add2Bullet(self, pybullet):
-        if self.dim() == 2:
+    def add_to_bullet(self, pybullet):
+        if self.dimension() == 2:
             basePosition = self.position() + [0.0]
-        elif self.dim() == 3:
+        elif self.dimension() == 3:
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")

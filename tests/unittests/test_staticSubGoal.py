@@ -1,17 +1,16 @@
 import pytest
 
 from MotionPlanningGoal.staticSubGoal import StaticSubGoal
-
 from MotionPlanningGoal.subGoal import SubGoalMissmatchDimensionError
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
+
+from omegaconf.errors import MissingMandatoryValue
 
 
 @pytest.fixture
 def simpleGoalDict():
     goalDict = {
-        "m": 2,
-        "w": 5.0,
-        "prime": True,
+        "weight": 5.0,
+        "is_primary_goal": True,
         "indices": [0, 1],
         "parent_link": 0,
         "child_link": 3,
@@ -23,14 +22,14 @@ def simpleGoalDict():
 
 
 def test_staticSubGoal(simpleGoalDict):
-    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", contentDict=simpleGoalDict)
+    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     assert "simple_static_subGoal" == simpleStaticSubGoal.name()
     assert [0.01, 0.2] == simpleStaticSubGoal.position()
     assert 0.2 == simpleStaticSubGoal.epsilon()
 
 
 def test_shuffleGoal(simpleGoalDict):
-    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", contentDict=simpleGoalDict)
+    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     simpleStaticSubGoal.shuffle()
     assert [0.01, 0.2] != simpleStaticSubGoal.position()
     assert simpleStaticSubGoal.position()[0] >= -1
@@ -40,7 +39,7 @@ def test_shuffleGoal(simpleGoalDict):
     # add limits to goalDict
     simpleGoalDict['low'] = [-2, -2]
     simpleGoalDict['high'] = [-1, -1]
-    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", contentDict=simpleGoalDict)
+    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     simpleStaticSubGoal.shuffle()
     assert [0.01, 0.2] != simpleStaticSubGoal.position()
     assert simpleStaticSubGoal.position()[0] >= -2
@@ -49,31 +48,30 @@ def test_shuffleGoal(simpleGoalDict):
     assert simpleStaticSubGoal.position()[1] <= -1
 
 def test_saving_sub_goal(simpleGoalDict):
-    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", contentDict=simpleGoalDict)
+    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     simpleStaticSubGoal.shuffle()
-    goal_dict_after =simpleStaticSubGoal.toDict()
+    goal_dict_after =simpleStaticSubGoal.dict()
     assert isinstance(goal_dict_after, dict)
     assert goal_dict_after['desired_position'][0] != 0.01
 
 
 def test_errorRaiseIncompleteDict():
     goalDict = {
-        "w": 5.0,
-        "prime": True,
+        "weight": 5.0,
         "indices": [0, 1],
         "parent_link": 0,
         "child_link": 3,
         "desired_position": [0.01, 0.2],
     }
-    with pytest.raises(ComponentIncompleteError) as e_info:
-        StaticSubGoal(name="example_static_subGoal", contentDict=goalDict)
+    with pytest.raises(MissingMandatoryValue) as e_info:
+        static_sub_goal = StaticSubGoal(name="example_static_subGoal", content_dict=goalDict)
+        is_primary_gaol = static_sub_goal.is_primary_goal()
 
 
 def test_errorRaiseMissmatichDimension():
     goalDict = {
-        "m": 1,
-        "w": 5.0,
-        "prime": True,
+        "weight": 5.0,
+        "is_primary_goal": True,
         "epsilon": 0.2,
         "indices": [0],
         "parent_link": 0,
@@ -82,4 +80,4 @@ def test_errorRaiseMissmatichDimension():
         "type": "staticSubGoal",
     }
     with pytest.raises(SubGoalMissmatchDimensionError) as e_info:
-        StaticSubGoal(name="example_static_subGoal", contentDict=goalDict)
+        StaticSubGoal(name="example_static_subGoal", content_dict=goalDict)

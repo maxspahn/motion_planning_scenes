@@ -46,12 +46,9 @@ class UrdfObstacleConfig(CollisionObstacleConfig):
 
 class UrdfObstacle(CollisionObstacle):
     def __init__(self,**kwargs):
-        super().__init__(**kwargs)
         schema = OmegaConf.structured(UrdfObstacleConfig)
-        config = OmegaConf.create(self._content_dict)
-        self._config = OmegaConf.merge(schema, config)
-        self.checkCompleteness()
-        self.checkGeometryCompleteness()
+        super().__init__(schema, **kwargs)
+        self.check_completeness()
 
     def checkUrdfFile(self):
         if 'urdf' not in self._content_dict:
@@ -73,10 +70,10 @@ class UrdfObstacle(CollisionObstacle):
     def acceleration(self):
         return np.zeros(3)
 
-    def toDict(self):
-        return OmegaConf.to_container(self._config)
+    def dimension(self):
+        return len(self._config.geometry.position)
 
-    def add2Bullet(self, pybullet):
-        if self._config.dim != 3:
+    def add_to_bullet(self, pybullet):
+        if self.dimension() != 3:
             raise DimensionNotSuitableForEnv("Pybullet only supports two dimensional obstacles")
         pybullet.loadURDF(fileName=self.urdf(), basePosition=self.position())
