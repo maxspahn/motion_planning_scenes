@@ -144,7 +144,7 @@ class SphereObstacle(CollisionObstacle):
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='sphere_smooth.obj',
+            fileName='../assets/obstacles/sphere_smooth.obj',
             rgbaColor=[1.0, 0.0, 0.0, 1.0],
             specularColor=[1.0, 0.5, 0.5],
             meshScale=[self.radius(), self.radius(), self.radius()]

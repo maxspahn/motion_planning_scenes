@@ -1,4 +1,4 @@
-rom dataclasses import dataclass
+from dataclasses import dataclass
 import numpy as np
 import os
 from copy import deepcopy
@@ -125,23 +125,26 @@ class BoxObstacle(CollisionObstacle):
     #     joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
+        print("the lwh(), {}, and type {}".format(self.lwh(), type(self.lwh())))
+
         if self.dim() == 2:
             basePosition = self.position() + [0.0]
         elif self.dim() == 3:
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=2*self.lwh())
+        print(self.lwh()) 
+        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=self.lwh())
         visualShapeId = -1
         baseOrientation = [0, 0, 0, 1]
         mass = int(self.movable())
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='sphere_smooth.obj',
+            fileName='../assets/obstacles/box.obj',
             rgbaColor=[1.0, 0.0, 0.0, 1.0],
             specularColor=[1.0, 0.5, 0.5],
-            meshScale=[self.radius(), self.radius(), self.radius()]
+            meshScale=self.lwh()
         )
         pybullet.createMultiBody(mass,
               collisionShape,
