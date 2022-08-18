@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import numpy as np
 import os
 from copy import deepcopy
@@ -27,20 +27,22 @@ class GeometryConfig:
 
 @dataclass
 class BoxObstacleConfig(CollisionObstacleConfig):
-    """Configuration dataclass for cuboid obstacle.
+    """Configuration dataclass for box obstacle.
     This configuration class holds information about the position, size 
-    and randomization of a cuboid obstacle.
+    and randomization of a box obstacle.
     Parameters:
     ------------
     geometry : GeometryConfig : Geometry of the obstacle
     movable : bool : Flag indicating whether an obstacle can be pushed around
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
+    color : list : [r,g,b] where r,g and b are floats between 0 and 1
     """
     geometry: GeometryConfig
     movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
+    color: List = field(default_factory=list) 
 
 class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
@@ -125,25 +127,24 @@ class BoxObstacle(CollisionObstacle):
     #     joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        print("the lwh(), {}, and type {}".format(self.lwh(), type(self.lwh())))
-
         if self.dim() == 2:
             basePosition = self.position() + [0.0]
         elif self.dim() == 3:
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        print(self.lwh()) 
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=self.lwh())
         visualShapeId = -1
         baseOrientation = [0, 0, 0, 1]
         mass = int(self.movable())
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        print(self._config.color)
+        print("here")
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='../assets/obstacles/box.obj',
-            rgbaColor=[1.0, 0.0, 0.0, 1.0],
-            specularColor=[1.0, 0.5, 0.5],
+            fileName='box.obj',
+            rgbaColor=[0.0, 1.0, 0.0, 1.0],
+            specularColor= [0,0.2,0], #self._config.color,
             meshScale=self.lwh()
         )
         pybullet.createMultiBody(mass,
@@ -151,3 +152,4 @@ class BoxObstacle(CollisionObstacle):
               visualShapeId,
               basePosition,
               baseOrientation)
+       
