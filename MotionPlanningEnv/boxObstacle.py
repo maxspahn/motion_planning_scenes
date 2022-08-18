@@ -4,7 +4,6 @@ import os
 from copy import deepcopy
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
-
 from omegaconf import OmegaConf
 from typing import List, Optional, Dict
 
@@ -15,7 +14,7 @@ class BoxObstacleMissmatchDimensionError(Exception):
 class GeometryConfig:
     """Configuration dataclass for geometry.
     This configuration class holds information about position
-    and radius of a sphere obstacle.
+    and geometry of a box obstacle.
     Parameters:
     ------------
     position: list: Position of the obstacle
@@ -28,21 +27,24 @@ class GeometryConfig:
 @dataclass
 class BoxObstacleConfig(CollisionObstacleConfig):
     """Configuration dataclass for box obstacle.
-    This configuration class holds information about the position, size 
-    and randomization of a box obstacle.
+     
     Parameters:
     ------------
     geometry : GeometryConfig : Geometry of the obstacle
     movable : bool : Flag indicating whether an obstacle can be pushed around
+    mass: float : mass of the object, only used if movable set to true
+    color : list : [r,g,b,a] where r,g,b and a are floats between 0 and 1
+    id: integer : identify the box with a integer 
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
-    color : list : [r,g,b] where r,g and b are floats between 0 and 1
     """
     geometry: GeometryConfig
     movable: bool = False
+    mass: float = 1
+    color: List = field(default_factory=list) 
+    id: int = -1
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
-    color: List = field(default_factory=list) 
 
 class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
@@ -54,7 +56,7 @@ class BoxObstacle(CollisionObstacle):
         self.checkCompleteness()
         self.checkGeometryCompleteness()
         self.checkDimensionality()
-
+        
     def checkDimensionality(self):
         if self.dim() != len(self.position()):
             raise BoxObstacleMissmatchDimensionError(
@@ -98,33 +100,18 @@ class BoxObstacle(CollisionObstacle):
     def toDict(self):
         return OmegaConf.to_container(self._config)
 
-    def shuffle(self):
-        randomPos = np.random.uniform(self.limitLow()[0], self.limitHigh()[0], self.dim())
-        randomLWH = np.random.uniform(self.limitLow()[1], self.limitHigh()[1], 3)
-        self._config.geometry.position = randomPos.tolist()
-        self._config.geometry.lwh = randomLWH.tolist()
-
     def movable(self):
         return self._config.movable
-
-    def toCSV(self, fileName, samples=100):
-        import numpy as np
-        import csv
-        theta = np.arange(-np.pi, np.pi + np.pi/samples, step=np.pi/samples)
-        x = self.position()[0] + (self.radius()-0.1) * np.cos(theta)
-        y = self.position()[1] + (self.radius()-0.1) * np.sin(theta)
-        with open(fileName, mode='w') as file:
-            csv_writer = csv.writer(file, delimiter=',')
-            for i in range(2*samples):
-                csv_writer.writerow([x[i], y[i]])
-
-    # def renderGym(self, viewer, rendering, **kwargs):
-    #     if self.dim() != 2:
-    #         raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
-    #     x = self.position()
-    #     tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
-    #     joint = viewer.draw_circle(self.radius())
-    #     joint.add_attr(tf)
+    
+    def renderGym(self, viewer, rendering, **kwargs):
+        raise NotImplementedError
+        # TODO: the 2 dimensional version of box, rectangle
+        # if self.dim() != 2:
+        #     raise DimensionNotSuitableForEnv("PlanarGym only supports two dimensional obstacles")
+        # x = self.position()
+        # tf = rendering.Transform(rotation=0, translation=(x[0], x[1]))
+        # joint = viewer.draw_circle(self.radius()) # <-- radius is not defined 
+        # joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
         if self.dim() == 2:
@@ -134,22 +121,19 @@ class BoxObstacle(CollisionObstacle):
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=self.lwh())
-        visualShapeId = -1
+        visualShapeId = self._config.id
         baseOrientation = [0, 0, 0, 1]
-        mass = int(self.movable())
+
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
-        print(self._config.color)
-        print("here")
+
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
             fileName='box.obj',
-            rgbaColor=[0.0, 1.0, 0.0, 1.0],
-            specularColor= [0,0.2,0], #self._config.color,
+            rgbaColor=self._config.color,  
             meshScale=self.lwh()
         )
-        pybullet.createMultiBody(mass,
+        pybullet.createMultiBody(self._config.mass,
               collisionShape,
               visualShapeId,
               basePosition,
               baseOrientation)
-       

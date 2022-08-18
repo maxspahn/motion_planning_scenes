@@ -4,7 +4,6 @@ import os
 from copy import deepcopy
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
-
 from omegaconf import OmegaConf
 from typing import List, Optional, Dict
 
@@ -40,11 +39,17 @@ class SphereObstacleConfig(CollisionObstacleConfig):
 
     geometry : GeometryConfig : Geometry of the obstacle
     movable : bool : Flag indicating whether an obstacle can be pushed around
+    mass: float : mass of the object, only used if movable set to true
+    color : list : [r,g,b,a] where r,g,b and a are floats between 0 and 1
+    id: integer : identify the box with a integer 
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
     geometry: GeometryConfig
     movable: bool = False
+    mass: float = 1
+    color: List = field(default_factory=list) 
+    id: int = -1
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
@@ -138,18 +143,17 @@ class SphereObstacle(CollisionObstacle):
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
-        visualShapeId = -1
+        visualShapeId = self._config.id
         baseOrientation = [0, 0, 0, 1]
-        mass = int(self.movable())
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='../assets/obstacles/sphere_smooth.obj',
-            rgbaColor=[1.0, 0.0, 0.0, 1.0],
-            specularColor=[1.0, 0.5, 0.5],
+            fileName='sphere.obj',
+            rgbaColor=self._config.color,
             meshScale=[self.radius(), self.radius(), self.radius()]
         )
-        pybullet.createMultiBody(mass,
+        pybullet.createMultiBody(self._config.mass,
               collisionShape,
               visualShapeId,
               basePosition,
