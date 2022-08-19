@@ -7,26 +7,18 @@ from dataclasses import dataclass
 class CollisionObstacleConfig:
     """Configuration dataclass for an obstacle.
 
-    This configuration class holds information about the dimension and 
-    the type of collision obstacle.
+    This configuration class holds information about the dimension and the type
+    of collision obstacle.
 
     Parameters:
     ------------
 
-    dim : int : Dimension of the obstacle
+    dimension : int : Dimension of the obstacle
     type : str : Type of the obstacle
     """
-    dim: int
     type: str
 
 class CollisionObstacle(MotionPlanningComponent):
-    def __init__(self, **kwargs):
-        self._required_keys = [
-            'dim',
-            'type',
-            'geometry',
-        ]
-        super().__init__(**kwargs)
 
         self.sanitize_orientation()
         self.sanitize_color()
@@ -49,6 +41,11 @@ class CollisionObstacle(MotionPlanningComponent):
 
     def dim(self):
         return self._config.dim
+
+    @abstractmethod
+    def dimension(self):
+        pass
+
 
     def type(self):
         return self._config.type
@@ -83,5 +80,5 @@ class CollisionObstacle(MotionPlanningComponent):
     def acceleration(self, **kwargs):
         pass
 
-    def updateBulletPosition(self, pybullet, **kwargs):
+    def update_bullet_position(self, pybullet, **kwargs):
         pass

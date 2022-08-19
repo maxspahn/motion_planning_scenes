@@ -5,12 +5,11 @@ from MotionPlanningEnv.dynamicSphereObstacle import DynamicSphereObstacle
 
 def test_circleObstacle():
     obstDict = {
-        "dim": 2,
         "type": "sphere",
         "geometry": {"trajectory": ["0.1 * t", "0.2 * t"], "radius": 0.2},
     }
     dynamicSphereObst = DynamicSphereObstacle(
-        name="dynamicSphere", contentDict=obstDict
+        name="dynamicSphere", content_dict=obstDict
     )
     assert "dynamicSphere" == dynamicSphereObst.name()
     assert 0.2 == dynamicSphereObst.radius()
@@ -25,12 +24,11 @@ def test_circleObstacle():
 def test_splineObstacle():
     splineDict = {'degree': 2, 'controlPoints': [[1.0, 0.0], [2.0, 0.0],[2.0, 1.0]], 'duration': 10}
     obstDict = {
-        "dim": 2,
         "type": "splineSphere",
         "geometry": {"trajectory": splineDict, "radius": 0.2},
     }
     dynamicSphereObst = DynamicSphereObstacle(
-        name="dynamicSphere", contentDict=obstDict
+        name="dynamicSphere", content_dict=obstDict
     )
     assert "dynamicSphere" == dynamicSphereObst.name()
     assert 0.2 == dynamicSphereObst.radius()

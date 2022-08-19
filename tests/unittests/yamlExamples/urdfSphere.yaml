@@ -1,5 +1,4 @@
 name: simpleUrdf
-dim: 3
 type: sphere
 geometry:
   position:

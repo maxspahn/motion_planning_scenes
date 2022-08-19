@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Testing motion planning scenes
+name: Verifying linting motion planning scenes
 
 # Controls when the workflow will run
 on: 
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  basic:
+  linting:
     runs-on: ubuntu-latest
 
     steps:
@@ -52,11 +52,15 @@ jobs:
       # install your root project, if required
       #----------------------------------------------
       - name: Install library
-        run: poetry install --no-interaction -E bullet
+        run: poetry install --no-interaction
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
       # Runs a set of commands using the runners shell
-      - name: Run pytest
-        run: PYTHONPATH=src/ poetry run python -m pytest tests/
+      - name: Run pylint on MotionPlanningEnv
+        run: |
+          PYTHONPATH=src/ poetry run pylint --fail-under=9 MotionPlanningEnv
+      - name: Run pylint on MotionPlanningGoal
+        run: |
+          PYTHONPATH=src/ poetry run pylint --fail-under=9 MotionPlanningGoal
 
