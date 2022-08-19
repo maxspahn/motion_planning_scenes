@@ -98,9 +98,6 @@ class BoxObstacle(CollisionObstacle):
     def toDict(self):
         return OmegaConf.to_container(self._config)
 
-    def movable(self):
-        return self._config.movable
-    
     def renderGym(self, viewer, rendering, **kwargs):
         raise NotImplementedError
         # TODO: the 2 dimensional version of box, rectangle
@@ -118,15 +115,15 @@ class BoxObstacle(CollisionObstacle):
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=[self.length(), self.width(), self.heigth()])
-        visualShapeId = self._config.id
-        baseOrientation = self._config.orientation
+        visualShapeId = self.id()
+        baseOrientation = self.orientation()
 
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
 
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
             fileName='box.obj',
-            rgbaColor=self._config.color,  
+            rgbaColor=self.color(),  
             meshScale=[self.length(), self.width(), self.heigth()]
         )
         pybullet.createMultiBody(self._config.mass,
