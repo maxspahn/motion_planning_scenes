@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class CollisionObstacleConfig:
-    """Configuration dataclass for sphere obstacle.
+    """Configuration dataclass for an obstacle.
 
     This configuration class holds information about the dimension and 
     the type of collision obstacle.
@@ -38,6 +38,21 @@ class CollisionObstacle(MotionPlanningComponent):
     def geometry(self):
         return self._config.geometry
 
+    def orientation(self):
+        return self._config.geometry.orientation
+
+    def movable(self):
+        return self._config.movable
+
+    def mass(self):
+        return self._config.mass
+
+    def color(self):
+        return self._config.color
+
+    def id(self):
+        return self._config.id
+    
     @abstractmethod
     def position(self, **kwargs):
         pass
