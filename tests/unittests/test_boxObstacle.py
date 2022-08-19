@@ -68,7 +68,6 @@ def test_orientation_incorrect_shape():
         BoxObstacle(name='simpleBox', contentDict=obstDict)
 
 def test_color_incorrect_shape():
-    # TODO: implement a check such as assert len(color) == 4 
     obstDict = {'dim': 3,
             'type': 'box', 
             'geometry': {'position': [0.1, 0.2, 0.5], 'length': 0.5, 'width': 0.5, 'heigth': 0.5},
@@ -76,6 +75,16 @@ def test_color_incorrect_shape():
             }
     with pytest.raises(ValueError) as _:
         BoxObstacle(name='simpleBox', contentDict=obstDict)
+
+def test_negative_mass():
+    obstDict = {'dim': 3,
+            'type': 'box', 
+            'geometry': {'position': [0.1, 0.2, 0.5], 'length': 0.5, 'width': 0.5, 'heigth': 0.5},
+            'mass': -15, 
+            }
+    with pytest.raises(ValueError) as _:
+        BoxObstacle(name='simpleBox', contentDict=obstDict)
+
 
 def test_color_incorrect_type():
     obstDict = {'dim': 3,

@@ -19,7 +19,6 @@ class CollisionObstacleConfig:
     dim: int
     type: str
 
-
 class CollisionObstacle(MotionPlanningComponent):
     def __init__(self, **kwargs):
         self._required_keys = [
@@ -31,17 +30,22 @@ class CollisionObstacle(MotionPlanningComponent):
 
         self.sanitize_orientation()
         self.sanitize_color()
+        self.sanitize_mass()
 
     def sanitize_orientation(self):
         if 'orientation' in self._content_dict:
             if len(self._content_dict['orientation']) != 4:
                 raise ValueError("incorrect orientation shape: {}, which should be (4,)".format(len(self._content_dict['orientation'])))
 
-
     def sanitize_color(self):
         if 'color' in self._content_dict:
             if len(self._content_dict['color']) != 4:
                 raise ValueError("incorrect color shape: {}, which should be (4,)".format(len(self._content_dict['color'])))
+
+    def sanitize_mass(self):
+        if 'mass' in self._content_dict:
+            if self._content_dict['mass'] <= 0:
+                raise ValueError("negative mass: {}, which should positive".format(self._content_dict['mass']))
 
     def dim(self):
         return self._config.dim
