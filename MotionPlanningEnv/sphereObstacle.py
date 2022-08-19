@@ -56,7 +56,6 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
-
     geometry: GeometryConfig
     orientation: list[float] = field(default_factory=list)
     movable: bool = False
@@ -72,9 +71,6 @@ class SphereObstacle(CollisionObstacle):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
         self.check_completeness()
-
-    def dimension(self):
-        return len(self._config.geometry.position)
 
     def limit_low(self):
         if self._config.low:
@@ -147,7 +143,7 @@ class SphereObstacle(CollisionObstacle):
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
         collisionShape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
         visualShapeId = self.id()
-        baseOrientation = [0, 0, 0, 1]
+        baseOrientation = self.orientation()
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
 
         visualShapeId = pybullet.createVisualShape(

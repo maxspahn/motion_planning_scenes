@@ -52,17 +52,16 @@ class BoxObstacleConfig(CollisionObstacleConfig):
 
 class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-        super().__init__( **kwargs)
-        self._geometry_keys = ['position', 'length', 'width', 'heigth']
         schema = OmegaConf.structured(BoxObstacleConfig)
-        config = OmegaConf.create(self._content_dict)
-        self._config = OmegaConf.merge(schema, config)
-        self.checkCompleteness()
+        super().__init__(schema, **kwargs)
+        self._geometry_keys = ['position', 'length', 'width', 'heigth']
+
+        self.check_completeness()
         self.checkGeometryCompleteness()
         self.checkDimensionality()
         
     def checkDimensionality(self):
-        if self.dim() != len(self.position()):
+        if self.dimension() != len(self.position()):
             raise BoxObstacleMissmatchDimensionError(
                 "Dimension mismatch between position array and dimension"
             )
@@ -109,7 +108,7 @@ class BoxObstacle(CollisionObstacle):
         # joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.dim() == 3:
+        if self.dimension() == 3:
             basePosition = self.position()
         else:
             raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")

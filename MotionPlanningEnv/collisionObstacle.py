@@ -16,9 +16,17 @@ class CollisionObstacleConfig:
     dimension : int : Dimension of the obstacle
     type : str : Type of the obstacle
     """
+    dimension: int
     type: str
 
 class CollisionObstacle(MotionPlanningComponent):
+
+    def __init__(self, schema, **kwargs):
+        self._required_keys = [
+            'dimension',
+            'type',
+        ]
+        super().__init__(schema, **kwargs)
 
         self.sanitize_orientation()
         self.sanitize_color()
@@ -39,13 +47,8 @@ class CollisionObstacle(MotionPlanningComponent):
             if self._content_dict['mass'] <= 0:
                 raise ValueError("negative mass: {}, which should positive".format(self._content_dict['mass']))
 
-    def dim(self):
-        return self._config.dim
-
-    @abstractmethod
     def dimension(self):
-        pass
-
+        return self._config.dimension
 
     def type(self):
         return self._config.type
