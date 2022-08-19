@@ -5,14 +5,14 @@ from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncomple
 from omegaconf import OmegaConf
 from typing import Optional
 
-class CilinderObstacleMissmatchDimensionError(Exception):
+class CylinderObstacleMissmatchDimensionError(Exception):
     pass
 
 @dataclass
 class GeometryConfig:
     """Configuration dataclass for geometry.
     This configuration class holds information about position
-    and geometry of a cilinder obstacle.
+    and geometry of a cylinder obstacle.
 
     Parameters:
     ------------
@@ -25,8 +25,8 @@ class GeometryConfig:
     heigth: float
 
 @dataclass
-class CilinderObstacleConfig(CollisionObstacleConfig):
-    """Configuration dataclass for cilinder obstacle.
+class CylinderObstacleConfig(CollisionObstacleConfig):
+    """Configuration dataclass for cylinder obstacle.
      
     Parameters:
     ------------
@@ -48,11 +48,11 @@ class CilinderObstacleConfig(CollisionObstacleConfig):
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
-class CilinderObstacle(CollisionObstacle):
+class CylinderObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self._geometry_keys = ['position', 'radius', 'heigth']
-        schema = OmegaConf.structured(CilinderObstacleConfig)
+        schema = OmegaConf.structured(CylinderObstacleConfig)
         config = OmegaConf.create(self._content_dict)
         self._config = OmegaConf.merge(schema, config)
         self.checkCompleteness()
@@ -61,7 +61,7 @@ class CilinderObstacle(CollisionObstacle):
         
     def checkDimensionality(self):
         if self.dim() != len(self.position()):
-            raise CilinderObstacleMissmatchDimensionError(
+            raise CylinderObstacleMissmatchDimensionError(
                 "Dimension mismatch between position array and dimension"
             )
 
@@ -110,7 +110,7 @@ class CilinderObstacle(CollisionObstacle):
 
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
-            fileName='cilinder.obj',
+            fileName='cylinder.obj',
             rgbaColor=self.color(),  
             meshScale=[self.radius(), self.radius(), self.height()]
         )
