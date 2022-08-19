@@ -52,9 +52,11 @@ class CylinderObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self._geometry_keys = ['position', 'radius', 'heigth']
+
         schema = OmegaConf.structured(CylinderObstacleConfig)
         config = OmegaConf.create(self._content_dict)
         self._config = OmegaConf.merge(schema, config)
+    
         self.checkCompleteness()
         self.checkGeometryCompleteness()
         self.checkDimensionality()
@@ -87,7 +89,7 @@ class CylinderObstacle(CollisionObstacle):
     def radius(self):
         return self._config.geometry.radius
 
-    def height(self):
+    def heigth(self):
         return self._config.geometry.heigth
 
     def toDict(self):
