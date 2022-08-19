@@ -3,12 +3,11 @@ import pytest
 from MotionPlanningGoal.goalComposition import GoalComposition, MultiplePrimeGoalsError
 
 
-def test_goalComposition_single():
-    goalDict = {
+def test_goal_composition_single():
+    goal_dict = {
         "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
+            "weight": 5.0,
+            "is_primary_goal": True,
             "indices": [0, 1],
             "parent_link": 0,
             "child_link": 3,
@@ -17,23 +16,22 @@ def test_goalComposition_single():
             "type": "staticSubGoal",
         }
     }
-    goalComposition = GoalComposition(
-        name="example_static_subGoal", contentDict=goalDict
+    goal_composition = GoalComposition(
+        name="example_static_subGoal", content_dict=goal_dict
     )
-    subGoal0 = goalComposition.primeGoal()
-    assert "subgoal0" == subGoal0.name()
-    assert subGoal0.indices() == [0, 1]
-    assert subGoal0.parentLink() == 0
-    assert isinstance(subGoal0.parentLink(), int)
+    sub_goal_0 = goal_composition.primary_goal()
+    assert "subgoal0" == sub_goal_0.name()
+    assert sub_goal_0.indices() == [0, 1]
+    assert sub_goal_0.parent_link() == 0
+    assert isinstance(sub_goal_0.parent_link(), int)
 
 
 @pytest.fixture
-def multiGoalDict():
-    goalDict = {
+def multi_goal_dict():
+    goal_dict = {
         "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
+            "weight": 5.0,
+            "is_primary_goal": True,
             "indices": [0, 1],
             "parent_link": 0,
             "child_link": 3,
@@ -42,9 +40,8 @@ def multiGoalDict():
             "type": "staticSubGoal",
         },
         "subgoal1": {
-            "m": 2,
-            "w": 5.0,
-            "prime": False,
+            "weight": 5.0,
+            "is_primary_goal": False,
             "indices": [0, 1],
             "parent_link": 0,
             "child_link": 3,
@@ -53,38 +50,37 @@ def multiGoalDict():
             "type": "staticSubGoal",
         },
     }
-    return goalDict
+    return goal_dict
 
 
-def test_goalCompositionMulti(multiGoalDict):
-    goalComposition = GoalComposition(
-        name="example_static_subGoal", contentDict=multiGoalDict
+def test_goal_composition_multi(multi_goal_dict):
+    goal_composition = GoalComposition(
+        name="example_static_subGoal", content_dict=multi_goal_dict
     )
-    subGoal1 = goalComposition.getGoalByName("subgoal1")
-    assert "subgoal1" == subGoal1.name()
-    assert subGoal1.position() == [-0.21, 0.2]
-    subGoals = goalComposition.subGoals()
-    assert len(subGoals) == 2
+    sub_goal_1 = goal_composition.get_goal_by_name("subgoal1")
+    assert "subgoal1" == sub_goal_1.name()
+    assert sub_goal_1.position() == [-0.21, 0.2]
+    sub_goals = goal_composition.sub_goals()
+    assert len(sub_goals) == 2
 
 
-def test_shuffleGoalComposition(multiGoalDict):
-    goalComposition = GoalComposition(
-        name="example_static_subGoal", contentDict=multiGoalDict
+def test_shuffleGoalComposition(multi_goal_dict):
+    goal_composition = GoalComposition(
+        name="example_static_subGoal", content_dict=multi_goal_dict
     )
     # verification that returns are actually only pointers
-    subGoal1 = goalComposition.getGoalByName('subgoal1')
-    assert subGoal1.position() == [-0.21, 0.2]
-    goalComposition.shuffle()
-    assert goalComposition.getGoalByName('subgoal1').position() != [-0.21, 0.2]
-    assert subGoal1.position() != [-0.21, 0.2]
+    sub_goal_1 = goal_composition.get_goal_by_name('subgoal1')
+    assert sub_goal_1.position() == [-0.21, 0.2]
+    goal_composition.shuffle()
+    assert goal_composition.get_goal_by_name('subgoal1').position() != [-0.21, 0.2]
+    assert sub_goal_1.position() != [-0.21, 0.2]
 
 
 def test_errorMultiplePrimeGoals():
     goalDict = {
         "subgoal0": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
+            "weight": 5.0,
+            "is_primary_goal": True,
             "indices": [0, 1],
             "parent_link": 0,
             "child_link": 3,
@@ -93,9 +89,8 @@ def test_errorMultiplePrimeGoals():
             "type": "staticSubGoal",
         },
         "subgoal1": {
-            "m": 2,
-            "w": 5.0,
-            "prime": True,
+            "weight": 5.0,
+            "is_primary_goal": True,
             "indices": [0, 1],
             "parent_link": 0,
             "child_link": 3,
@@ -105,4 +100,4 @@ def test_errorMultiplePrimeGoals():
         },
     }
     with pytest.raises(MultiplePrimeGoalsError) as e_info:
-        GoalComposition(name="example_static_subGoal", contentDict=goalDict)
+        GoalComposition(name="example_static_subGoal", content_dict=goalDict)

@@ -11,12 +11,14 @@ class SubGoalCreator(object):
     def __init__(self):
         pass
 
-    def createSubGoal(self, subGoalType, name, contentDict):
-        if subGoalType == 'staticSubGoal':
-            return StaticSubGoal(name=name, contentDict=contentDict)
-        elif subGoalType == 'analyticSubGoal' or subGoalType == 'splineSubGoal':
-            return DynamicSubGoal(name=name, contentDict=contentDict)
-        elif subGoalType == 'staticJointSpaceSubGoal':
-            return StaticJointSpaceSubGoal(name=name, contentDict=contentDict)
+    def create_sub_goal(self, sub_goal_type, name, content_dict):
+        if sub_goal_type == "staticSubGoal":
+            return StaticSubGoal(name=name, content_dict=content_dict)
+        elif sub_goal_type in ("analyticSubGoal", "splineSubGoal"):
+            return DynamicSubGoal(name=name, content_dict=content_dict)
+        elif sub_goal_type == "staticJointSpaceSubGoal":
+            return StaticJointSpaceSubGoal(name=name, content_dict=content_dict)
         else:
-            raise UnknownSubGoalType("SubGoalType %s is not known" % subGoalType)
+            raise UnknownSubGoalType(
+                f"SubGoalType {sub_goal_type} is not known"
+            )

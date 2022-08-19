@@ -10,12 +10,14 @@ class ObstacleCreator(object):
     def __init__(self):
         pass
 
-    def createObstacle(self, obstacleType, name, contentDict):
-        if obstacleType == "sphereObstacle":
-            return SphereObstacle(name=name, contentDict=contentDict)
-        elif obstacleType == "analyticSphere":
-            return DynamicSphereObstacle(name=name, contentDict=contentDict)
-        elif obstacleType == "splineSphere":
-            return DynamicSphereObstacle(name=name, contentDict=contentDict)
+    def create_obstacle(self, obstacle_type, name, content_dict):
+        if obstacle_type == "sphereObstacle":
+            return SphereObstacle(name=name, content_dict=content_dict)
+        elif obstacle_type == "analyticSphere":
+            return DynamicSphereObstacle(name=name, content_dict=content_dict)
+        elif obstacle_type == "splineSphere":
+            return DynamicSphereObstacle(name=name, content_dict=content_dict)
         else:
-            raise UnknownObstacleType("ObstacleType %s is not know" % obstacleType)
+            raise UnknownObstacleType(
+                f"ObstacleType {obstacle_type} is not know"
+            )

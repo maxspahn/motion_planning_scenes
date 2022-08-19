@@ -1,84 +1,97 @@
-from abc import ABC, abstractmethod
-from MotionPlanningGoal.staticSubGoal import SubGoalConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    MotionPlanningComponent,
+)
+from MotionPlanningGoal.subGoal import SubGoal
 from MotionPlanningGoal.subGoalCreator import SubGoalCreator
-from MotionPlanningGoal.staticJointSpaceSubGoal import JointSpaceGoalsNotSupportedError
+from MotionPlanningGoal.staticJointSpaceSubGoal import (
+    JointSpaceGoalsNotSupportedError,
+)
 
-from dataclasses import dataclass
+import yaml
 from omegaconf import OmegaConf
-from typing import List, Optional, Dict
+
 
 class MultiplePrimeGoalsError(Exception):
     pass
 
+
 class GoalComposition(MotionPlanningComponent):
     def __init__(self, **kwargs):
-        self._required_keys = [
-            "subgoal0",
-        ]
-        super().__init__(**kwargs)
+        if "content_dict" in kwargs and "name" in kwargs:
+            self._content_dict = kwargs.get("content_dict")
+            self._name = kwargs.get("name")
+        elif "file_name" in kwargs:
+            with open(kwargs.get("file_name"), "r") as stream:
+                self._content_dict = yaml.safe_load(stream)
+            self._name = self._content_dict["name"]
+            del self._content_dict["name"]
         self._config = OmegaConf.create(self._content_dict)
-        self._primeGoalIndex = -1
-        self._subGoals = []
-        self._subGoalCreator = SubGoalCreator()
-        self.parseSubGoals()
+        self._primary_goal_index = -1
+        self._sub_goals = []
+        self._sub_goal_creator = SubGoalCreator()
+        self.parse_sub_goals()
 
-    def parseSubGoals(self):
-        for subGoalName in self._config.keys():
-            subGoalType = self._config[subGoalName].type
-            subGoalDict = self._config[subGoalName]
-            subGoal = self._subGoalCreator.createSubGoal(subGoalType, subGoalName, subGoalDict)
-            if subGoal.isPrimeGoal():
-                if self._primeGoalIndex >= 0:
-                    raise MultiplePrimeGoalsError("There are multiple prime goals. Using first prime goal")
+    def parse_sub_goals(self):
+        for sub_goal_name in self._config.keys():
+            sub_goal_type = self._config[sub_goal_name].type
+            sub_goal_dict = self._config[sub_goal_name]
+            sub_goal = self._sub_goal_creator.create_sub_goal(
+                sub_goal_type, sub_goal_name, sub_goal_dict
+            )
+            if sub_goal.is_primary_goal():
+                if self._primary_goal_index >= 0:
+                    raise MultiplePrimeGoalsError(
+                        "There are multiple prime goals. Using first prime goal"
+                    )
                 else:
-                    self._primeGoalIndex = len(self._subGoals)
-            self._subGoals.append(subGoal)
+                    self._primary_goal_index = len(self._sub_goals)
+            self._sub_goals.append(sub_goal)
 
-    def primeGoal(self):
-        return self.getGoalByIndex(self._primeGoalIndex)
+    def primary_goal(self):
+        return self.get_goal_by_index(self._primary_goal_index)
 
-    def subGoals(self):
-        return self._subGoals
+    def sub_goals(self):
+        return self._sub_goals
 
-    def getGoalByName(self, name):
-        for subGoal in self.subGoals():
-            if subGoal.name() == name:
-                return subGoal
+    def get_goal_by_name(self, name) -> SubGoal:
+        for sub_goal in self._sub_goals:
+            if sub_goal.name() == name:
+                return sub_goal
 
-    def getGoalByIndex(self, index):
-        return self._subGoals[index]
+    def get_goal_by_index(self, index):
+        return self._sub_goals[index]
 
     def evaluate(self, **kwargs):
         evals = []
-        for subGoal in self._subGoals:
-            evals += subGoal.evaluate(**kwargs)
+        for sub_goal in self._sub_goals:
+            evals += sub_goal.evaluate(**kwargs)
         return evals
 
-    def toDict(self):
-        compositionDict = {}
-        for subGoal in self._subGoals:
-            compositionDict[subGoal.name()] = subGoal.toDict()
-        return compositionDict
+    def dict(self):
+        composition_dict = {}
+        for sub_goal in self._sub_goals:
+            composition_dict[sub_goal.name()] = sub_goal.dict()
+        return composition_dict
 
     def shuffle(self):
-        for subGoal in self._subGoals:
-            subGoal.shuffle()
+        for sub_goal in self._sub_goals:
+            sub_goal.shuffle()
 
-    def renderGym(self, viewer, rendering, **kwargs):
-        for subGoal in self._subGoals:
+    def render_gym(self, viewer, rendering, **kwargs):
+        for sub_goal in self._sub_goals:
             try:
-                subGoal.renderGym(viewer, rendering, **kwargs)
-            except JointSpaceGoalsNotSupportedError as e:
-                print(f"Skipping visualization of joint space goal.")
+                sub_goal.render_gym(viewer, rendering, **kwargs)
+            except JointSpaceGoalsNotSupportedError as _:
+                print("Skipping visualization of joint space goal.")
 
-    def add2Bullet(self, pybullet):
-        for subGoal in self._subGoals:
+    def add_to_bullet(self, pybullet):
+        for sub_goal in self._sub_goals:
             try:
-                subGoal.add2Bullet(pybullet, position=self.primeGoal().position())
-            except JointSpaceGoalsNotSupportedError as e:
-                print(f"Skipping visualization of joint space goal.")
+                sub_goal.add_to_bullet(
+                    pybullet, position=self.primary_goal().position()
+                )
+            except JointSpaceGoalsNotSupportedError as _:
+                print("Skipping visualization of joint space goal.")
 
-    def updateBulletPosition(self, pybullet, **kwargs):
-        self.primeGoal().updateBulletPosition(pybullet, **kwargs)
-
+    def update_bullet_position(self, pybullet, **kwargs):
+        self.primary_goal().update_bullet_position(pybullet, **kwargs)

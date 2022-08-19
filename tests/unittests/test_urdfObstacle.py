@@ -3,22 +3,21 @@ import os
 from MotionPlanningEnv.urdfObstacle import UrdfObstacle
 
 
-def test_urdfObstacle():
-    obstDict = {
-        "dim": 3,
+def test_urdf_obstacle():
+    obst_dict = {
         "type": "sphere",
         "geometry": {"position": [0.1, 0.2, 0.4]},
         "urdf": "duck.urdf",
     }
-    sphereObst = UrdfObstacle(name="simpleUrdf", contentDict=obstDict)
-    assert "simpleUrdf" == sphereObst.name()
-    assert [0.1, 0.2, 0.4] == sphereObst.position()
-    assert "duck.urdf" == sphereObst.urdf()[-9:]
+    sphere_obst = UrdfObstacle(name="simpleUrdf", content_dict=obst_dict)
+    assert "simpleUrdf" == sphere_obst.name()
+    assert [0.1, 0.2, 0.4] == sphere_obst.position()
+    assert "duck.urdf" == sphere_obst.urdf()[-9:]
 
 
-def test_yamlLoad():
-    yamlFile = os.path.join(os.path.dirname(__file__), 'yamlExamples/urdfSphere.yaml')
-    sphereObst = UrdfObstacle(fileName=yamlFile)
-    assert "simpleUrdf" == sphereObst.name()
-    assert [0.1, 0.2, 0.4] == sphereObst.position()
-    assert "sphere_015.urdf" in sphereObst.urdf()
+def test_yaml_load():
+    yaml_file = os.path.join(os.path.dirname(__file__), 'yamlExamples/urdfSphere.yaml')
+    sphere_obst = UrdfObstacle(file_name=yaml_file)
+    assert "simpleUrdf" == sphere_obst.name()
+    assert [0.1, 0.2, 0.4] == sphere_obst.position()
+    assert "sphere_015.urdf" in sphere_obst.urdf()
