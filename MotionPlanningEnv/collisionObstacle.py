@@ -29,6 +29,20 @@ class CollisionObstacle(MotionPlanningComponent):
         ]
         super().__init__(**kwargs)
 
+        self.sanitize_orientation()
+        self.sanitize_color()
+
+    def sanitize_orientation(self):
+        if 'orientation' in self._content_dict:
+            if len(self._content_dict['orientation']) != 4:
+                raise ValueError("incorrect orientation shape: {}, which should be (4,)".format(len(self._content_dict['orientation'])))
+
+
+    def sanitize_color(self):
+        if 'color' in self._content_dict:
+            if len(self._content_dict['color']) != 4:
+                raise ValueError("incorrect color shape: {}, which should be (4,)".format(len(self._content_dict['color'])))
+
     def dim(self):
         return self._config.dim
 
