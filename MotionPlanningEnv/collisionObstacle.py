@@ -57,7 +57,8 @@ class CollisionObstacle(MotionPlanningComponent):
         return self._config.geometry
 
     def orientation(self):
-        return self._config.geometry.orientation
+        if 'orientation' in self._config.geometry.orientation:
+            return self._config.geometry.orientation 
 
     def movable(self):
         return self._config.movable

@@ -3,7 +3,7 @@ import os
 from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 from omegaconf import OmegaConf
-from typing import Optional
+from typing import List, Optional
 
 class BoxObstacleMissmatchDimensionError(Exception):
     pass
@@ -21,7 +21,7 @@ class GeometryConfig:
     width: float: Width of the obstacle
     heigth: float: Heigth of the obstacle
     """
-    position: list[float]
+    position: List[float]
     length: float
     width: float
     heigth: float
@@ -42,10 +42,10 @@ class BoxObstacleConfig(CollisionObstacleConfig):
     high : GeometryConfig : Upper limit for randomization
     """
     geometry: GeometryConfig
-    orientation: list[float] = field(default_factory=list)
+    orientation: List[float] = field(default_factory=list)
     movable: bool = False
     mass: float = 1
-    color: list[float] = field(default_factory=list) 
+    color: List[float] = field(default_factory=list) 
     id: int = -1
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None

@@ -2,11 +2,10 @@ from dataclasses import dataclass, field
 import numpy as np
 import os
 
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
 from omegaconf import OmegaConf
 from typing import List, Optional
 import csv
+
 from MotionPlanningEnv.collisionObstacle import (
     CollisionObstacle,
     CollisionObstacleConfig,
@@ -14,10 +13,6 @@ from MotionPlanningEnv.collisionObstacle import (
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
     DimensionNotSuitableForEnv,
 )
-
-from omegaconf import OmegaConf
-from typing import List, Optional
-
 
 class SphereObstacleMissmatchDimensionError(Exception):
     pass
@@ -35,7 +30,7 @@ class GeometryConfig:
     position: list: [x,y,z] Position of the obstacle
     radius: float: Radius of the obstacle
     """
-    position: list[float]
+    position: List[float]
     radius: float
 
 @dataclass
@@ -57,14 +52,13 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     high : GeometryConfig : Upper limit for randomization
     """
     geometry: GeometryConfig
-    orientation: list[float] = field(default_factory=list)
+    orientation: List[float] = field(default_factory=list)
     movable: bool = False
     mass: float = 1
-    color: list[float] = field(default_factory=list) 
+    color: List[float] = field(default_factory=list) 
     id: int = -1
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
-
 
 class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
