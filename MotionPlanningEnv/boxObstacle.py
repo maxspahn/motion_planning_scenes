@@ -9,19 +9,17 @@ class BoxObstacleMissmatchDimensionError(Exception):
     pass
 
 @dataclass
-class GeometryConfig:
+class GeometryConfig(CollisionObstacleConfig):
     """Configuration dataclass for geometry.
     This configuration class holds information about position
     and geometry of a box obstacle.
 
     Parameters:
     ------------
-    position: list: [x,y,z] Position of the obstacle
     length: float: Lenght of the obstacle
     width: float: Width of the obstacle
     heigth: float: Heigth of the obstacle
     """
-    position: List[float]
     length: float
     width: float
     heigth: float
@@ -52,13 +50,18 @@ class BoxObstacleConfig(CollisionObstacleConfig):
 
 class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
+        print("creating boxObstacle")
         schema = OmegaConf.structured(BoxObstacleConfig)
         super().__init__(schema, **kwargs)
-        self._geometry_keys = ['position', 'length', 'width', 'heigth']
+        self._geometry_keys = ['length', 'width', 'heigth']
 
         self.check_completeness()
         self.checkGeometryCompleteness()
         self.checkDimensionality()
+
+        print("geometric_keys {}".format(self._geometry_keys))
+
+        print("required keys {}".format(self._required_keys))
         
     def checkDimensionality(self):
         if self.dimension() != len(self.position()):
@@ -76,14 +79,8 @@ class BoxObstacle(CollisionObstacle):
         if incomplete:
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
 
-    def position(self):
-        return self._config.geometry.position
-
-    def velocity(self):
-        raise NotImplementedError
-
-    def acceleration(self):
-        raise NotImplementedError
+    def geometry(self):
+        return self._config.geometry
 
     def length(self):
         return self._config.geometry.length

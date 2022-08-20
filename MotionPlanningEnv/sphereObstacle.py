@@ -27,10 +27,8 @@ class GeometryConfig:
 
     Parameters:
     ------------
-    position: list: [x,y,z] Position of the obstacle
     radius: float: Radius of the obstacle
     """
-    position: List[float]
     radius: float
 
 @dataclass

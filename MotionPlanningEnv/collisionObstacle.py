@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from MotionPlanningSceneHelpers.motionPlanningComponent import MotionPlanningComponent
 
+from omegaconf import OmegaConf
+from typing import List
 from dataclasses import dataclass
 
 @dataclass
@@ -12,18 +14,17 @@ class CollisionObstacleConfig:
 
     Parameters:
     ------------
-
-    dimension : int : Dimension of the obstacle
+    position: list: [x,y,z] Position of the obstacle
     type : str : Type of the obstacle
     """
-    dimension: int
+    position: List[float]
     type: str
 
 class CollisionObstacle(MotionPlanningComponent):
 
     def __init__(self, schema, **kwargs):
         self._required_keys = [
-            'dimension',
+            'position',
             'type',
         ]
         super().__init__(schema, **kwargs)
@@ -48,17 +49,23 @@ class CollisionObstacle(MotionPlanningComponent):
                 raise ValueError("negative mass: {}, which should positive".format(self._content_dict['mass']))
 
     def dimension(self):
-        return self._config.dimension
+        return len(self._config.position)
 
     def type(self):
         return self._config.type
 
+    @abstractmethod
     def geometry(self):
-        return self._config.geometry
+        pass
 
-    def orientation(self):
-        if 'orientation' in self._config.geometry.orientation:
-            return self._config.geometry.orientation 
+    def position(self):
+        return self._config.position
+
+    def velocity(self):
+        raise NotImplementedError
+
+    def acceleration(self):
+        raise NotImplementedError
 
     def movable(self):
         return self._config.movable
@@ -72,17 +79,5 @@ class CollisionObstacle(MotionPlanningComponent):
     def id(self):
         return self._config.id
     
-    @abstractmethod
-    def position(self, **kwargs):
-        pass
-
-    @abstractmethod
-    def velocity(self, **kwargs):
-        pass
-
-    @abstractmethod
-    def acceleration(self, **kwargs):
-        pass
-
     def update_bullet_position(self, pybullet, **kwargs):
         pass

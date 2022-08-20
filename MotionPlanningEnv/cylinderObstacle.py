@@ -16,11 +16,9 @@ class GeometryConfig:
 
     Parameters:
     ------------
-    position: list: [x,y,z] Position of the obstacle
     radius: float: radius of the obstacle
     heigth: float: Heigth of the obstacle
     """
-    position: List[float]
     radius: float
     heigth: float
 
@@ -54,7 +52,7 @@ class CylinderObstacle(CollisionObstacle):
         schema = OmegaConf.structured(CylinderObstacleConfig)
         super().__init__(schema, **kwargs)
 
-        self._geometry_keys = ['position', 'radius', 'heigth']
+        self._geometry_keys = ['radius', 'heigth']
 
         self.check_completeness()
         self.checkGeometryCompleteness()
