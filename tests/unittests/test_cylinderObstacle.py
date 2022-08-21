@@ -2,7 +2,6 @@ import pytest
 
 from MotionPlanningEnv.cylinderObstacle import CylinderObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
-from MotionPlanningEnv.cylinderObstacle import CylinderObstacleMissmatchDimensionError
 
 def test_cylinderObstacle():
     obstDict = {'type': 'cylinder', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.5, 'heigth': 0.5}}

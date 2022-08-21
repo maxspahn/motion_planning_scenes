@@ -30,7 +30,7 @@ def bullet_gui():
     return p
 
 def test_sphereObstacle(bullet):
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     sphereObst.add_to_bullet(bullet)
     for i in range(100):
@@ -40,7 +40,7 @@ def test_sphereObstacle(bullet):
 
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_sphereObstacle_gui(bullet_gui):
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     sphereObst.add_to_bullet(bullet_gui)
     for i in range(100):

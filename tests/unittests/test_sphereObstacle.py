@@ -2,7 +2,6 @@ from omegaconf.errors import MissingMandatoryValue
 import pytest
 
 from MotionPlanningEnv.sphereObstacle import SphereObstacle
-from MotionPlanningEnv.sphereObstacle import SphereObstacleMissmatchDimensionError
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
 
 

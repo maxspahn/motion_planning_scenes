@@ -79,7 +79,8 @@ class CollisionObstacle(MotionPlanningComponent):
         return self._config.geometry
     
     def orientation(self):
-        return self._config.orientation()
+        if "orientation" in self._config.orientation:
+            return self._config.orientation()
 
     def update_bullet_position(self, pybullet, **kwargs):
         pass
