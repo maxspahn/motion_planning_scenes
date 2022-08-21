@@ -1,9 +1,17 @@
 from dataclasses import dataclass, field
 import os
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+
 from omegaconf import OmegaConf
 from typing import List, Optional
+
+from MotionPlanningEnv.collisionObstacle import (
+    CollisionObstacle,
+    CollisionObstacleConfig,
+)
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    ComponentIncompleteError,
+    DimensionNotSuitableForEnv,
+)
 
 class CylinderObstacleMissmatchDimensionError(Exception):
     pass
@@ -11,8 +19,7 @@ class CylinderObstacleMissmatchDimensionError(Exception):
 @dataclass
 class GeometryConfig:
     """Configuration dataclass for geometry.
-    This configuration class holds information about position
-    and geometry of a cylinder obstacle.
+    This configuration class holds information about the geometry of a cylinder obstacle.
 
     Parameters:
     ------------
@@ -48,10 +55,8 @@ class CylinderObstacleConfig(CollisionObstacleConfig):
 
 class CylinderObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-
         schema = OmegaConf.structured(CylinderObstacleConfig)
         super().__init__(schema, **kwargs)
-
         self._geometry_keys = ['radius', 'heigth']
 
         self.check_completeness()
@@ -73,15 +78,6 @@ class CylinderObstacle(CollisionObstacle):
                 missingKeys += key + ", "
         if incomplete:
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
-        
-    def position(self):
-        return self._config.geometry.position
-
-    def velocity(self):
-        raise NotImplementedError
-
-    def acceleration(self):
-        raise NotImplementedError
 
     def radius(self):
         return self._config.geometry.radius
@@ -96,23 +92,23 @@ class CylinderObstacle(CollisionObstacle):
         return self._config.movable
    
     def add2Bullet(self, pybullet):
-        if self.dimension() == 3:
-            basePosition = self.position()
-        else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        
-        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_CYLINDER, radius=self.radius(), height=self.height())
-        visualShapeId = self.id()
-        baseOrientation = self.orientation()
-
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
 
+        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_CYLINDER, radius=self.radius(), heigth=self.heigth())
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
             fileName='cylinder.obj',
             rgbaColor=self.color(),  
-            meshScale=[self.radius(), self.radius(), self.height()]
+            meshScale=[self.radius(), self.radius(), self.heigth()]
         )
+
+        if self.dimension() == 3:
+            basePosition = self.position()
+        else:
+            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
+
+        baseOrientation = self.orientation()
+        
         pybullet.createMultiBody(self.mass(),
               collisionShape,
               visualShapeId,

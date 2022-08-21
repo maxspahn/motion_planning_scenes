@@ -2,7 +2,6 @@ import pytest
 
 from MotionPlanningEnv.boxObstacle import BoxObstacle
 from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError
-from MotionPlanningEnv.boxObstacle import BoxObstacleMissmatchDimensionError
 
 def test_rectangleObstacle():
     # TODO: implement when boxObstacle has 2D compatability

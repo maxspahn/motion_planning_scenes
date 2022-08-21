@@ -54,10 +54,6 @@ class CollisionObstacle(MotionPlanningComponent):
     def type(self):
         return self._config.type
 
-    @abstractmethod
-    def geometry(self):
-        pass
-
     def position(self):
         return self._config.position
 
@@ -79,5 +75,11 @@ class CollisionObstacle(MotionPlanningComponent):
     def id(self):
         return self._config.id
     
+    def geometry(self):
+        return self._config.geometry
+    
+    def orientation(self):
+        return self._config.orientation()
+
     def update_bullet_position(self, pybullet, **kwargs):
         pass

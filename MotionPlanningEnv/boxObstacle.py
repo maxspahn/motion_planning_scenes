@@ -1,18 +1,25 @@
 from dataclasses import dataclass, field
 import os
-from MotionPlanningEnv.collisionObstacle import CollisionObstacle, CollisionObstacleConfig
-from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncompleteError, DimensionNotSuitableForEnv
+
 from omegaconf import OmegaConf
 from typing import List, Optional
+
+from MotionPlanningEnv.collisionObstacle import (
+    CollisionObstacle,
+    CollisionObstacleConfig,
+)
+from MotionPlanningSceneHelpers.motionPlanningComponent import (
+    ComponentIncompleteError,
+    DimensionNotSuitableForEnv,
+)
 
 class BoxObstacleMissmatchDimensionError(Exception):
     pass
 
 @dataclass
-class GeometryConfig(CollisionObstacleConfig):
+class GeometryConfig():
     """Configuration dataclass for geometry.
-    This configuration class holds information about position
-    and geometry of a box obstacle.
+    This configuration class holds information about geometry of a box obstacle.
 
     Parameters:
     ------------
@@ -26,7 +33,8 @@ class GeometryConfig(CollisionObstacleConfig):
 
 @dataclass
 class BoxObstacleConfig(CollisionObstacleConfig):
-    """Configuration dataclass for box obstacle.
+    """
+    Configuration dataclass for box obstacle.
      
     Parameters:
     ------------
@@ -35,7 +43,6 @@ class BoxObstacleConfig(CollisionObstacleConfig):
     movable : bool : Flag indicating whether an obstacle can be pushed around
     mass: float : mass of the object, only used if movable set to true
     color : list : [r,g,b,a] where r,g,b and a are floats between 0 and 1
-    id: integer : identify the box with a integer 
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
@@ -44,13 +51,11 @@ class BoxObstacleConfig(CollisionObstacleConfig):
     movable: bool = False
     mass: float = 1
     color: List[float] = field(default_factory=list) 
-    id: int = -1
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
 class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-        print("creating boxObstacle")
         schema = OmegaConf.structured(BoxObstacleConfig)
         super().__init__(schema, **kwargs)
         self._geometry_keys = ['length', 'width', 'heigth']
@@ -59,10 +64,6 @@ class BoxObstacle(CollisionObstacle):
         self.checkGeometryCompleteness()
         self.checkDimensionality()
 
-        print("geometric_keys {}".format(self._geometry_keys))
-
-        print("required keys {}".format(self._required_keys))
-        
     def checkDimensionality(self):
         if self.dimension() != len(self.position()):
             raise BoxObstacleMissmatchDimensionError(
@@ -78,9 +79,6 @@ class BoxObstacle(CollisionObstacle):
                 missingKeys += key + ", "
         if incomplete:
             raise ComponentIncompleteError("Missing keys in geometry: %s" % missingKeys[:-2])
-
-    def geometry(self):
-        return self._config.geometry
 
     def length(self):
         return self._config.geometry.length
@@ -105,16 +103,9 @@ class BoxObstacle(CollisionObstacle):
         # joint.add_attr(tf)
 
     def add2Bullet(self, pybullet):
-        if self.dimension() == 3:
-            basePosition = self.position()
-        else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
-        
-        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=[self.length(), self.width(), self.heigth()])
-        visualShapeId = self.id()
-        baseOrientation = self.orientation()
-
         pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+
+        collisionShape = pybullet.createCollisionShape(pybullet.GEOM_BOX, halfExtents=[self.length(), self.width(), self.heigth()])
 
         visualShapeId = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
@@ -122,6 +113,14 @@ class BoxObstacle(CollisionObstacle):
             rgbaColor=self.color(),  
             meshScale=[self.length(), self.width(), self.heigth()]
         )
+
+        if self.dimension() == 3:
+            basePosition = self.position()
+        else:
+            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
+        
+        baseOrientation = self.orientation()
+         
         pybullet.createMultiBody(self._config.mass,
               collisionShape,
               visualShapeId,
