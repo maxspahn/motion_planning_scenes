@@ -24,8 +24,8 @@ class CollisionObstacle(MotionPlanningComponent):
 
     def __init__(self, schema, **kwargs):
         self._required_keys = [
-            'position',
-            'type',
+            "position",
+            "type",
         ]
         super().__init__(schema, **kwargs)
 
@@ -34,19 +34,19 @@ class CollisionObstacle(MotionPlanningComponent):
         self.sanitize_mass()
 
     def sanitize_orientation(self):
-        if 'orientation' in self._content_dict:
-            if len(self._content_dict['orientation']) != 4:
-                raise ValueError("incorrect orientation shape: {}, which should be (4,)".format(len(self._content_dict['orientation'])))
+        if "orientation" in self._content_dict:
+            if len(self._content_dict["orientation"]) != 4:
+                raise ValueError("incorrect orientation shape: {}, which should be (4,)".format(len(self._content_dict["orientation"])))
 
     def sanitize_color(self):
-        if 'color' in self._content_dict:
-            if len(self._content_dict['color']) != 4:
-                raise ValueError("incorrect color shape: {}, which should be (4,)".format(len(self._content_dict['color'])))
+        if "color" in self._content_dict:
+            if len(self._content_dict["color"]) != 4:
+                raise ValueError("incorrect color shape: {}, which should be (4,)".format(len(self._content_dict["color"])))
 
     def sanitize_mass(self):
-        if 'mass' in self._content_dict:
-            if self._content_dict['mass'] <= 0:
-                raise ValueError("negative mass: {}, which should positive".format(self._content_dict['mass']))
+        if "mass" in self._content_dict:
+            if self._content_dict["mass"] <= 0:
+                raise ValueError("negative mass: {}, which should positive".format(self._content_dict["mass"]))
 
     def dimension(self):
         return len(self._config.position)
