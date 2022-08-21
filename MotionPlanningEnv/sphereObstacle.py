@@ -1,12 +1,12 @@
 """
 Module doctring
 """
-import os
 from dataclasses import dataclass, field
 import csv
 from typing import List, Optional
 import numpy as np
 
+import os
 from omegaconf import OmegaConf
 
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
@@ -24,7 +24,8 @@ class GeometryConfig:
     """
     Configuration dataclass for geometry.
 
-    This configuration class holds information about the geometry of the sphere obstacle.
+    This configuration class holds information about
+    the geometry of the sphere obstacle.
 
     Parameters:
     ------------
@@ -43,7 +44,7 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     orientation: list: Orientation of the obstacle
     movable : bool : Flag indicating whether an obstacle can be pushed around
     mass: float : Mass of the object, only used if movable set to true
-    color : list : [r,g,b,a] rgba Color where r,g,b and a are floats between 0 and 1
+    color : list : [r,g,b,a] rgba Color where r,g,b,a are floats between 0 and 1
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
@@ -78,7 +79,8 @@ class SphereObstacle(CollisionObstacle):
                 incomplete = True
                 missing_keys += key + ", "
         if incomplete:
-            raise ComponentIncompleteError("Missing keys in geometry: %s" % missing_keys[:-2])
+            raise ComponentIncompleteError(
+                    "Missing keys in geometry: {missing_keys[:-2]}")
 
     def limit_low(self):
         """
@@ -151,15 +153,18 @@ class SphereObstacle(CollisionObstacle):
             )
         x_pos = self.position()
         joint = viewer.draw_circle(self.radius())
-        joint.add_attr(rendering.Transform(rotation=0, translation=(x_pos[0], x_pos[1])))
+        joint.add_attr(rendering.Transform(
+            rotation=0, translation=(x_pos[0], x_pos[1])))
 
     def add_to_bullet(self, pybullet):
         """
         Adds object to pybullet environment.
         """
-        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        pybullet.setAdditionalSearchPath(
+                os.path.dirname(os.path.realpath(__file__)))
 
-        collision_shape = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=self.radius())
+        collision_shape = pybullet.createCollisionShape(
+                pybullet.GEOM_SPHERE, radius=self.radius())
 
         visual_shape_id = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
@@ -173,7 +178,8 @@ class SphereObstacle(CollisionObstacle):
         elif self.dimension() == 3:
             base_position = self.position()
         else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
+            raise DimensionNotSuitableForEnv(
+                "Pybullet only supports three dimensional obstacles")
 
         base_orientation = self.orientation()
 

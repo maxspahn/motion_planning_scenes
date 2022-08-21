@@ -36,17 +36,26 @@ class CollisionObstacle(MotionPlanningComponent):
     def sanitize_orientation(self):
         if "orientation" in self._content_dict:
             if len(self._content_dict["orientation"]) != 4:
-                raise ValueError("incorrect orientation shape: {}, which should be (4,)".format(len(self._content_dict["orientation"])))
+                raise ValueError(f"""
+                        incorrect orientation shape: {len(
+                        self._content_dict['orientation'])}, which should be (4,)
+                        """)
 
     def sanitize_color(self):
         if "color" in self._content_dict:
             if len(self._content_dict["color"]) != 4:
-                raise ValueError("incorrect color shape: {}, which should be (4,)".format(len(self._content_dict["color"])))
+                raise ValueError(f"""
+                        incorrect color shape: {len(
+                        self._content_dict['color'])}, which should be (4,)
+                        """)
 
     def sanitize_mass(self):
         if "mass" in self._content_dict:
             if self._content_dict["mass"] <= 0:
-                raise ValueError("negative mass: {}, which should positive".format(self._content_dict["mass"]))
+                raise ValueError(f"""
+                        negative mass: 
+                        {self._content_dict['mass']}, which should positive
+                        """)
 
     def dimension(self):
         return len(self._config.position)
@@ -74,10 +83,10 @@ class CollisionObstacle(MotionPlanningComponent):
 
     def id(self):
         return self._config.id
-    
+
     def geometry(self):
         return self._config.geometry
-    
+
     def orientation(self):
         if "orientation" in self._config.orientation:
             return self._config.orientation()

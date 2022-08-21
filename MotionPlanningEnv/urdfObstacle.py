@@ -1,11 +1,9 @@
-import os
 
 from MotionPlanningEnv.collisionObstacle import (
     CollisionObstacle,
     CollisionObstacleConfig,
 )
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
-    ComponentIncompleteError,
     DimensionNotSuitableForEnv,
 )
 import numpy as np

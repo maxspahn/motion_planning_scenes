@@ -19,8 +19,10 @@ from MotionPlanningEnv.collisionObstacle import (
 
 @dataclass
 class GeometryConfig:
-    """Configuration dataclass for geometry.
-    This configuration class holds information about the geometry of a cylinder obstacle.
+    """
+    Configuration dataclass for geometry.
+    This configuration class holds information
+    about the geometry of a cylinder obstacle.
 
     Parameters:
     ------------
@@ -38,9 +40,9 @@ class CylinderObstacleConfig(CollisionObstacleConfig):
     ------------
     geometry : GeometryConfig : Geometry of the obstacle
     orientation: list: [a,b,c,d] Quaternion orientation of the obstacle
-    movable : bool : Flag indicating whether an obstacle can be pushed around
+    movable : bool : Flag indicating whether an obstacle is movable
     mass: float : Mass of the object, only used if movable set to true
-    color : list : [r,g,b,a] rgba Color where r,g,b and a are floats between 0 and 1
+    color : list : [r,g,b,a] rgba Color where r,g,b,a floats between 0 and 1
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
@@ -75,7 +77,8 @@ class CylinderObstacle(CollisionObstacle):
                 incomplete = True
                 missing_keys += key + ", "
         if incomplete:
-            raise ComponentIncompleteError("Missing keys in geometry: %s" % missing_keys[:-2])
+            raise ComponentIncompleteError(
+                    f"Missing keys in geometry: {missing_keys[:-2]}")
 
     def radius(self):
         """
@@ -105,7 +108,8 @@ class CylinderObstacle(CollisionObstacle):
         """
         Adds object to pybullet environment.
         """
-        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        pybullet.setAdditionalSearchPath(
+                os.path.dirname(os.path.realpath(__file__)))
 
         collision_shape = pybullet.createCollisionShape(
                 pybullet.GEOM_CYLINDER,
@@ -121,7 +125,8 @@ class CylinderObstacle(CollisionObstacle):
         if self.dimension() == 3:
             base_position = self.position()
         else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
+            raise DimensionNotSuitableForEnv(
+                    "Pybullet only supports three dimensional obstacles")
 
         base_orientation = self.orientation()
 

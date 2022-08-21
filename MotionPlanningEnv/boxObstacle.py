@@ -59,7 +59,6 @@ class BoxObstacle(CollisionObstacle):
     Box obstacle class.
     """
     def __init__(self, **kwargs):
-        
         schema = OmegaConf.structured(BoxObstacleConfig)
         super().__init__(schema, **kwargs)
         self._geometry_keys = ["length", "width", "heigth"]
@@ -78,7 +77,8 @@ class BoxObstacle(CollisionObstacle):
                 incomplete = True
                 missing_keys += key + ", "
         if incomplete:
-            raise ComponentIncompleteError("Missing keys in geometry: %s" % missing_keys[:-2])
+            raise ComponentIncompleteError(
+                f"Missing keys in geometry: {missing_keys[:-2]}")
 
     def length(self):
         """
@@ -108,7 +108,8 @@ class BoxObstacle(CollisionObstacle):
         """
         Adds object to pybullet environment.
         """
-        pybullet.setAdditionalSearchPath(os.path.dirname(os.path.realpath(__file__)))
+        pybullet.setAdditionalSearchPath(
+                os.path.dirname(os.path.realpath(__file__)))
 
         collision_shape = pybullet.createCollisionShape(pybullet.GEOM_BOX,
                 halfExtents=[self.length(), self.width(), self.heigth()])
@@ -123,7 +124,8 @@ class BoxObstacle(CollisionObstacle):
         if self.dimension() == 3:
             base_position = self.position()
         else:
-            raise DimensionNotSuitableForEnv("Pybullet only supports three dimensional obstacles")
+            raise DimensionNotSuitableForEnv(
+                    "Pybullet only supports three dimensional obstacles")
 
         base_orientation = self.orientation()
 
