@@ -104,7 +104,7 @@ class CylinderObstacle(CollisionObstacle):
         """
         return self._config.movable
 
-    def add2Bullet(self, pybullet):
+    def add_to_bullet(self, pybullet):
         """
         Adds object to pybullet environment.
         """

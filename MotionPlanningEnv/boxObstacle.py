@@ -104,7 +104,7 @@ class BoxObstacle(CollisionObstacle):
         """
         return OmegaConf.to_container(self._config)
 
-    def add2Bullet(self, pybullet):
+    def add_to_bullet(self, pybullet):
         """
         Adds object to pybullet environment.
         """
