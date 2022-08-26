@@ -56,6 +56,7 @@ class SphereObstacle(CollisionObstacle):
         super().__init__(schema, **kwargs)
         self.add_required_keys("radius")
 
+        self.check_completeness()
 
     def limit_low(self):
         """
@@ -151,7 +152,7 @@ class SphereObstacle(CollisionObstacle):
                 "Pybullet only supports three dimensional obstacles")
 
         base_orientation = self.orientation()
-        
+
         mass = -1
         if self.movable():
             mass = self.mass()
