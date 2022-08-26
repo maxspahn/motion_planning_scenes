@@ -6,8 +6,8 @@ from dataclasses import dataclass
 @dataclass
 class CollisionObstacleConfig:
     """
-    Configuration dataclass for an obstacle.
-    This configuration class holds information about the dimension and the type
+    Configuration dataclass for an collision obstacle.
+    This configuration class holds information about the position and type
     of collision obstacle.
 
     Parameters:
@@ -21,17 +21,17 @@ class CollisionObstacleConfig:
 class CollisionObstacle(MotionPlanningComponent):
 
     def __init__(self, schema, **kwargs):
-        self._required_keys = [
+        super().__init__(schema, **kwargs)
+        self.add_required_keys([
             "position",
             "type",
-        ]
-        super().__init__(schema, **kwargs)
+        ])
 
-        self.sanitize_orientation()
-        self.sanitize_color()
-        self.sanitize_mass()
+        self.check_orientation()
+        self.check_color()
+        self.check_mass()
 
-    def sanitize_orientation(self):
+    def check_orientation(self):
         if "orientation" in self._content_dict:
             if len(self._content_dict["orientation"]) != 4:
                 raise ValueError(f"""
@@ -39,7 +39,7 @@ class CollisionObstacle(MotionPlanningComponent):
                         self._content_dict['orientation'])}, which should be (4,)
                         """)
 
-    def sanitize_color(self):
+    def check_color(self):
         if "color" in self._content_dict:
             if len(self._content_dict["color"]) != 4:
                 raise ValueError(f"""
@@ -47,7 +47,7 @@ class CollisionObstacle(MotionPlanningComponent):
                         self._content_dict['color'])}, which should be (4,)
                         """)
 
-    def sanitize_mass(self):
+    def check_mass(self):
         if "mass" in self._content_dict:
             if self._content_dict["mass"] <= 0:
                 raise ValueError(f"""
@@ -83,8 +83,7 @@ class CollisionObstacle(MotionPlanningComponent):
         return self._config.geometry
 
     def orientation(self):
-        if "orientation" in self._config.orientation:
-            return self._config.orientation()
+        return self._config.orientation
 
     def update_bullet_position(self, pybullet, **kwargs):
         pass

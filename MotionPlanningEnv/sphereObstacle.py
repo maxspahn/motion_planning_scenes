@@ -7,7 +7,6 @@ import os
 from omegaconf import OmegaConf
 
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
-    ComponentIncompleteError,
     DimensionNotSuitableForEnv,
 )
 from MotionPlanningEnv.collisionObstacle import (
@@ -15,11 +14,9 @@ from MotionPlanningEnv.collisionObstacle import (
     CollisionObstacleConfig,
 )
 
-
 @dataclass
 class GeometryConfig:
     """
-    Configuration dataclass for geometry.
     This configuration class holds information about
     the geometry of the sphere obstacle.
     Parameters:
@@ -57,10 +54,8 @@ class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
-        self._geometry_keys = ["radius"]
+        self.add_required_keys("radius")
 
-        self.check_completeness()
-        self.check_geometry_completeness()
 
     def limit_low(self):
         """
@@ -104,12 +99,6 @@ class SphereObstacle(CollisionObstacle):
         )
         self._config.position = random_pos.tolist()
         self._config.geometry.radius = float(random_radius)
-
-    def movable(self):
-        """
-        Indicates it the object is movable.
-        """
-        return self._config.movable
 
     def csv(self, file_name, samples=100):
         """
@@ -162,8 +151,12 @@ class SphereObstacle(CollisionObstacle):
                 "Pybullet only supports three dimensional obstacles")
 
         base_orientation = self.orientation()
+        
+        mass = -1
+        if self.movable():
+            mass = self.mass()
 
-        pybullet.createMultiBody(self._config.mass,
+        pybullet.createMultiBody(mass,
               collision_shape,
               visual_shape_id,
               base_position,
