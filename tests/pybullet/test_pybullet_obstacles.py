@@ -51,8 +51,8 @@ def test_sphereObstacle_gui(bullet_gui):
 
 def test_urdfObstacle(bullet):
     obstDict = {
-        "type": "sphere",
-        "geometry": {"position": [0.1, 0.2, 0.4]},
+        "type": "urdf",
+        "position": [0.1, 0.2, 0.4],
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
@@ -66,8 +66,8 @@ def test_urdfObstacle(bullet):
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_urdfObstacle_gui(bullet_gui):
     obstDict = {
-        "type": "sphere",
-        "geometry": {"position": [0.1, 0.2, 0.4]},
+        "type": "urdf",
+        "position": [0.1, 0.2, 0.4],
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
