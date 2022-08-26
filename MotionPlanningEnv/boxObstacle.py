@@ -25,11 +25,11 @@ class GeometryConfig():
     ------------
     length: float: Lenght of the obstacle
     width: float: Width of the obstacle
-    heigth: float: Heigth of the obstacle
+    height: float: Height of the obstacle
     """
     length: float
     width: float
-    heigth: float
+    height: float
 
 @dataclass
 class BoxObstacleConfig(CollisionObstacleConfig):
@@ -61,7 +61,7 @@ class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(BoxObstacleConfig)
         super().__init__(schema, **kwargs)
-        self._geometry_keys = ["length", "width", "heigth"]
+        self._geometry_keys = ["length", "width", "height"]
 
         self.check_completeness()
         self.check_geometry_completeness()
@@ -92,11 +92,11 @@ class BoxObstacle(CollisionObstacle):
         """
         return self._config.geometry.width
 
-    def heigth(self):
+    def height(self):
         """
         Height of the obstacle.
         """
-        return self._config.geometry.heigth
+        return self._config.geometry.height
 
     def to_dict(self):
         """
@@ -112,13 +112,13 @@ class BoxObstacle(CollisionObstacle):
                 os.path.dirname(os.path.realpath(__file__)))
 
         collision_shape = pybullet.createCollisionShape(pybullet.GEOM_BOX,
-                halfExtents=[self.length(), self.width(), self.heigth()])
+                halfExtents=[self.length(), self.width(), self.height()])
 
         visual_shape_id = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
             fileName="box.obj",
             rgbaColor=self.color(),
-            meshScale=[self.length(), self.width(), self.heigth()]
+            meshScale=[self.length(), self.width(), self.height()]
         )
 
         if self.dimension() == 3:

@@ -27,10 +27,10 @@ class GeometryConfig:
     Parameters:
     ------------
     radius: float: radius of the obstacle
-    heigth: float: Heigth of the obstacle
+    height: float: Height of the obstacle
     """
     radius: float
-    heigth: float
+    height: float
 
 @dataclass
 class CylinderObstacleConfig(CollisionObstacleConfig):
@@ -61,7 +61,7 @@ class CylinderObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(CylinderObstacleConfig)
         super().__init__(schema, **kwargs)
-        self._geometry_keys = ["radius", "heigth"]
+        self._geometry_keys = ["radius", "height"]
 
         self.check_completeness()
         self.check_geometry_completeness()
@@ -86,11 +86,11 @@ class CylinderObstacle(CollisionObstacle):
         """
         return self._config.geometry.radius
 
-    def heigth(self):
+    def height(self):
         """
         Height of the obstacle.
         """
-        return self._config.geometry.heigth
+        return self._config.geometry.height
 
     def to_dict(self):
         """
@@ -114,12 +114,12 @@ class CylinderObstacle(CollisionObstacle):
         collision_shape = pybullet.createCollisionShape(
                 pybullet.GEOM_CYLINDER,
                 radius=self.radius(),
-                heigth=self.heigth())
+                height=self.height())
         visual_shape_id = pybullet.createVisualShape(
             pybullet.GEOM_MESH,
             fileName="cylinder.obj",
             rgbaColor=self.color(),
-            meshScale=[self.radius(), self.radius(), self.heigth()]
+            meshScale=[self.radius(), self.radius(), self.height()]
         )
 
         if self.dimension() == 3:
