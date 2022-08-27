@@ -54,8 +54,7 @@ class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.add_required_keys("radius")
-
+        self.add_required_keys({"geometry": ["radius"]})
         self.check_completeness()
 
     def limit_low(self):

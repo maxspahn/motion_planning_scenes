@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib sphere_smooth.mtl
+mtllib sphere.mtl
 o Sphere_Sphere.001
 v -0.108119 0.994138 0.000000
 v -0.214970 0.976621 0.000000

@@ -56,7 +56,7 @@ class CylinderObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(CylinderObstacleConfig)
         super().__init__(schema, **kwargs)
-        self._geometry_keys = ["radius", "height"]
+        self.add_required_keys({"geometry": ["radius", "height"]})
 
         self.check_completeness()
 

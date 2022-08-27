@@ -56,7 +56,8 @@ class BoxObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(BoxObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.add_required_keys(["length", "width", "height"])
+        self.add_required_keys({"geometry": ["length", "width", "height"]})
+
 
         self.check_completeness()
 
