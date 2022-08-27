@@ -62,18 +62,6 @@ class UrdfObstacle(CollisionObstacle):
     def urdf(self):
         return self._config.urdf
 
-    def position(self):
-        return self._config.geometry.position
-
-    def velocity(self):
-        return np.zeros(3)
-
-    def acceleration(self):
-        return np.zeros(3)
-
-    def dimension(self):
-        return len(self._config.geometry.position)
-
     def add_to_bullet(self, pybullet):
         if self.dimension() != 3:
             raise DimensionNotSuitableForEnv(

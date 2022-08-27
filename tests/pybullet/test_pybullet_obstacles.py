@@ -40,7 +40,7 @@ def test_sphereObstacle(bullet):
 
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_sphereObstacle_gui(bullet_gui):
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     sphereObst.add_to_bullet(bullet_gui)
     for i in range(100):
@@ -52,7 +52,8 @@ def test_sphereObstacle_gui(bullet_gui):
 def test_urdfObstacle(bullet):
     obstDict = {
         "type": "sphere",
-        "geometry": {"position": [0.1, 0.2, 0.4]},
+        "position": [0.1, 0.2, 0.4],
+        "geometry": {},
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
@@ -67,7 +68,8 @@ def test_urdfObstacle(bullet):
 def test_urdfObstacle_gui(bullet_gui):
     obstDict = {
         "type": "sphere",
-        "geometry": {"position": [0.1, 0.2, 0.4]},
+        "position": [0.1, 0.2, 0.4],
+        "geometry": {},
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
@@ -82,6 +84,7 @@ def test_urdfObstacle_gui(bullet_gui):
 def test_circleObstacle_gui(bullet_gui):
     obstDict = {
         "type": "sphere",
+        "position": [0,0,0],
         "geometry": {"trajectory": ["0.1 * t", "0.2 * t"], "radius": 0.2},
     }
     dynamicSphereObst = DynamicSphereObstacle(
@@ -97,6 +100,7 @@ def test_circleObstacle_gui(bullet_gui):
 def test_circleObstacle(bullet):
     obstDict = {
         "type": "sphere",
+        "position": [0,0,0],
         "geometry": {"trajectory": ["0.1 * t", "0.2 * t"], "radius": 0.2},
     }
     dynamicSphereObst = DynamicSphereObstacle(
@@ -113,6 +117,7 @@ def test_splineObstacle(bullet):
     splineDict = {'degree': 2, 'controlPoints': [[1.0, 0.0], [2.0, 0.0],[2.0, 1.0]], 'duration': 10}
     obstDict = {
         "type": "splineSphere",
+        "position": [0,0,0],
         "geometry": {"trajectory": splineDict, "radius": 0.2},
     }
     dynamicSphereObst = DynamicSphereObstacle(
