@@ -32,10 +32,10 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     Parameters:
     ------------
     geometry : GeometryConfig : Geometry of the obstacle
-    orientation: list: Orientation of the obstacle
+    orientation: List: [a,b,c,d] Quaternion orientation of the obstacle
     movable : bool : Flag indicating whether an obstacle can be pushed around
     mass: float : Mass of the object, only used if movable set to true
-    color : list : [r,g,b,a] rgba Color where r,g,b,a are floats between 0 and 1
+    color : List : [r,g,b,a] rgba Color where r,g,b,a are floats between 0 and 1
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
