@@ -62,6 +62,10 @@ class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
+<<<<<<< HEAD
+=======
+        self.check_completeness()
+>>>>>>> parent of f2328f7 (create test for motionPlanningComponent function check_completeness)
 
     def dimension(self):
         return len(self._config.geometry.position)
