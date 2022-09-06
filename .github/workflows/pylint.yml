@@ -31,8 +31,13 @@ jobs:
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
-          virtualenvs-path: /home/runner/.local/bin
           installer-parallel: true
+      #----------------------------------------------
+      #     test poetry version 
+      #----------------------------------------------
+      - name: test poetry version
+        run: poetry --version
+
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
@@ -47,8 +52,6 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        env:
-          POETRY_VIRTUALENVS_PATH: /home/runner/.local/bin
         run: poetry install --no-interaction --no-root
       #----------------------------------------------
       # install your root project, if required
