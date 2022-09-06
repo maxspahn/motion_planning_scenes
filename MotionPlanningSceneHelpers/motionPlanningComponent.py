@@ -2,7 +2,6 @@ from abc import ABC
 import yaml
 from omegaconf import OmegaConf
 
-
 class ComponentIncompleteError(Exception):
     pass
 
@@ -56,21 +55,30 @@ class MotionPlanningComponent(ABC):
 
     def add_required_keys(self, keys, parent_keys=""):
         """
-        Adds required keys.
-        dictionary containing list with strings
-        or list with strings expected.
+        Adds keys to list of required keys.
+
+        allowed types are a list containing strings or dictionaries
+        nested dictionaries are allowed as long as the most
+        nested dictionary contains a list with strings.
+
+        keys character "." is not allowed in keys
         """
-        if isinstance(keys, list):
+        if isinstance(keys, dict):
+            for (k, v) in keys.items():
+                self.add_required_keys(v, parent_keys=parent_keys+k+".")
+
+        elif isinstance(keys, list):
             for key in keys:
-                if isinstance(key, str):
+                if isinstance(key, dict):
+                    for (k, v) in key.items():
+                        self.add_required_keys(v, parent_keys=parent_keys+k+".")
+                elif isinstance(key, str):
                     if "." in key:
                         raise ValueError("'.' not allowed in the key")
                     self._required_keys.append(parent_keys+key)
                 else:
-                    raise TypeError("list can only contain strings")
-        elif isinstance(keys, dict):
-            for (key, val) in keys.items():
-                self.add_required_keys(val, parent_keys=key+".")
+                    raise TypeError("only strings of "\
+                    "dictionaries allowed in list")
 
     def name(self):
         return self._name
