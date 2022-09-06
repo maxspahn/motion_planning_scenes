@@ -63,7 +63,10 @@ class SphereObstacle(CollisionObstacle):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of f2328f7 (create test for motionPlanningComponent function check_completeness)
         self.check_completeness()
 >>>>>>> parent of f2328f7 (create test for motionPlanningComponent function check_completeness)
 
