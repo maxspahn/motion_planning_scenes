@@ -23,8 +23,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
-        env:
-          POETRY_VIRTUALENVS_PATH: /home/runner/.local/bin
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
@@ -33,6 +31,7 @@ jobs:
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
+          virtualenvs-path: /home/runner/.local/bin
           installer-parallel: true
       #----------------------------------------------
       #       load cached venv if cache exists
