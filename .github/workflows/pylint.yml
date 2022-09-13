@@ -37,6 +37,7 @@ jobs:
       #----------------------------------------------
       - name: test poetry version
         run: poetry --version
+          version: 1.1.14
 
       #----------------------------------------------
       #       load cached venv if cache exists
