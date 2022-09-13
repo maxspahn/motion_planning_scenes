@@ -9,6 +9,7 @@ on:
       - develop_python3.10
       - main
 
+
 jobs:
   linting:
     runs-on: ubuntu-latest
@@ -38,7 +39,7 @@ jobs:
       #----------------------------------------------
       - name: test poetry version
         run: poetry --version
-          version: "1.1.14"
+        version: "1.1.14"
 
       #----------------------------------------------
       #       load cached venv if cache exists
