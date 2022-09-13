@@ -10,7 +10,7 @@ import numpy as np
 
 from dataclasses import dataclass
 from omegaconf import OmegaConf
-from typing import List, Optional
+from typing import Optional
 
 
 @dataclass
@@ -32,7 +32,7 @@ class UrdfObstacleConfig(FreeCollisionObstacleConfig):
     Configuration dataclass for sphere obstacle.
 
     This configuration class holds information about the 
-    and randomization of a spherical obstacle.
+    and randomization of the obstacle.
 
     Parameters:
     ------------
@@ -51,10 +51,12 @@ class UrdfObstacle(FreeCollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(UrdfObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
+    
+    def geometry(self):
+        return self._config.geometry
 
     def urdf(self):
-        return self._config.urdf
+        return self._config.geometry.urdf
 
     def add_to_bullet(self, pybullet):
         if self.dimension() != 3:

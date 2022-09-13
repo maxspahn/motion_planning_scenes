@@ -53,8 +53,7 @@ def test_urdfObstacle(bullet):
     obstDict = {
         "type": "sphere",
         "position": [0.1, 0.2, 0.4],
-        "geometry": {},
-        "urdf": "teddy_large.urdf",
+        "geometry": {"urdf": "teddy_large.urdf"},
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
     sphereObst.add_to_bullet(bullet)
@@ -69,8 +68,7 @@ def test_urdfObstacle_gui(bullet_gui):
     obstDict = {
         "type": "sphere",
         "position": [0.1, 0.2, 0.4],
-        "geometry": {},
-        "urdf": "teddy_large.urdf",
+        "geometry": {"urdf": "teddy_large.urdf"},
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
     sphereObst.add_to_bullet(bullet_gui)

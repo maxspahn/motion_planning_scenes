@@ -7,8 +7,7 @@ def test_urdf_obstacle():
     obst_dict = {
         "type": "sphere",
         "position": [0.1, 0.2, 0.4],
-        "geometry": {},
-        "urdf": "duck.urdf",
+        "geometry": {"urdf": "duck.urdf"},
     }
     sphere_obst = UrdfObstacle(name="simpleUrdf", content_dict=obst_dict)
     assert "simpleUrdf" == sphere_obst.name()
