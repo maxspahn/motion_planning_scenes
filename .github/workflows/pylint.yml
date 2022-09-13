@@ -9,7 +9,6 @@ on:
       - develop_python3.10
       - main
 
-
 jobs:
   linting:
     runs-on: ubuntu-latest

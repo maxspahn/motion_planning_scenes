@@ -1,9 +1,7 @@
 import os
 
-from MotionPlanningEnv.collisionObstacle import (
-    CollisionObstacle,
-    CollisionObstacleConfig,
-)
+from MotionPlanningEnv.freeCollisionObstacle import FreeCollisionObstacleConfig, FreeCollisionObstacle
+
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
     ComponentIncompleteError,
     DimensionNotSuitableForEnv,
@@ -19,41 +17,37 @@ from typing import List, Optional
 class GeometryConfig:
     """Configuration dataclass for geometry for urdf obstacles.
 
-    This configuration class holds information about position.
-
-    Parameters:
-    ------------
-
-    position: list: Position of the obstacle
-    """
-
-    position: List[float]
-
-
-@dataclass
-class UrdfObstacleConfig(CollisionObstacleConfig):
-    """Configuration dataclass for sphere obstacle.
-
-    This configuration class holds information about the position, size
-    and randomization of a spherical obstacle.
+    This configuration class holds information about the urdf file.
 
     Parameters:
     ------------
 
     urdf : str : Filename of the urdf
+    """
+    urdf: str
+
+@dataclass
+class UrdfObstacleConfig(FreeCollisionObstacleConfig):
+    """
+    Configuration dataclass for sphere obstacle.
+
+    This configuration class holds information about the 
+    and randomization of a spherical obstacle.
+
+    Parameters:
+    ------------
+
     geometry : GeometryConfig : Geometry of the obstacle
     low: GeometryConfig : Lower limit for randomization
     high: GeometryConfig : Upper limit for randomization
 
     """
-
-    urdf: str
     geometry: GeometryConfig
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
 
-class UrdfObstacle(CollisionObstacle):
+class UrdfObstacle(FreeCollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(UrdfObstacleConfig)
         super().__init__(schema, **kwargs)
@@ -61,18 +55,6 @@ class UrdfObstacle(CollisionObstacle):
 
     def urdf(self):
         return self._config.urdf
-
-    def position(self):
-        return self._config.geometry.position
-
-    def velocity(self):
-        return np.zeros(3)
-
-    def acceleration(self):
-        return np.zeros(3)
-
-    def dimension(self):
-        return len(self._config.geometry.position)
 
     def add_to_bullet(self, pybullet):
         if self.dimension() != 3:

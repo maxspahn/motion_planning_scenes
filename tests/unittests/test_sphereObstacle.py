@@ -7,7 +7,7 @@ from MotionPlanningSceneHelpers.motionPlanningComponent import ComponentIncomple
 
 
 def test_circleObstacle():
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     assert "simpleSphere" == sphereObst.name()
     assert [0.1, 0.2] == sphereObst.position()
@@ -15,7 +15,7 @@ def test_circleObstacle():
     assert 2 == sphereObst.dimension()
 
 def test_sphereObstacle():
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     assert "simpleSphere" == sphereObst.name()
     assert [0.1, 0.2, 0.4] == sphereObst.position()
@@ -24,16 +24,16 @@ def test_sphereObstacle():
 
 
 def test_errorRaiseIncompleteDict():
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2]}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2], 'geometry': {}}
     with pytest.raises(MissingMandatoryValue):
         sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
         sphereObst.radius()
 
 def test_saving_obstacle():
-    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    obstDict = {'type': 'sphere', 'position': [0.1, 0.2, 0.4], 'geometry': {'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
     sphereObst.shuffle()
     obst_dict_after = sphereObst.dict()
     assert isinstance(obst_dict_after, dict)
-    assert obst_dict_after['geometry']['position'][0] != 0.1
+    assert obst_dict_after['position'][0] != 0.1
 

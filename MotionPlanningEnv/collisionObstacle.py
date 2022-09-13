@@ -23,12 +23,6 @@ class CollisionObstacle(MotionPlanningComponent):
     def type(self):
         return self._config.type
 
-    # @abstractmethod
-    # def dimension(self):
-    #     pass
-    
-    #     return self._config.geometry
-
     @abstractmethod
     def position(self, **kwargs):
         pass

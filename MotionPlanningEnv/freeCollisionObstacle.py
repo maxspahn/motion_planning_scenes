@@ -11,11 +11,13 @@ class FreeCollisionObstacleConfig(CollisionObstacleConfig):
     Configuration dataclass for free collision obstacle.
     Parameters:
     ------------
+    position: List: [x,y,z] Position of the obstacle
     orientation: List: [a,b,c,d] Quaternion orientation of the obstacle
     movable : bool : Flag indicating whether an obstacle is movable
     mass: float : mass of the object, only used if movable set to true
     color : List : [r,g,b,a] where r,g,b and a are floats between 0 and 1
     """
+    position: List[float]
     _: KW_ONLY
     orientation: List[float] = field(default_factory=list)
     movable: bool = True
@@ -29,6 +31,7 @@ class FreeCollisionObstacle(CollisionObstacle):
 
     """
     def __init__(self, schema, **kwargs):
+        schema = OmegaConf.merge(FreeCollisionObstacleConfig, schema)
         super().__init__(schema, **kwargs)
 
         # todo: add required keys?
@@ -75,6 +78,8 @@ class FreeCollisionObstacle(CollisionObstacle):
     def color(self):
         return self._config.color
 
-    # @abstractmethod
-    # def position(self, **kwargs):
-    #     pass
+    def position(self):
+        return self._config.position
+
+    def dimension(self):
+        return len(self.position())

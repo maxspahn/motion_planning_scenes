@@ -2,10 +2,8 @@ from dataclasses import dataclass, KW_ONLY
 import numpy as np
 import os
 import csv
-from MotionPlanningEnv.freeCollisionObstacle import (
-    FreeCollisionObstacle,
-    FreeCollisionObstacleConfig,
-)
+from MotionPlanningEnv.freeCollisionObstacle import FreeCollisionObstacleConfig, FreeCollisionObstacle
+
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
     DimensionNotSuitableForEnv,
 )
@@ -21,16 +19,13 @@ class GeometryConfig:
     """
     Configuration dataclass for geometry.
 
-    This configuration class holds information about position
-    and radius.
+    This configuration class holds information and radius.
 
     Parameters:
     ------------
 
-    position: list: Position of the obstacle
     radius: float: Radius of the obstacle
     """
-    position: List[float]
     radius: float
 
 
@@ -52,7 +47,6 @@ class SphereObstacleConfig(FreeCollisionObstacleConfig):
     """
     geometry: GeometryConfig
     _: KW_ONLY
-    movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
@@ -81,14 +75,8 @@ class SphereObstacle(FreeCollisionObstacle):
         else:
             return [np.ones(self.dimension()) * 1, 1]
 
-    def position(self):
-        return self._config.geometry.position
-
     def radius(self):
         return self._config.geometry.radius
-
-    def dimension(self):
-        return len(self._config.geometry.position)
 
     def shuffle(self):
         random_pos = np.random.uniform(
@@ -97,7 +85,7 @@ class SphereObstacle(FreeCollisionObstacle):
         random_radius = np.random.uniform(
             self.limit_low()[1], self.limit_high()[1], 1
         )
-        self._config.geometry.position = random_pos.tolist()
+        self._config.position = random_pos.tolist()
         self._config.geometry.radius = float(random_radius)
 
     def csv(self, file_name, samples=100):

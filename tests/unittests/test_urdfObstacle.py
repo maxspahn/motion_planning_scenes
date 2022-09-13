@@ -6,7 +6,8 @@ from MotionPlanningEnv.urdfObstacle import UrdfObstacle
 def test_urdf_obstacle():
     obst_dict = {
         "type": "sphere",
-        "geometry": {"position": [0.1, 0.2, 0.4]},
+        "position": [0.1, 0.2, 0.4],
+        "geometry": {},
         "urdf": "duck.urdf",
     }
     sphere_obst = UrdfObstacle(name="simpleUrdf", content_dict=obst_dict)
