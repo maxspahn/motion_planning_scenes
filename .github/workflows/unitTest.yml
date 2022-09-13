@@ -6,7 +6,6 @@ name: Testing motion planning scenes
 on: 
   pull_request:
     branches:
-      - develop_python3.10
       - main
 
 jobs:
