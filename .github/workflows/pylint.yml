@@ -6,6 +6,7 @@ name: Verifying linting motion planning scenes
 on: 
   pull_request:
     branches:
+      - develop_python3.10
       - main
 
 jobs:
@@ -22,7 +23,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: 3.10
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
