@@ -146,6 +146,9 @@ class DynamicSphereObstacle(CollisionObstacle):
             t = kwargs.get("t")
         return self._traj.evaluate(t)[2]
 
+    def geometry(self):
+        return self._config.geometry
+
     def radius(self):
         return self.geometry()["radius"]
 

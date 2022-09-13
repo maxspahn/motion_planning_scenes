@@ -25,7 +25,7 @@ def test_sphereObstacle():
 
 def test_errorRaiseIncompleteDict():
     obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2]}}
-    with pytest.raises(ComponentIncompleteError):
+    with pytest.raises(MissingMandatoryValue):
         sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
         sphereObst.radius()
 

@@ -1,10 +1,10 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, KW_ONLY
 import numpy as np
 import os
 import csv
-from MotionPlanningEnv.collisionObstacle import (
-    CollisionObstacle,
-    CollisionObstacleConfig,
+from MotionPlanningEnv.freeCollisionObstacle import (
+    FreeCollisionObstacle,
+    FreeCollisionObstacleConfig,
 )
 from MotionPlanningSceneHelpers.motionPlanningComponent import (
     DimensionNotSuitableForEnv,
@@ -13,17 +13,16 @@ from MotionPlanningSceneHelpers.motionPlanningComponent import (
 from omegaconf import OmegaConf
 from typing import List, Optional
 
-
 class SphereObstacleMissmatchDimensionError(Exception):
     pass
 
-
 @dataclass
 class GeometryConfig:
-    """Configuration dataclass for geometry.
+    """
+    Configuration dataclass for geometry.
 
     This configuration class holds information about position
-    and radius of a sphere obstacle.
+    and radius.
 
     Parameters:
     ------------
@@ -31,14 +30,14 @@ class GeometryConfig:
     position: list: Position of the obstacle
     radius: float: Radius of the obstacle
     """
-
     position: List[float]
     radius: float
 
 
 @dataclass
-class SphereObstacleConfig(CollisionObstacleConfig):
-    """Configuration dataclass for sphere obstacle.
+class SphereObstacleConfig(FreeCollisionObstacleConfig):
+    """
+    Configuration dataclass for sphere obstacle.
 
     This configuration class holds information about the position, size
     and randomization of a spherical obstacle.
@@ -51,22 +50,18 @@ class SphereObstacleConfig(CollisionObstacleConfig):
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
     """
-
     geometry: GeometryConfig
+    _: KW_ONLY
     movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
 
-
-class SphereObstacle(CollisionObstacle):
+class SphereObstacle(FreeCollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.add_required_keys({"geometry": ["position", "radius"]})
-        self.check_completeness()
-
-    def dimension(self):
-        return len(self._config.geometry.position)
+        # self.add_required_keys({"geometry": ["position", "radius"]})
+        # self.check_completeness()
 
     def limit_low(self):
         if self._config.low:
@@ -86,17 +81,14 @@ class SphereObstacle(CollisionObstacle):
         else:
             return [np.ones(self.dimension()) * 1, 1]
 
-    def position(self, **kwargs):
+    def position(self):
         return self._config.geometry.position
-
-    def velocity(self, **kwargs):
-        return np.zeros(self.dimension())
-
-    def acceleration(self, **kwargs):
-        return np.zeros(self.dimension())
 
     def radius(self):
         return self._config.geometry.radius
+
+    def dimension(self):
+        return len(self._config.geometry.position)
 
     def shuffle(self):
         random_pos = np.random.uniform(
@@ -107,9 +99,6 @@ class SphereObstacle(CollisionObstacle):
         )
         self._config.geometry.position = random_pos.tolist()
         self._config.geometry.radius = float(random_radius)
-
-    def movable(self):
-        return self._config.movable
 
     def csv(self, file_name, samples=100):
         theta = np.arange(-np.pi, np.pi + np.pi / samples, step=np.pi / samples)
@@ -131,6 +120,24 @@ class SphereObstacle(CollisionObstacle):
         joint.add_attr(tf)
 
     def add_to_bullet(self, pybullet):
+        pybullet.setAdditionalSearchPath(
+            os.path.dirname(os.path.realpath(__file__))
+        )
+
+        mass = -1
+        if self.movable():
+            mass = self.mass()
+
+        collision_shape = pybullet.createCollisionShape(
+            pybullet.GEOM_SPHERE, radius=self.radius()
+        )
+        visual_shape_id = pybullet.createVisualShape(
+            pybullet.GEOM_MESH,
+            fileName="sphere_smooth.obj",
+            rgbaColor=self.color(),
+            specularColor=[1.0, 0.5, 0.5],
+            meshScale=[self.radius(), self.radius(), self.radius()],
+        )
         if self.dimension() == 2:
             base_position = self.position() + [0.0]
         elif self.dimension() == 3:
@@ -139,22 +146,8 @@ class SphereObstacle(CollisionObstacle):
             raise DimensionNotSuitableForEnv(
                 "Pybullet only supports three dimensional obstacles"
             )
-        collision_shape = pybullet.createCollisionShape(
-            pybullet.GEOM_SPHERE, radius=self.radius()
-        )
-        visual_shape_id = -1
-        base_orientation = [0, 0, 0, 1]
-        mass = int(self.movable())
-        pybullet.setAdditionalSearchPath(
-            os.path.dirname(os.path.realpath(__file__))
-        )
-        visual_shape_id = pybullet.createVisualShape(
-            pybullet.GEOM_MESH,
-            fileName="sphere_smooth.obj",
-            rgbaColor=[1.0, 0.0, 0.0, 1.0],
-            specularColor=[1.0, 0.5, 0.5],
-            meshScale=[self.radius(), self.radius(), self.radius()],
-        )
+        base_orientation = self.orientation()
+
         pybullet.createMultiBody(
             mass,
             collision_shape,
