@@ -51,9 +51,6 @@ class UrdfObstacle(FreeCollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(UrdfObstacleConfig)
         super().__init__(schema, **kwargs)
-    
-    def geometry(self):
-        return self._config.geometry
 
     def urdf(self):
         return self._config.geometry.urdf

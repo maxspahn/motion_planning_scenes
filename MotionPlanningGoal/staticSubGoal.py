@@ -48,7 +48,6 @@ class StaticSubGoal(SubGoal):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(StaticSubGoalConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
         self.check_dimensionality()
 
     def parent_link(self):

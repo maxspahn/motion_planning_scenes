@@ -53,7 +53,6 @@ class DynamicSubGoal(SubGoal):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(DynamicSubGoalConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
         if self.type() == "splineSubGoal":
             self._traj = SplineTrajectory(
                 self.dimension(), traj=self._config.trajectory
