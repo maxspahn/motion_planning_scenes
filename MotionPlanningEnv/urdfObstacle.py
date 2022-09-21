@@ -57,7 +57,6 @@ class UrdfObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(UrdfObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
 
     def urdf(self):
         return self._config.urdf

@@ -62,7 +62,6 @@ class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(SphereObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
 
     def dimension(self):
         return len(self._config.geometry.position)

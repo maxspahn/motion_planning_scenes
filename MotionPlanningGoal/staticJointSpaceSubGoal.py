@@ -34,7 +34,6 @@ class StaticJointSpaceSubGoal(SubGoal):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(StaticJointSpaceSubGoalConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
         self.check_dimensionality()
 
     def limit_low(self):

@@ -70,7 +70,7 @@ class DynamicSphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
         schema = OmegaConf.structured(DynamicSphereObstacleConfig)
         super().__init__(schema, **kwargs)
-        self.check_completeness()
+
         self.check_dimensionality()
         if self.type() == "splineSphere":
             self._traj = SplineTrajectory(
