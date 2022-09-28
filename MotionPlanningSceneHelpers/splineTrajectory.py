@@ -30,6 +30,9 @@ class SplineTrajectory(ReferenceTrajectory):
             raise TrajectoryComponentMissingError(
                 "Spline definition not complete. Missing component in trajectory: duration"
             )
+        self.initialize_spline()
+
+    def initialize_spline(self):
         self._traj = BSpline.Curve()
         self._traj.degree = self._trajDict["degree"]
         list_ctrlpts = [list(val) for val in self._trajDict["controlPoints"]]
@@ -41,6 +44,12 @@ class SplineTrajectory(ReferenceTrajectory):
 
     def concretize(self):
         pass
+
+    def shuffle(self):
+        limit_low = np.array(self._trajDict['low']['controlPoints'])
+        limit_high = np.array(self._trajDict['high']['controlPoints'])
+        self._trajDict['controlPoints'] = np.random.uniform(limit_low, limit_high, limit_low.shape).tolist()
+        self.initialize_spline()
 
     def timeReparameterize(self, t):
         if t > self._duration:

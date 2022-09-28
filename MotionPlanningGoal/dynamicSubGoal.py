@@ -95,7 +95,7 @@ class DynamicSubGoal(SubGoal):
         return self._traj.evaluate(t=t)
 
     def shuffle(self):
-        pass
+        self._traj.shuffle()
 
     def angle(self):
         return self._config.angle
