@@ -21,6 +21,9 @@ class AnalyticTrajectory(ReferenceTrajectory):
         self._a = ca.jacobian(self._v, self._t)
         self._funs = ca.Function("traj", [self._t], [self._traj, self._v, self._a])
 
+    def shuffle(self):
+        pass
+
     def evaluate(self, t):
         fun = self._funs(t)
         x = np.array(fun[0])[:, 0]
