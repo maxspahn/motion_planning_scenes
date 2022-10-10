@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 
 from MotionPlanningGoal.dynamicSubGoal import DynamicSubGoal
 
@@ -36,6 +37,8 @@ def test_dynamicSubGoal(dynamicGoalDict):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicGoalDict)
     assert "simple_dynamic_subGoal" == dynamic_sub_goal.name()
     assert 0.2 == dynamic_sub_goal.epsilon()
+    assert isinstance(dynamic_sub_goal.position(t=0), np.ndarray)
+    assert isinstance(dynamic_sub_goal.evaluate(t=0), list)
     assert [0.01, 0.2] == dynamic_sub_goal.position(t=0).tolist()
     assert [1.01, 0.2] == dynamic_sub_goal.position(t=1).tolist()
 

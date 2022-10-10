@@ -81,16 +81,16 @@ class DynamicSubGoal(SubGoal):
     def dict(self):
         return OmegaConf.to_container(self._config)
 
-    def position(self, **kwargs):
-        return self.evaluate(**kwargs)[0]
+    def position(self, **kwargs) -> np.ndarray:
+        return self.evaluate_trajectory(**kwargs)[0]
 
-    def velocity(self, **kwargs):
-        return self.evaluate(**kwargs)[1]
+    def velocity(self, **kwargs) -> np.ndarray:
+        return self.evaluate_trajectory(**kwargs)[1]
 
-    def acceleration(self, **kwargs):
-        return self.evaluate(**kwargs)[2]
+    def acceleration(self, **kwargs) -> np.ndarray:
+        return self.evaluate_trajectory(**kwargs)[2]
 
-    def evaluate(self, **kwargs):
+    def evaluate_trajectory(self, **kwargs):
         t = kwargs.get("t") if "t" in kwargs else 0.0
         return self._traj.evaluate(t=t)
 

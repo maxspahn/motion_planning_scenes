@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 
 from MotionPlanningGoal.goalComposition import GoalComposition, MultiplePrimeGoalsError
 
@@ -59,7 +60,8 @@ def test_goal_composition_multi(multi_goal_dict):
     )
     sub_goal_1 = goal_composition.get_goal_by_name("subgoal1")
     assert "subgoal1" == sub_goal_1.name()
-    assert sub_goal_1.position() == [-0.21, 0.2]
+    assert isinstance(sub_goal_1.position(), np.ndarray)
+    assert sub_goal_1.position().tolist() == [-0.21, 0.2]
     sub_goals = goal_composition.sub_goals()
     assert len(sub_goals) == 2
 
@@ -70,10 +72,10 @@ def test_shuffleGoalComposition(multi_goal_dict):
     )
     # verification that returns are actually only pointers
     sub_goal_1 = goal_composition.get_goal_by_name('subgoal1')
-    assert sub_goal_1.position() == [-0.21, 0.2]
+    assert sub_goal_1.position().tolist() == [-0.21, 0.2]
     goal_composition.shuffle()
-    assert goal_composition.get_goal_by_name('subgoal1').position() != [-0.21, 0.2]
-    assert sub_goal_1.position() != [-0.21, 0.2]
+    assert goal_composition.get_goal_by_name('subgoal1').position().tolist() != [-0.21, 0.2]
+    assert sub_goal_1.position().tolist() != [-0.21, 0.2]
 
 
 def test_errorMultiplePrimeGoals():

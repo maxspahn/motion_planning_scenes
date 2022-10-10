@@ -67,6 +67,13 @@ class SubGoal(MotionPlanningComponent):
     def update_bullet_position(self, pybullet, **kwargs):
         pass
 
+    def evaluate(self, **kwargs) -> list:
+        return [
+            self.position(**kwargs),
+            self.velocity(**kwargs),
+            self.acceleration(**kwargs)
+        ]
+
     @abstractmethod
     def position(self, **kwargs):
         pass
