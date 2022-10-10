@@ -69,13 +69,10 @@ class StaticSubGoal(SubGoal):
         else:
             return np.ones(self.dimension()) * 1
 
-    def evaluate(self, **kwargs):
-        pass
+    def position(self, **kwargs) -> np.ndarray:
+        return np.array(self._config.desired_position)
 
-    def position(self, **kwargs):
-        return self._config.desired_position
-
-    def velocity(self, **kwargs):
+    def velocity(self, **kwargs) -> np.ndarray:
         return np.zeros(self.dimension())
 
     def acceleration(self, **kwargs):

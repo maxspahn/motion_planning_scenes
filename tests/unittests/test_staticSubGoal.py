@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 
 from MotionPlanningGoal.staticSubGoal import StaticSubGoal
 from MotionPlanningGoal.subGoal import SubGoalMissmatchDimensionError
@@ -22,16 +23,18 @@ def simpleGoalDict():
 
 
 def test_staticSubGoal(simpleGoalDict):
-    simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
-    assert "simple_static_subGoal" == simpleStaticSubGoal.name()
-    assert [0.01, 0.2] == simpleStaticSubGoal.position()
-    assert 0.2 == simpleStaticSubGoal.epsilon()
+    simple_static_sub_goal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
+    assert "simple_static_subGoal" == simple_static_sub_goal.name()
+    assert isinstance(simple_static_sub_goal.position(), np.ndarray)
+    assert isinstance(simple_static_sub_goal.evaluate(), list)
+    assert [0.01, 0.2] == simple_static_sub_goal .position().tolist()
+    assert 0.2 == simple_static_sub_goal .epsilon()
 
 
 def test_shuffleGoal(simpleGoalDict):
     simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     simpleStaticSubGoal.shuffle()
-    assert [0.01, 0.2] != simpleStaticSubGoal.position()
+    assert [0.01, 0.2] != simpleStaticSubGoal.position().tolist()
     assert simpleStaticSubGoal.position()[0] >= -1
     assert simpleStaticSubGoal.position()[0] <= 1
     assert simpleStaticSubGoal.position()[1] >= -1
@@ -41,7 +44,7 @@ def test_shuffleGoal(simpleGoalDict):
     simpleGoalDict['high'] = [-1, -1]
     simpleStaticSubGoal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     simpleStaticSubGoal.shuffle()
-    assert [0.01, 0.2] != simpleStaticSubGoal.position()
+    assert [0.01, 0.2] != simpleStaticSubGoal.position().tolist()
     assert simpleStaticSubGoal.position()[0] >= -2
     assert simpleStaticSubGoal.position()[0] <= -1
     assert simpleStaticSubGoal.position()[1] >= -2
@@ -53,6 +56,7 @@ def test_saving_sub_goal(simpleGoalDict):
     goal_dict_after =simpleStaticSubGoal.dict()
     assert isinstance(goal_dict_after, dict)
     assert goal_dict_after['desired_position'][0] != 0.01
+    assert isinstance(goal_dict_after['desired_position'], list)
 
 
 def test_errorRaiseIncompleteDict():
@@ -81,3 +85,4 @@ def test_errorRaiseMissmatichDimension():
     }
     with pytest.raises(SubGoalMissmatchDimensionError) as e_info:
         StaticSubGoal(name="example_static_subGoal", content_dict=goalDict)
+
