@@ -131,9 +131,9 @@ class SphereObstacle(CollisionObstacle):
 
     def add_to_bullet(self, pybullet):
         if self.dimension() == 2:
-            base_position = self.position() + [0.0]
+            base_position = self.position().tolist() + [0.0]
         elif self.dimension() == 3:
-            base_position = self.position()
+            base_position = self.position().tolist()
         else:
             raise DimensionNotSuitableForEnv(
                 "Pybullet only supports three dimensional obstacles"
@@ -154,6 +154,8 @@ class SphereObstacle(CollisionObstacle):
             specularColor=[1.0, 0.5, 0.5],
             meshScale=[self.radius(), self.radius(), self.radius()],
         )
+        assert isinstance(base_position, list)
+        assert isinstance(base_orientation, list)
         pybullet.createMultiBody(
             mass,
             collision_shape,
