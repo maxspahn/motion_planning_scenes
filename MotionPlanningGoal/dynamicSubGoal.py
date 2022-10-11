@@ -150,9 +150,9 @@ class DynamicSubGoal(SubGoal):
 
     def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]):
         if self.dimension() == 2:
-            base_position = self.position() + [0.0]
+            base_position = self.position().tolist() + [0.0]
         elif self.dimension() == 3:
-            base_position = self.position()
+            base_position = self.position().tolist()
         else:
             raise DimensionNotSuitableForEnv(
                 "Pybullet only supports three dimensional obstacles"
@@ -165,6 +165,8 @@ class DynamicSubGoal(SubGoal):
         base_orientation = [0, 0, 0, 1]
         mass = 0
 
+        assert isinstance(base_position, list)
+        assert isinstance(base_orientation, list)
         self._bullet_id = pybullet.createMultiBody(
             mass,
             collision_shape,
@@ -214,6 +216,8 @@ class DynamicSubGoal(SubGoal):
         )
         collision_shape = -1
         mass = 0
+        assert isinstance(position, list)
+        assert isinstance(orientation_array, list)
         pybullet.createMultiBody(
             mass,
             collision_shape,
