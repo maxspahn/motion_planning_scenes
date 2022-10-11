@@ -27,7 +27,7 @@ def simpleSplineTrajectory():
     return traj
 
 
-def test_analyticTrajectory(simpleSplineTrajectory):
+def test_splineTrajectory(simpleSplineTrajectory):
     x, v, a = simpleSplineTrajectory.evaluate(0.3)
     assert isinstance(x, np.ndarray)
     assert isinstance(v, np.ndarray)

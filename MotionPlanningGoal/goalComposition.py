@@ -8,6 +8,7 @@ from MotionPlanningGoal.staticJointSpaceSubGoal import (
 )
 
 import yaml
+import logging
 from omegaconf import OmegaConf
 
 
@@ -82,7 +83,7 @@ class GoalComposition(MotionPlanningComponent):
             try:
                 sub_goal.render_gym(viewer, rendering, **kwargs)
             except JointSpaceGoalsNotSupportedError as _:
-                print("Skipping visualization of joint space goal.")
+                logging.warn("Skipping visualization of joint space goal.")
 
     def add_to_bullet(self, pybullet):
         for sub_goal in self._sub_goals:

@@ -41,6 +41,8 @@ def test_dynamicSubGoal(dynamicGoalDict):
     assert isinstance(dynamic_sub_goal.evaluate(t=0), list)
     assert [0.01, 0.2] == dynamic_sub_goal.position(t=0).tolist()
     assert [1.01, 0.2] == dynamic_sub_goal.position(t=1).tolist()
+    assert [0.00, 0.0] == dynamic_sub_goal.acceleration(t=0).tolist()
+    assert [0.00, 0.0] == dynamic_sub_goal.acceleration(t=1).tolist()
 
 def test_dynamicSplineSubGoal(dynamicSplineGoalDict):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicSplineGoalDict)

@@ -2,6 +2,7 @@ import numpy as np
 
 from geomdl import BSpline
 from geomdl import utilities
+import logging
 
 from MotionPlanningSceneHelpers.referenceTrajectory import ReferenceTrajectory
 
@@ -65,7 +66,11 @@ class SplineTrajectory(ReferenceTrajectory):
         v_scaling = 1 * np.pi / self._duration * np.sin(t * np.pi / self._duration)
         a_scaling = 1 * np.pi / self._duration * np.cos(t * np.pi / self._duration)
         v = v_scaling * v_raw / np.linalg.norm(v_raw)
-        a = a_scaling * a_raw / np.linalg.norm(a_raw)
+        if np.linalg.norm(a_raw) < 1e-5:
+            logging.warn(f"Assuming zero acceleration on spline, because of large magnitude {np.linalg.norm(a_raw)}")
+            a = a_raw * 0
+        else:
+            a = a_scaling * a_raw / np.linalg.norm(a_raw)
         if t_ref == 1.0:
             v = v_raw * 0.0
             a = a_raw * 0.0
