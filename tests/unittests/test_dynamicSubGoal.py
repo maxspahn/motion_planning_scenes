@@ -44,6 +44,19 @@ def test_dynamicSubGoal(dynamicGoalDict):
     assert [0.00, 0.0] == dynamic_sub_goal.acceleration(t=0).tolist()
     assert [0.00, 0.0] == dynamic_sub_goal.acceleration(t=1).tolist()
 
+def test_mask_selection(dynamicGoalDict):
+    dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicGoalDict)
+    mask = ["position", "velocity", "epsilon", "parent_link"]
+    selected_items = dynamic_sub_goal.evaluate_components(mask, 0.2)
+    assert isinstance(selected_items, dict)
+    assert isinstance(selected_items['position'], np.ndarray)
+    assert isinstance(selected_items['velocity'], np.ndarray)
+    assert isinstance(selected_items['epsilon'], float)
+    assert isinstance(selected_items['parent_link'], str)
+    assert selected_items['epsilon'] == 0.2
+    assert list(selected_items.keys()) == ["position", "velocity", "epsilon", "parent_link"]
+
+
 def test_dynamicSplineSubGoal(dynamicSplineGoalDict):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicSplineGoalDict)
     assert "simple_dynamic_subGoal" == dynamic_sub_goal.name()

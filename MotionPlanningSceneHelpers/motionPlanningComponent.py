@@ -42,5 +42,11 @@ class MotionPlanningComponent(ABC):
     def name(self):
         return self._name
 
+    def evaluate_components(self, mask: list, t: float):
+        result = {}
+        for mask_entry in mask:
+            result[mask_entry] = getattr(self, mask_entry)()
+        return result
+
     def dict(self):
         return OmegaConf.to_container(self._config)
