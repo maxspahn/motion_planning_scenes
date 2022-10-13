@@ -129,7 +129,7 @@ class SphereObstacle(CollisionObstacle):
         joint = viewer.draw_circle(self.radius())
         joint.add_attr(tf)
 
-    def add_to_bullet(self, pybullet):
+    def add_to_bullet(self, pybullet) -> int:
         if self.dimension() == 2:
             base_position = self.position().tolist() + [0.0]
         elif self.dimension() == 3:
@@ -156,7 +156,7 @@ class SphereObstacle(CollisionObstacle):
         )
         assert isinstance(base_position, list)
         assert isinstance(base_orientation, list)
-        pybullet.createMultiBody(
+        return pybullet.createMultiBody(
             mass,
             collision_shape,
             visual_shape_id,

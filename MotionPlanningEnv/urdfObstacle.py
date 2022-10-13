@@ -74,9 +74,9 @@ class UrdfObstacle(CollisionObstacle):
     def dimension(self):
         return len(self._config.geometry.position)
 
-    def add_to_bullet(self, pybullet):
+    def add_to_bullet(self, pybullet) -> int:
         if self.dimension() != 3:
             raise DimensionNotSuitableForEnv(
                 "Pybullet only supports two dimensional obstacles"
             )
-        pybullet.loadURDF(fileName=self.urdf(), basePosition=self.position())
+        return pybullet.loadURDF(fileName=self.urdf(), basePosition=self.position())
