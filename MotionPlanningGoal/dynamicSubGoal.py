@@ -148,7 +148,7 @@ class DynamicSubGoal(SubGoal):
         ori = [0, 0, 0, 1]
         pybullet.resetBasePositionAndOrientation(self._bullet_id, pos, ori)
 
-    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]):
+    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]) -> int:
         if self.dimension() == 2:
             base_position = self.position().tolist() + [0.0]
         elif self.dimension() == 3:
@@ -178,6 +178,8 @@ class DynamicSubGoal(SubGoal):
         if self.angle():
             for i in range(3):
                 self.add_axis_component(pybullet, i, position)
+        return self._bullet_id
+
 
     def add_axis_component(self, pybullet, i, goal_position):
         rgba_color = [0.0, 0.0, 0.0, 0.3]
@@ -218,7 +220,7 @@ class DynamicSubGoal(SubGoal):
         mass = 0
         assert isinstance(position, list)
         assert isinstance(orientation_array, list)
-        pybullet.createMultiBody(
+        return pybullet.createMultiBody(
             mass,
             collision_shape,
             visual_shape_id,

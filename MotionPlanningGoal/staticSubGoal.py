@@ -138,7 +138,7 @@ class StaticSubGoal(SubGoal):
                 "PlanarGym only supports two dimensional obstacles"
             )
 
-    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]):
+    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]) -> int:
         """Adds the static sub goal to pybullet.
 
         The static sub goal is added to the pybullet as point or a coordinate
@@ -168,7 +168,7 @@ class StaticSubGoal(SubGoal):
 
         assert isinstance(base_position, list)
         assert isinstance(base_orientation, list)
-        pybullet.createMultiBody(
+        multi_body_id = pybullet.createMultiBody(
             mass,
             collision_shape,
             visual_shape_id,
@@ -179,6 +179,7 @@ class StaticSubGoal(SubGoal):
         if self.angle():
             for i in range(3):
                 self.add_axis_component(pybullet, i, position)
+        return multi_body_id
 
     def add_axis_component(self, pybullet, i, goal_position):
         """Adds the coordinate system of the static sub goal to pybullet.

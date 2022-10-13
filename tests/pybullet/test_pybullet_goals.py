@@ -84,7 +84,8 @@ def bullet_gui():
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_add_static_sub_goal_gui(simpleGoalDict, bullet_gui):
     static_sub_goal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
-    static_sub_goal.add_to_bullet(bullet_gui)
+    body_id = static_sub_goal.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for _ in range(10):
         bullet_gui.stepSimulation()
         time.sleep(0.1)
@@ -92,7 +93,8 @@ def test_add_static_sub_goal_gui(simpleGoalDict, bullet_gui):
 
 def test_add_static_sub_goal(simpleGoalDict, bullet):
     static_sub_goal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
-    static_sub_goal.add_to_bullet(bullet)
+    body_id = static_sub_goal.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for _ in range(10):
         bullet.stepSimulation()
     bullet.disconnect()
@@ -108,7 +110,8 @@ def test_add_joint_space_goal(simpleJointSpaceGoalDict, bullet):
 
 def test_dynamicSubGoal(dynamicGoalDict, bullet):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicGoalDict)
-    dynamic_sub_goal.add_to_bullet(bullet)
+    body_id = dynamic_sub_goal.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for i in range(10):
         bullet.stepSimulation()
         dynamic_sub_goal.update_bullet_position(bullet, t=i/100)
@@ -118,7 +121,8 @@ def test_dynamicSubGoal(dynamicGoalDict, bullet):
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_dynamicSubGoal_gui(dynamicGoalDict, bullet_gui):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicGoalDict)
-    dynamic_sub_goal.add_to_bullet(bullet_gui)
+    body_id = dynamic_sub_goal.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         dynamic_sub_goal.update_bullet_position(bullet_gui, t=i/100)
@@ -127,7 +131,8 @@ def test_dynamicSubGoal_gui(dynamicGoalDict, bullet_gui):
 
 def test_dynamicSplineSubGoal(dynamicSplineGoalDict, bullet):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicSplineGoalDict)
-    dynamic_sub_goal.add_to_bullet(bullet)
+    body_id = dynamic_sub_goal.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for i in range(10):
         bullet.stepSimulation()
         dynamic_sub_goal.update_bullet_position(bullet, t=i/100)
@@ -137,7 +142,8 @@ def test_dynamicSplineSubGoal(dynamicSplineGoalDict, bullet):
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
 def test_dynamicSplineSubGoal_gui(dynamicSplineGoalDict, bullet_gui):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicSplineGoalDict)
-    dynamic_sub_goal.add_to_bullet(bullet_gui)
+    body_id = dynamic_sub_goal.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         dynamic_sub_goal.update_bullet_position(bullet_gui, t=i/10)

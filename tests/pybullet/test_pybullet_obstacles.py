@@ -32,7 +32,22 @@ def bullet_gui():
 def test_sphereObstacle(bullet):
     obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
-    sphereObst.add_to_bullet(bullet)
+    body_id = sphereObst.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
+    for i in range(100):
+        bullet.stepSimulation()
+        sphereObst.update_bullet_position(bullet, t=i/10)
+    bullet.disconnect()
+
+def test_sphereObstacle(bullet):
+    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
+    obstDict2 = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 1.4], 'radius': 0.2}}
+    sphereObst2 = SphereObstacle(name='simpleSphere', content_dict=obstDict2)
+    body_id = sphereObst.add_to_bullet(bullet)
+    body_id_2 = sphereObst2.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
+    assert isinstance(body_id_2, int)
     for i in range(100):
         bullet.stepSimulation()
         sphereObst.update_bullet_position(bullet, t=i/10)
@@ -42,7 +57,8 @@ def test_sphereObstacle(bullet):
 def test_sphereObstacle_gui(bullet_gui):
     obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
-    sphereObst.add_to_bullet(bullet_gui)
+    body_id = sphereObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         sphereObst.update_bullet_position(bullet_gui, t=i/10)
@@ -56,7 +72,8 @@ def test_urdfObstacle(bullet):
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
-    sphereObst.add_to_bullet(bullet)
+    body_id = sphereObst.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet.stepSimulation()
         sphereObst.update_bullet_position(bullet, t=i/10)
@@ -71,7 +88,8 @@ def test_urdfObstacle_gui(bullet_gui):
         "urdf": "teddy_large.urdf",
     }
     sphereObst = UrdfObstacle(name="simpleUrdf", content_dict=obstDict)
-    sphereObst.add_to_bullet(bullet_gui)
+    body_id = sphereObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         sphereObst.update_bullet_position(bullet_gui, t=i/10)
@@ -87,7 +105,8 @@ def test_circleObstacle_gui(bullet_gui):
     dynamicSphereObst = DynamicSphereObstacle(
         name="dynamicSphere", content_dict=obstDict
     )
-    dynamicSphereObst.add_to_bullet(bullet_gui)
+    body_id = dynamicSphereObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         dynamicSphereObst.update_bullet_position(bullet_gui, t=i/10)
@@ -102,7 +121,8 @@ def test_circleObstacle(bullet):
     dynamicSphereObst = DynamicSphereObstacle(
         name="dynamicSphere", content_dict=obstDict
     )
-    dynamicSphereObst.add_to_bullet(bullet)
+    body_id = dynamicSphereObst.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet.stepSimulation()
         dynamicSphereObst.update_bullet_position(bullet, t=i/10)
@@ -118,7 +138,8 @@ def test_splineObstacle(bullet):
     dynamicSphereObst = DynamicSphereObstacle(
         name="dynamicSphere", content_dict=obstDict
     )
-    dynamicSphereObst.add_to_bullet(bullet)
+    body_id = dynamicSphereObst.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet.stepSimulation()
         dynamicSphereObst.update_bullet_position(bullet, t=i/10)
@@ -135,7 +156,8 @@ def test_splineObstacle_gui(bullet_gui):
     dynamicSphereObst = DynamicSphereObstacle(
         name="dynamicSphere", content_dict=obstDict
     )
-    dynamicSphereObst.add_to_bullet(bullet_gui)
+    body_id = dynamicSphereObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
     for i in range(100):
         bullet_gui.stepSimulation()
         dynamicSphereObst.update_bullet_position(bullet_gui, t=i/10)
