@@ -45,7 +45,10 @@ class MotionPlanningComponent(ABC):
     def evaluate_components(self, mask: list, t: float):
         result = {}
         for mask_entry in mask:
-            result[mask_entry] = getattr(self, mask_entry)()
+            try:
+                result[mask_entry] = getattr(self, mask_entry)(t=t)
+            except TypeError as _:
+                result[mask_entry] = getattr(self, mask_entry)()
         return result
 
     def dict(self):
