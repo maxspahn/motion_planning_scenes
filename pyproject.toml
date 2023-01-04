@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "motion_planning_scenes"
-version = "0.3.5"
+version = "0.4.0"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
 packages = [
@@ -13,7 +13,6 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.6.2,<3.10"
 numpy = "^1.19.0"
-casadi = "^3.5.4,!=3.5.5.post1,!=3.5.5.post2"
 PyYAML = "^6.0"
 geomdl = "^5.3.1"
 pyquaternion = "^0.9.9"
@@ -21,6 +20,7 @@ dataclasses = { version = "^0.8", python = "<3.7" }
 omegaconf = "^2.2.2"
 pybullet = {version = "^3.2.3", optional = true}
 matplotlib = "^3.3.0"
+sympy = "^1.7"
 
 [tool.poetry.extras]
 bullet = ["pybullet"]
