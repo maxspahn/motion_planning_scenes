@@ -1,7 +1,16 @@
-import casadi as ca
 import numpy as np
+import sympy as sp
 
 from MotionPlanningSceneHelpers.referenceTrajectory import ReferenceTrajectory, t
+
+def evaluate_component(expression, evaluation_time: float):
+    evaluation = []
+    for expr in expression:
+        if isinstance(expr, float):
+            evaluation.append(expr)
+        else:
+            evaluation.append(expr.evalf(subs={'t': evaluation_time}))
+    return np.array(evaluation)
 
 
 class TrajectoryComponentMissingError(Exception):
@@ -14,19 +23,18 @@ class AnalyticTrajectory(ReferenceTrajectory):
         if 'traj' not in kwargs:
             raise TrajectoryComponentMissingError("Trajectory definition not complete. Missing component: traj")
         self._t = t
-        self._traj = ca.vcat([eval(x) for x in kwargs.get('traj')])
+        self._traj = [eval(x) for x in kwargs.get('traj')]
 
     def concretize(self):
-        self._v = ca.jacobian(self._traj, self._t)
-        self._a = ca.jacobian(self._v, self._t)
-        self._funs = ca.Function("traj", [self._t], [self._traj, self._v, self._a])
+        self._v = [sp.diff(component, t) for component in self._traj]
+        self._a = [sp.diff(component, t) for component in self._v]
 
     def shuffle(self):
         pass
 
+
     def evaluate(self, t):
-        fun = self._funs(t)
-        x = np.array(fun[0])[:, 0]
-        v = np.array(fun[1])[:, 0]
-        a = np.array(fun[2])[:, 0]
+        x = evaluate_component(self._traj, t)
+        v = evaluate_component(self._v, t)
+        a = evaluate_component(self._a, t)
         return [x, v, a]

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-import casadi as ca
+import sympy as sp
 
-t = ca.SX.sym("t", 1)
+t = sp.symbols('t')
 
 
 class ReferenceTrajectory(ABC):
