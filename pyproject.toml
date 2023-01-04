@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "motion_planning_scenes"
-version = "0.4.0"
+version = "0.4.1"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
 packages = [
