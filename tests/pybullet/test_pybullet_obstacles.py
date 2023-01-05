@@ -10,7 +10,7 @@ from MotionPlanningEnv.boxObstacle import BoxObstacle
 from MotionPlanningEnv.urdfObstacle import UrdfObstacle
 from MotionPlanningEnv.dynamicSphereObstacle import DynamicSphereObstacle
 
-no_gui = False
+no_gui = True
 
 @pytest.fixture
 def bullet():
