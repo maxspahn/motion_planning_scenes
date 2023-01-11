@@ -28,6 +28,7 @@ jobs:
         run: poetry version patch
       - name: push version increase
         run: |
+          git pull
           git add pyproject.toml
           git add poetry.lock
           git config --global user.name 'GitHub Actions'
