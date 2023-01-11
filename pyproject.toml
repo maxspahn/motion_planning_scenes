@@ -1,13 +1,8 @@
 [tool.poetry]
-name = "motion_planning_scenes"
-version = "0.4.1"
+name = "mpscenes"
+version = "0.1.0"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
-packages = [
-  { include = "MotionPlanningSceneHelpers" },
-  { include = "MotionPlanningGoal" },
-  { include = "MotionPlanningEnv" },
-]
   
 
 [tool.poetry.dependencies]
@@ -18,7 +13,6 @@ geomdl = "^5.3.1"
 pyquaternion = "^0.9.9"
 omegaconf = "^2.2.2"
 pybullet = {version = "^3.2.3", optional = true}
-matplotlib = "^3.3.0"
 sympy = "^1.7"
 
 [tool.poetry.extras]
