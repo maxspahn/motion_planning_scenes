@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Publishing package to pypi.
+name: Publishing package to pypi with patch.
 
 # Controls when the workflow will run
 on: 
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  publish:
+  publish_patch:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -28,6 +28,8 @@ jobs:
         run: poetry version patch
       - name: push version increase
         run: |
+          git add pyproject.toml
+          git add poetry.lock
           git config --global user.name 'GitHub Actions'
           git config --global user.name 'maxspahn@users.noreply.github.com'
           git commit -m "Bumps version number."
