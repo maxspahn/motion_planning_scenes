@@ -6,6 +6,7 @@ import sys
 import pybullet as p
 import pybullet_data
 from MotionPlanningEnv.sphereObstacle import SphereObstacle
+from MotionPlanningEnv.boxObstacle import BoxObstacle
 from MotionPlanningEnv.urdfObstacle import UrdfObstacle
 from MotionPlanningEnv.dynamicSphereObstacle import DynamicSphereObstacle
 
@@ -39,18 +40,28 @@ def test_sphereObstacle(bullet):
         sphereObst.update_bullet_position(bullet, t=i/10)
     bullet.disconnect()
 
-def test_sphereObstacle(bullet):
+def test_boxObstacle(bullet):
+    obstDict = {'type': 'box', 'movable': True, 'geometry': {'position': [0.1, 0.2, 0.4], 'length': 2.2, 'width': 0.3, 'height': 0.2}}
+    boxObst = BoxObstacle(name='simpleBox', content_dict=obstDict)
+    body_id = boxObst.add_to_bullet(bullet)
+    assert isinstance(body_id, int)
+    for i in range(100):
+        bullet.stepSimulation()
+        boxObst.update_bullet_position(bullet, t=i/10)
+    bullet.disconnect()
+
+
+def test_TwoObstacles(bullet):
     obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
     sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
-    obstDict2 = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 1.4], 'radius': 0.2}}
-    sphereObst2 = SphereObstacle(name='simpleSphere', content_dict=obstDict2)
     body_id = sphereObst.add_to_bullet(bullet)
-    body_id_2 = sphereObst2.add_to_bullet(bullet)
+    obstDict = {'type': 'box', 'geometry': {'position': [0.1, 0.2, 0.4], 'length': 2.2, 'width': 0.3, 'height': 0.2}}
+    boxObst = BoxObstacle(name='simpleBox', content_dict=obstDict)
+    body_id_2 = boxObst.add_to_bullet(bullet)
     assert isinstance(body_id, int)
     assert isinstance(body_id_2, int)
     for i in range(100):
         bullet.stepSimulation()
-        sphereObst.update_bullet_position(bullet, t=i/10)
     bullet.disconnect()
 
 @pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
@@ -64,6 +75,34 @@ def test_sphereObstacle_gui(bullet_gui):
         sphereObst.update_bullet_position(bullet_gui, t=i/10)
         time.sleep(1/100)
     bullet_gui.disconnect()
+
+@pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
+def test_boxObstacle_gui(bullet_gui):
+    obstDict = {'type': 'box', 'geometry': {'position': [0.1, 0.2, 0.4], 'length': 2.2, 'width': 0.3, 'height': 0.2}}
+    boxObst = BoxObstacle(name='simpleBox', content_dict=obstDict)
+    body_id = boxObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
+    for i in range(100):
+        bullet_gui.stepSimulation()
+        boxObst.update_bullet_position(bullet_gui, t=i/10)
+        time.sleep(1/100)
+    bullet_gui.disconnect()
+
+@pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
+def test_TwoObstacles_gui(bullet_gui):
+    obstDict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    sphereObst = SphereObstacle(name='simpleSphere', content_dict=obstDict)
+    body_id = sphereObst.add_to_bullet(bullet_gui)
+    obstDict = {'type': 'box', 'geometry': {'position': [0.1, 0.2, 0.4], 'length': 2.2, 'width': 0.3, 'height': 0.2}}
+    boxObst = BoxObstacle(name='simpleBox', content_dict=obstDict)
+    body_id_2 = boxObst.add_to_bullet(bullet_gui)
+    assert isinstance(body_id, int)
+    assert isinstance(body_id_2, int)
+    for _ in range(100):
+        bullet_gui.stepSimulation()
+        time.sleep(1/100)
+    bullet_gui.disconnect()
+
 
 def test_urdfObstacle(bullet):
     obstDict = {
