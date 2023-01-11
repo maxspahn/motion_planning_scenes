@@ -1,13 +1,8 @@
 [tool.poetry]
-name = "motion_planning_scenes"
+name = "mpscenes"
 version = "0.4.1"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
-packages = [
-  { include = "MotionPlanningSceneHelpers" },
-  { include = "MotionPlanningGoal" },
-  { include = "MotionPlanningEnv" },
-]
   
 
 [tool.poetry.dependencies]

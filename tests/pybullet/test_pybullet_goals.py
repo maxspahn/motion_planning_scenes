@@ -4,11 +4,12 @@ import time
 import pybullet as p
 import pybullet_data
 
-from MotionPlanningGoal.staticSubGoal import StaticSubGoal
-from MotionPlanningGoal.dynamicSubGoal import DynamicSubGoal
-from MotionPlanningGoal.staticJointSpaceSubGoal import StaticJointSpaceSubGoal, JointSpaceGoalsNotSupportedError
+from mpscenes.goals.static_sub_goal import StaticSubGoal
+from mpscenes.goals.dynamic_sub_goal import DynamicSubGoal
+from mpscenes.goals.static_joint_space_sub_goal import StaticJointSpaceSubGoal
+from mpscenes.common.errors import JointSpaceGoalsNotSupportedError
 
-no_gui = True
+gui = False
 
 @pytest.fixture
 def simpleGoalDict():
@@ -81,7 +82,7 @@ def bullet_gui():
     planeId = p.loadURDF("plane.urdf")
     return p
 
-@pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
+@pytest.mark.skipif(not gui, reason="Not testing because gui is not available")
 def test_add_static_sub_goal_gui(simpleGoalDict, bullet_gui):
     static_sub_goal = StaticSubGoal(name="simple_static_subGoal", content_dict=simpleGoalDict)
     body_id = static_sub_goal.add_to_bullet(bullet_gui)
@@ -118,7 +119,7 @@ def test_dynamicSubGoal(dynamicGoalDict, bullet):
         time.sleep(i/100)
     bullet.disconnect()
 
-@pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
+@pytest.mark.skipif(not gui, reason="Not testing because gui is not available")
 def test_dynamicSubGoal_gui(dynamicGoalDict, bullet_gui):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicGoalDict)
     body_id = dynamic_sub_goal.add_to_bullet(bullet_gui)
@@ -139,7 +140,7 @@ def test_dynamicSplineSubGoal(dynamicSplineGoalDict, bullet):
         time.sleep(i/100)
     bullet.disconnect()
 
-@pytest.mark.skipif(no_gui, reason="Not testing because gui is not available")
+@pytest.mark.skipif(not gui, reason="Not testing because gui is not available")
 def test_dynamicSplineSubGoal_gui(dynamicSplineGoalDict, bullet_gui):
     dynamic_sub_goal = DynamicSubGoal(name="simple_dynamic_subGoal", content_dict=dynamicSplineGoalDict)
     body_id = dynamic_sub_goal.add_to_bullet(bullet_gui)

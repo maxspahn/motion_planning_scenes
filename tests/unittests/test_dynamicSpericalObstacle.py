@@ -1,6 +1,6 @@
 import pytest
 
-from MotionPlanningEnv.dynamicSphereObstacle import DynamicSphereObstacle
+from mpscenes.obstacles.dynamic_sphere_obstacle import DynamicSphereObstacle
 
 
 def test_circleObstacle():
