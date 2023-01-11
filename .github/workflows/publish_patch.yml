@@ -26,6 +26,12 @@ jobs:
           installer-parallel: true
       - name: Bump version
         run: poetry version patch
+      - name: push version increase
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.name 'maxspahn@users.noreply.github.com'
+          git commit -m "Bumps version number."
+          git push
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.13
         with:
