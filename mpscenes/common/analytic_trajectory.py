@@ -10,7 +10,7 @@ def evaluate_component(expression, evaluation_time: float):
         if isinstance(expr, float):
             evaluation.append(expr)
         else:
-            evaluation.append(expr.evalf(subs={'t': evaluation_time}))
+            evaluation.append(float(expr.evalf(subs={'t': evaluation_time})))
     return np.array(evaluation)
 
 
