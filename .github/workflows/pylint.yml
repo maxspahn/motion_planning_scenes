@@ -60,4 +60,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run pylint on mpscenes
         run: |
-          PYTHONPATH=src/ poetry run pylint --fail-under=9 mpscenes
+          PYTHONPATH=src/ poetry run pylint --fail-under=9 mpscenes/*
