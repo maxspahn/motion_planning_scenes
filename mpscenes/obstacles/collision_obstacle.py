@@ -49,6 +49,9 @@ class CollisionObstacle(MPComponent):
     def type(self) -> str:
         return self._config.type
 
+    def bullet_id(self) -> int:
+        return self._bullet_id
+
     def geometry(self):
         return self._config.geometry
 
