@@ -146,10 +146,13 @@ class DynamicSubGoal(SubGoal):
         else:
             t = kwargs.get("t")
         pos = self.position(t=t).tolist()
+        vel = self.velocity(t=t).tolist()
         if self.dimension() == 2 and self.indices() == [0, 1]:
             pos += [0.0]
+            vel += [0.0]
         ori = [0, 0, 0, 1]
-        pybullet.resetBasePositionAndOrientation(self._bullet_id, pos, ori)
+        pybullet.resetBasePositionAndOrientation(self.bullet_id(), pos, ori)
+        pybullet.resetBaseVelocity(self.bullet_id(), linearVelocity=vel)
 
     def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]) -> int:
         if self.dimension() == 2:
