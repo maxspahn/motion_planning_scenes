@@ -80,5 +80,6 @@ class CollisionObstacle(MPComponent):
     def update_bullet_position(self, pybullet, **kwargs):
         pass
 
+    @abstractmethod
     def size(self):
         pass
