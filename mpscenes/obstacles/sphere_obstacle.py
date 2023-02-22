@@ -53,6 +53,10 @@ class SphereObstacle(CollisionObstacle):
         super().__init__(**kwargs)
         self.check_completeness()
 
+    def size(self):
+        return [
+            self.radius(),
+        ]
 
     def limit_low(self):
         if self._config.low:

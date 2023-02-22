@@ -56,6 +56,13 @@ class BoxObstacle(CollisionObstacle):
         super().__init__(**kwargs)
         self.check_completeness()
 
+    def size(self):
+        return [
+            self.length(),
+            self.width(),
+            self.height(),
+        ]
+
     def dimension(self):
         return len(self._config.geometry.position)
 
