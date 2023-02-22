@@ -46,6 +46,9 @@ class UrdfObstacle(CollisionObstacle):
         super().__init__(**kwargs)
         self.check_completeness()
 
+    def size(self):
+        return []
+
     def urdf(self):
         return self._config.urdf
 
