@@ -49,11 +49,3 @@ class MPComponent(ABC):
     def dict(self):
         return OmegaConf.to_container(self._config)
 
-    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]) -> int:
-        """Adds component to pybullet instance.
-
-        Returns
-        ----------
-        int: multi_body_identifier
-        """
-        pass
