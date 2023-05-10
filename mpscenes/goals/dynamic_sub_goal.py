@@ -95,7 +95,7 @@ class DynamicSubGoal(SubGoal):
 
     def evaluate_trajectory(self, **kwargs):
         t = kwargs.get("t") if "t" in kwargs else 0.0
-        return self._traj.evaluate(t=t)
+        return self._traj.evaluate(time_step=t)
 
     def shuffle(self):
         self._traj.shuffle()

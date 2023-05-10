@@ -6,7 +6,6 @@ import numpy as np
 from omegaconf import OmegaConf
 
 from mpscenes.obstacles.collision_obstacle import CollisionObstacle, CollisionObstacleConfig, GeometryConfig
-from mpscenes.common.errors import DimensionNotSuitableForEnv
 
 
 @dataclass
@@ -47,7 +46,7 @@ class SphereObstacleConfig(CollisionObstacleConfig):
 
 class SphereObstacle(CollisionObstacle):
     def __init__(self, **kwargs):
-        if not 'schema' in kwargs:
+        if 'schema' not in kwargs:
             schema = OmegaConf.structured(SphereObstacleConfig)
             kwargs['schema'] = schema
         super().__init__(**kwargs)
@@ -94,7 +93,7 @@ class SphereObstacle(CollisionObstacle):
         theta = np.arange(-np.pi, np.pi + np.pi / samples, step=np.pi / samples)
         x = self.position()[0] + (self.radius() - 0.1) * np.cos(theta)
         y = self.position()[1] + (self.radius() - 0.1) * np.sin(theta)
-        with open(file_name, mode="w") as file:
+        with open(file_name, "w", encoding="utf8") as file:
             csv_writer = csv.writer(file, delimiter=",")
             for i in range(2 * samples):
                 csv_writer.writerow([x[i], y[i]])
