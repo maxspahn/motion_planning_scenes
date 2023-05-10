@@ -99,6 +99,10 @@ class SphereObstacle(CollisionObstacle):
             for i in range(2 * samples):
                 csv_writer.writerow([x[i], y[i]])
 
+    def distance(self, position: np.ndarray) -> float:
+        pos = self.position_into_obstacle_frame(position)
+        return np.linalg.norm(pos) - self.radius()
+
     def render_gym(self, viewer, rendering, **kwargs):
         if self.dimension() != 2:
             raise DimensionNotSuitableForEnv(

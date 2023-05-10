@@ -21,5 +21,8 @@ class UnknownSubGoalType(Exception):
 
 class MissmatchDimensionError(Exception):
     pass
+ 
+class NoDistanceFunctionForURDFObstacle(Exception):
+    pass
 
 

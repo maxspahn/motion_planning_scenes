@@ -56,3 +56,13 @@ def test_saving_obstacle():
     assert obst_dict_after['geometry']['position'][0] != 0.1
     assert isinstance(obst_dict_after['geometry']['position'], list)
 
+def test_distance():
+    obst_dict= {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    sphere_obst = SphereObstacle(name='simpleSphere', content_dict=obst_dict)
+    point = np.array([1.0, 0.2, 0.1])
+    distance = sphere_obst.distance(point)
+    assert isinstance(distance, float)
+    distance_truth = np.linalg.norm(np.array([0.1, 0.2, 0.4]) - point) - 0.2
+    assert pytest.approx(distance, distance_truth)
+
+

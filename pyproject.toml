@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mpscenes"
-version = "0.3.1"
+version = "0.3.2"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
   

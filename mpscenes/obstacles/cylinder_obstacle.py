@@ -118,6 +118,13 @@ class CylinderObstacle(CollisionObstacle):
     def csv(self, file_name, samples=100):
         pass
 
+    def distance(self, position) -> float:
+        pos = self.position_into_obstacle_frame(position)
+        pos[2] += self.size()[1]/2
+        d = np.absolute(np.array([np.linalg.norm(pos[0:2]), pos[2]])) - np.array(self.size())
+        return np.minimum(np.maximum(d[0], d[1]), 0.0) + np.linalg.norm(np.maximum(d, 0.0))
+
+
     def render_gym(self, viewer, rendering, **kwargs):
         pass
 
