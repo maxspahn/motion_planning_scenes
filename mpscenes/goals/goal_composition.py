@@ -1,13 +1,10 @@
-from mpscenes.common.component import MPComponent
-from mpscenes.goals.sub_goal import SubGoal
-from mpscenes.goals.sub_goal_creator import SubGoalCreator
-from mpscenes.common.errors import JointSpaceGoalsNotSupportedError
-
 import yaml
-import logging
 from omegaconf import OmegaConf
 
 from mpscenes.common.errors import MultiplePrimeGoalsError
+from mpscenes.common.component import MPComponent
+from mpscenes.goals.sub_goal import SubGoal
+from mpscenes.goals.sub_goal_creator import SubGoalCreator
 
 
 class GoalComposition(MPComponent):
@@ -72,21 +69,3 @@ class GoalComposition(MPComponent):
         for sub_goal in self._sub_goals:
             sub_goal.shuffle()
 
-    def render_gym(self, viewer, rendering, **kwargs):
-        for sub_goal in self._sub_goals:
-            try:
-                sub_goal.render_gym(viewer, rendering, **kwargs)
-            except JointSpaceGoalsNotSupportedError as _:
-                logging.warn("Skipping visualization of joint space goal.")
-
-    def add_to_bullet(self, pybullet):
-        for sub_goal in self._sub_goals:
-            try:
-                sub_goal.add_to_bullet(
-                    pybullet, position=self.primary_goal().position()
-                )
-            except JointSpaceGoalsNotSupportedError as _:
-                print("Skipping visualization of joint space goal.")
-
-    def update_bullet_position(self, pybullet, **kwargs):
-        self.primary_goal().update_bullet_position(pybullet, **kwargs)

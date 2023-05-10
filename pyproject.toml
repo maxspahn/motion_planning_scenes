@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mpscenes"
-version = "0.3.2"
+version = "0.4.0"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
   
@@ -12,13 +12,12 @@ PyYAML = "^6.0"
 geomdl = "^5.3.1"
 pyquaternion = "^0.9.9"
 omegaconf = "^2.2.2"
-pybullet = {version = "^3.2.3", optional = true}
 sympy = "^1.7"
 
-[tool.poetry.extras]
-bullet = ["pybullet"]
+[tool.poetry.group.dev]
+optional = true
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pylint = "^2.12"
 pytest = "^6.2.5"
 black = "^22.6.0"

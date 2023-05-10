@@ -49,9 +49,6 @@ class CollisionObstacle(MPComponent):
     def type(self) -> str:
         return self._config.type
 
-    def bullet_id(self) -> int:
-        return self._bullet_id
-
     def geometry(self):
         return self._config.geometry
 
@@ -76,9 +73,6 @@ class CollisionObstacle(MPComponent):
 
     def movable(self):
         return self._config.movable
-
-    def update_bullet_position(self, pybullet, **kwargs):
-        pass
 
     def position_into_obstacle_frame(self, position: np.ndarray) -> np.ndarray:
         return position - self.position()

@@ -67,14 +67,3 @@ class UrdfObstacle(CollisionObstacle):
     def distance(self, position: np.ndarray) -> None:
         raise NoDistanceFunctionForURDFObstacle("Cannot compute distance for urdf-obstacle.")
 
-    def add_to_bullet(self, pybullet) -> int:
-        if self.dimension() != 3:
-            raise DimensionNotSuitableForEnv(
-                "Pybullet only supports three dimensional obstacles"
-            )
-        self._bullet_id = pybullet.loadURDF(
-            fileName=self.urdf(),
-            basePosition=self.position(),
-            globalScaling=self._config.scaling
-            )
-        return self._bullet_id

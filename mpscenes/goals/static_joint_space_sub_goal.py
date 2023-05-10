@@ -65,9 +65,3 @@ class StaticJointSpaceSubGoal(SubGoal):
             self.limit_low(), self.limit_high(), self.dimension()
         )
         self._config.desired_position = random_pos.tolist()
-
-    def render_gym(self, viewer, **kwargs):
-        raise JointSpaceGoalsNotSupportedError()
-
-    def add_to_bullet(self, pybullet, **kwargs):
-        raise JointSpaceGoalsNotSupportedError()

@@ -44,9 +44,6 @@ class SubGoal(MPComponent):
     def is_primary_goal(self):
         return self._config.is_primary_goal
 
-    def bullet_id(self) -> int:
-        return self._bullet_id
-
     def epsilon(self):
         return self._config.epsilon
 
@@ -61,9 +58,6 @@ class SubGoal(MPComponent):
 
     def type(self):
         return self._config.type
-
-    def update_bullet_position(self, pybullet, **kwargs):
-        pass
 
     def evaluate(self, **kwargs) -> list:
         return [

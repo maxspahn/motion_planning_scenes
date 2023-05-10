@@ -2,21 +2,23 @@ from abc import ABC
 import yaml
 from omegaconf import OmegaConf
 
-from mpscenes.common.errors import ComponentIncompleteError, DimensionNotSuitableForEnv
+from mpscenes.common.errors import (
+    ComponentIncompleteError,
+    DimensionNotSuitableForEnv,
+)
 
 
 class MPComponent(ABC):
-
     def __init__(self, **kwargs):
-        schema = kwargs.get('schema')
-        if 'content_dict' in kwargs and 'name' in kwargs:
-            self._content_dict = kwargs.get('content_dict')
-            self._name = kwargs.get('name')
-        elif 'file_name' in kwargs:
-            with open(kwargs.get('file_name'), 'r') as stream:
+        schema = kwargs.get("schema")
+        if "content_dict" in kwargs and "name" in kwargs:
+            self._content_dict = kwargs.get("content_dict")
+            self._name = kwargs.get("name")
+        elif "file_name" in kwargs:
+            with open(kwargs.get("file_name"), "r") as stream:
                 self._content_dict = yaml.safe_load(stream)
-            self._name = self._content_dict['name']
-            del self._content_dict['name']
+            self._name = self._content_dict["name"]
+            del self._content_dict["name"]
         self._config = OmegaConf.create(self._content_dict)
         config = OmegaConf.create(self._content_dict)
         self._config = OmegaConf.merge(schema, config)
@@ -48,12 +50,3 @@ class MPComponent(ABC):
 
     def dict(self):
         return OmegaConf.to_container(self._config)
-
-    def add_to_bullet(self, pybullet, position=[0.0, 0.0, 0.0]) -> int:
-        """Adds component to pybullet instance.
-
-        Returns
-        ----------
-        int: multi_body_identifier
-        """
-        pass
