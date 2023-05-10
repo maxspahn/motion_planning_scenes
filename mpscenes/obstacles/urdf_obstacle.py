@@ -4,7 +4,7 @@ import numpy as np
 from omegaconf import OmegaConf
 
 from mpscenes.obstacles.collision_obstacle import CollisionObstacle, CollisionObstacleConfig, GeometryConfig
-from mpscenes.common.errors import ComponentIncompleteError, DimensionNotSuitableForEnv
+from mpscenes.common.errors import NoDistanceFunctionForURDFObstacle, DimensionNotSuitableForEnv
 
 
 @dataclass
@@ -63,6 +63,9 @@ class UrdfObstacle(CollisionObstacle):
 
     def dimension(self):
         return len(self._config.geometry.position)
+
+    def distance(self, position: np.ndarray) -> None:
+        raise NoDistanceFunctionForURDFObstacle("Cannot compute distance for urdf-obstacle.")
 
     def add_to_bullet(self, pybullet) -> int:
         if self.dimension() != 3:

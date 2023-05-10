@@ -80,6 +80,13 @@ class CollisionObstacle(MPComponent):
     def update_bullet_position(self, pybullet, **kwargs):
         pass
 
+    def position_into_obstacle_frame(self, position: np.ndarray) -> np.ndarray:
+        return position - self.position()
+
+    @abstractmethod
+    def distance(self, position: np.array) -> float:
+        pass
+
     @abstractmethod
     def size(self):
         pass

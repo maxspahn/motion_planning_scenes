@@ -86,3 +86,52 @@ def test_saving_obstacle():
     assert obst_dict_after['geometry']['position'][0] != -0.1
     assert isinstance(obst_dict_after['geometry']['position'], list)
 
+
+def test_distance():
+    obst_dict = {
+        'type': 'box',
+        'geometry': {
+            'position':[-0.1, 0.5, 0.7],
+            'length': 0.3,
+            'width': 0.7,
+            'height': 0.8,
+        }
+    }
+    '''
+    -0.25 < x < 0.05
+    0.15 < y < 0.85
+    0.3 < z < 1.1
+    '''
+    box_obst = BoxObstacle(name='simpleBox', content_dict=obst_dict)
+    point = np.array([0.5, 0.8, 0.4])
+    '''
+    dx = 0.45
+    dy = 0
+    dz = 0
+    '''
+    distance = box_obst.distance(point)
+    assert isinstance(distance, float)
+    distance_truth = 0.45
+    assert distance == pytest.approx(distance_truth)
+    point = np.array([0.5, 1.8, 0.4])
+    '''
+    dx = 0.45
+    dy = 0.95
+    dz = 0
+    '''
+    distance = box_obst.distance(point)
+    assert isinstance(distance, float)
+    distance_truth = np.sqrt(0.45**2+0.95**2)
+    assert distance == pytest.approx(distance_truth)
+    point = np.array([0.5, 1.8, -0.2])
+    '''
+    dx = 0.45
+    dy = 0.95
+    dz = 0.5
+    '''
+    distance = box_obst.distance(point)
+    assert isinstance(distance, float)
+    distance_truth = np.sqrt(0.45**2+0.95**2+0.5**2)
+    assert distance == pytest.approx(distance_truth)
+
+
