@@ -26,6 +26,7 @@ def test_boxObstacle():
         'type': 'box',
         'geometry': {
             'position':[-0.1, 0.1, 0.2],
+            'orientation': [1.0, 0.0, 0.0, 0.0],
             'length': 0.2,
             'width': 0.2,
             'height': 0.2,
@@ -40,6 +41,7 @@ def test_boxObstacle():
     assert 0.2 == box_obst.position()[2]
     assert 0.2 == box_obst.height()
     assert 3 == box_obst.dimension()
+    assert isinstance(box_obst.orientation(t=0), np.ndarray)
 
 
 def test_errorRaiseIncompleteDict():

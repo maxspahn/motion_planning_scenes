@@ -19,6 +19,7 @@ class GeometryConfig:
     """
 
     position: List[float]
+    orientation: List[float]
 
 @dataclass
 class CollisionObstacleConfig:
@@ -61,6 +62,9 @@ class CollisionObstacle(MPComponent):
 
     def dimension(self):
         return len(self.geometry().position)
+
+    def orientation(self, **kwarg) -> np.ndarray:
+        return np.array(self.geometry().orientation)
 
     def position(self, **kwargs) -> np.ndarray:
         return np.array(self.geometry().position)
