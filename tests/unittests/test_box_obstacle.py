@@ -3,7 +3,6 @@ import pytest
 import numpy as np
 
 from mpscenes.obstacles.box_obstacle import BoxObstacle
-from mpscenes.common.errors import MissmatchDimensionError, ComponentIncompleteError
 
 
 def test_rectangleObstacle():
@@ -46,9 +45,8 @@ def test_boxObstacle():
 
 def test_errorRaiseIncompleteDict():
     obst_dict= {'type': 'box', 'geometry': {'position': [0.1, 0.2]}}
-    with pytest.raises(MissingMandatoryValue):
-        box_obst= BoxObstacle(name='simpleBox', content_dict=obst_dict)
-        box_obst.length()
+    box_obst= BoxObstacle(name='simpleBox', content_dict=obst_dict)
+    assert 1.0 == box_obst.length()
 
 def test_mask_selection():
     obst_dict = {

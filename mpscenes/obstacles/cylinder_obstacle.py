@@ -22,8 +22,8 @@ class CylinderGeometryConfig(GeometryConfig):
     height: float: Height of the cylinder
     """
 
-    radius: float
-    height: float
+    radius: float = 1.0
+    height: float = 1.0
 
 
 @dataclass

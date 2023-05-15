@@ -3,23 +3,24 @@ from abc import abstractmethod
 import numpy as np
 from mpscenes.common.component import MPComponent
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class GeometryConfig:
     """Configuration dataclass for geometry.
 
-    This configuration class holds information about position
+    This configuration class holds information about position and orientation
     of an obstacle. This class is further specified for the other obstacles.
 
     Parameters:
     ------------
 
     position: list: Position of the obstacle
+    orientation: list: Orientation of the obstacle
     """
 
-    position: List[float]
-    orientation: List[float]
+    position: List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
+    orientation: List[float] = field(default_factory=lambda: [1.0, 0.0, 0.0, 0.0])
 
 @dataclass
 class CollisionObstacleConfig:

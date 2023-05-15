@@ -43,9 +43,8 @@ def test_cylinderObstacle():
 
 def test_errorRaiseIncompleteDict():
     obst_dict= {'type': 'cylinder', 'geometry': {'position': [0.1, 0.2]}}
-    with pytest.raises(MissingMandatoryValue):
-        cylinder_obst= CylinderObstacle(name='simpleCylinder', content_dict=obst_dict)
-        cylinder_obst.height()
+    cylinder_obst= CylinderObstacle(name='simpleCylinder', content_dict=obst_dict)
+    assert 1.0 == cylinder_obst.height()
 
 def test_mask_selection():
     obst_dict = {

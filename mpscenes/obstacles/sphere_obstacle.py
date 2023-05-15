@@ -21,7 +21,7 @@ class SphereGeometryConfig(GeometryConfig):
     radius: float: Radius of the obstacle
     """
 
-    radius: float
+    radius: float = 1.0
 
 
 @dataclass
