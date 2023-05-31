@@ -84,7 +84,7 @@ class CollisionObstacleConfig:
     movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
-    rgba: List[float] = field(default_factory=lambda: [1.0, 1.0, 1.0, 0.0])
+    rgba: List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0, 1.0])
 
 
 class CollisionObstacle(MPComponent):
