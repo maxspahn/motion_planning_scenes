@@ -14,7 +14,7 @@ def test_circleObstacle():
     assert [0.1, 0.2] == sphere_obst.position().tolist()
     assert 0.2 == sphere_obst.radius()
     assert 2 == sphere_obst.dimension()
-    assert 1.0 == sphere_obst.rgba()[0]
+    assert 0.0 == sphere_obst.rgba()[0]
 
 def test_sphereObstacle():
     obst_dict = {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
