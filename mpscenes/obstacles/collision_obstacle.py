@@ -1,24 +1,64 @@
 from typing import List, Optional
+from dataclasses import dataclass, field
 from abc import abstractmethod
 import numpy as np
+
 from mpscenes.common.component import MPComponent
 
-from dataclasses import dataclass
+
+def quaternion_to_homogeneous_matrix(
+    translation: np.ndarray, quaternion: np.ndarray
+) -> np.ndarray:
+    w, x, y, z = quaternion
+
+    # Normalize the quaternion
+    norm = np.sqrt(w**2 + x**2 + y**2 + z**2)
+    w /= norm
+    x /= norm
+    y /= norm
+    z /= norm
+
+    # Calculate transformation matrix elements
+    xx = 1 - 2 * y**2 - 2 * z**2
+    xy = 2 * x * y - 2 * w * z
+    xz = 2 * x * z + 2 * w * y
+    yx = 2 * x * y + 2 * w * z
+    yy = 1 - 2 * x**2 - 2 * z**2
+    yz = 2 * y * z - 2 * w * x
+    zx = 2 * x * z - 2 * w * y
+    zy = 2 * y * z + 2 * w * x
+    zz = 1 - 2 * x**2 - 2 * y**2
+
+    # Construct the transformation matrix
+    transformation_matrix = np.array(
+        [
+            [xx, xy, xz, translation[0]],
+            [yx, yy, yz, translation[1]],
+            [zx, zy, zz, translation[2]],
+            [0, 0, 0, 1],
+        ]
+    )
+
+    return transformation_matrix
+
 
 @dataclass
 class GeometryConfig:
     """Configuration dataclass for geometry.
 
-    This configuration class holds information about position
+    This configuration class holds information about position and orientation
     of an obstacle. This class is further specified for the other obstacles.
 
     Parameters:
     ------------
 
     position: list: Position of the obstacle
+    orientation: list: Orientation of the obstacle
     """
 
-    position: List[float]
+    position: List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
+    orientation: List[float] = field(default_factory=lambda: [1.0, 0.0, 0.0, 0.0])
+
 
 @dataclass
 class CollisionObstacleConfig:
@@ -45,22 +85,24 @@ class CollisionObstacleConfig:
 
 
 class CollisionObstacle(MPComponent):
-
     def type(self) -> str:
         return self._config.type
 
-    def geometry(self):
+    def geometry(self) -> GeometryConfig:
         return self._config.geometry
 
     def evaluate(self, **kwargs) -> list:
         return [
             self.position(**kwargs),
             self.velocity(**kwargs),
-            self.acceleration(**kwargs)
+            self.acceleration(**kwargs),
         ]
 
-    def dimension(self):
+    def dimension(self) -> int:
         return len(self.geometry().position)
+
+    def orientation(self, **kwarg) -> np.ndarray:
+        return np.array(self.geometry().orientation)
 
     def position(self, **kwargs) -> np.ndarray:
         return np.array(self.geometry().position)
@@ -71,16 +113,20 @@ class CollisionObstacle(MPComponent):
     def acceleration(self, **kwargs) -> np.ndarray:
         return np.zeros(self.dimension())
 
-    def movable(self):
+    def movable(self) -> bool:
         return self._config.movable
 
     def position_into_obstacle_frame(self, position: np.ndarray) -> np.ndarray:
-        return position - self.position()
+        transformation_matrix = quaternion_to_homogeneous_matrix(
+            self.position(), self.orientation()
+        )
+
+        return np.dot(np.linalg.inv(transformation_matrix), np.append(position, 1))[:3]
 
     @abstractmethod
-    def distance(self, position: np.array) -> float:
+    def distance(self, position: np.ndarray) -> float:
         pass
 
     @abstractmethod
-    def size(self):
+    def size(self) -> np.ndarray:
         pass

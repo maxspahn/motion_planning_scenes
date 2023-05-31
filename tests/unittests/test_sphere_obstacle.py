@@ -1,9 +1,7 @@
-from omegaconf.errors import MissingMandatoryValue
 import pytest
 import numpy as np
 
 from mpscenes.obstacles.sphere_obstacle import SphereObstacle
-from mpscenes.common.errors import MissmatchDimensionError, ComponentIncompleteError
 
 
 def test_circleObstacle():
@@ -11,6 +9,8 @@ def test_circleObstacle():
     sphere_obst = SphereObstacle(name='simpleSphere', content_dict=obst_dict)
     assert "simpleSphere" == sphere_obst.name()
     assert isinstance(sphere_obst.position(), np.ndarray)
+    assert isinstance(sphere_obst.orientation(), np.ndarray)
+    assert sphere_obst.orientation().size == 4
     assert [0.1, 0.2] == sphere_obst.position().tolist()
     assert 0.2 == sphere_obst.radius()
     assert 2 == sphere_obst.dimension()
@@ -30,9 +30,8 @@ def test_sphereObstacle():
 
 def test_errorRaiseIncompleteDict():
     obst_dict= {'type': 'sphere', 'geometry': {'position': [0.1, 0.2]}}
-    with pytest.raises(MissingMandatoryValue):
-        sphere_obst= SphereObstacle(name='simpleSphere', content_dict=obst_dict)
-        sphere_obst.radius()
+    sphere_obst= SphereObstacle(name='simpleSphere', content_dict=obst_dict)
+    assert 1.0 == sphere_obst.radius()
 
 def test_mask_selection():
     obst_dict= {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}

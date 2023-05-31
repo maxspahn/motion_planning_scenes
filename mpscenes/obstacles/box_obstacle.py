@@ -1,11 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
-import os
 import numpy as np
 from omegaconf import OmegaConf
 
 from mpscenes.obstacles.collision_obstacle import CollisionObstacle, CollisionObstacleConfig, GeometryConfig
-from mpscenes.common.errors import DimensionNotSuitableForEnv
 
 
 @dataclass
@@ -23,8 +21,8 @@ class BoxGeometryConfig(GeometryConfig):
     height: float: Height of the box
     """
 
-    length: float
-    width: float
+    length: float = 1.0
+    width: float = 1.0
     height: float = 1.0
 
 
