@@ -20,6 +20,20 @@ def test_rectangleObstacle():
     assert [0.2, 0.2] == [box_obst.length(), box_obst.width()]
     assert 2 == box_obst.dimension()
 
+def test_rgba():
+    obst_dict = {
+        'type': 'box',
+        'geometry': {
+            'position':[0.1, 0.2],
+            'length': 0.2,
+            'width': 0.2,
+        },
+        'rgba': [0.0, 0.0, 0.0, 0.1],
+    }
+    box_obst = BoxObstacle(name='simpleRectangle', content_dict=obst_dict)
+    assert box_obst.rgba()[0] == 0.0
+
+
 def test_boxObstacle():
     obst_dict = {
         'type': 'box',

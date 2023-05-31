@@ -54,6 +54,7 @@ class GeometryConfig:
 
     position: list: Position of the obstacle
     orientation: list: Orientation of the obstacle
+    color: list: RGB-A color code
     """
 
     position: List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
@@ -75,6 +76,7 @@ class CollisionObstacleConfig:
     movable : bool : Flag indicating whether an obstacle can be pushed around
     low : GeometryConfig : Lower limit for randomization
     high : GeometryConfig : Upper limit for randomization
+    rgba: list: Color in rgba encoding
     """
 
     type: str
@@ -82,6 +84,7 @@ class CollisionObstacleConfig:
     movable: bool = False
     low: Optional[GeometryConfig] = None
     high: Optional[GeometryConfig] = None
+    rgba: List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0, 1.0])
 
 
 class CollisionObstacle(MPComponent):
@@ -106,6 +109,9 @@ class CollisionObstacle(MPComponent):
 
     def position(self, **kwargs) -> np.ndarray:
         return np.array(self.geometry().position)
+
+    def rgba(self) -> np.ndarray:
+        return np.array(self._config.rgba)
 
     def velocity(self, **kwargs) -> np.ndarray:
         return np.zeros(self.dimension())
