@@ -65,4 +65,16 @@ def test_distance():
     distance_truth = np.linalg.norm(np.array([0.1, 0.2, 0.4]) - point) - 0.2
     assert pytest.approx(distance, distance_truth)
 
+def test_multi_distance():
+    obst_dict= {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
+    sphere_obst = SphereObstacle(name='simpleSphere', content_dict=obst_dict)
+    points = np.array([[1.0, 0.2, 0.1], [1.0, 0.2, 0.1]])
+    distance = sphere_obst.distance(points)
+    assert isinstance(distance, np.ndarray)
+    assert isinstance(distance[0], float)
+    assert isinstance(distance[1], float)
+    distance_truth = np.linalg.norm(np.array([0.1, 0.2, 0.4]) - points[0]) - 0.2
+    assert pytest.approx(distance[0], distance_truth)
+    assert pytest.approx(distance[1], distance_truth)
+
 
