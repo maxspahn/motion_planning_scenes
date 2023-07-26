@@ -122,12 +122,18 @@ class CollisionObstacle(MPComponent):
     def movable(self) -> bool:
         return self._config.movable
 
-    def position_into_obstacle_frame(self, position: np.ndarray) -> np.ndarray:
+    def position_into_obstacle_frame(self, positions: np.ndarray) -> np.ndarray:
         transformation_matrix = quaternion_to_homogeneous_matrix(
             self.position(), self.orientation()
         )
+        if len(positions.shape) > 1:
+            nb_points = positions.shape[0]
+            positions_homo = np.transpose(np.append(positions, np.ones((nb_points, 1)), axis=1))
+            return np.dot(np.linalg.inv(transformation_matrix), positions_homo)[0:3,:]
+        else:
+            positions_homo = np.transpose(np.append(positions, 1))
+            return np.dot(np.linalg.inv(transformation_matrix), positions_homo)[0:3]
 
-        return np.dot(np.linalg.inv(transformation_matrix), np.append(position, 1))[:3]
 
     @abstractmethod
     def distance(self, position: np.ndarray) -> float:

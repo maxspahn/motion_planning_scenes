@@ -100,4 +100,4 @@ class SphereObstacle(CollisionObstacle):
 
     def distance(self, position: np.ndarray) -> float:
         pos = self.position_into_obstacle_frame(position)
-        return np.linalg.norm(pos) - self.radius()
+        return np.linalg.norm(pos, axis=0) - self.radius()
