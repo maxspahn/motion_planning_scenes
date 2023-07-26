@@ -130,5 +130,6 @@ class BoxObstacle(CollisionObstacle):
 
     def distance(self, position: np.ndarray) -> float:
         pos = self.position_into_obstacle_frame(position)
-        q = np.absolute(pos) - np.array(self.size())/2.0
-        return np.linalg.norm(np.maximum(q, 0)) + np.minimum(np.maximum(q[0], np.maximum(q[1], q[2])), 0.0)
+        q = np.transpose(np.subtract(np.transpose(np.absolute(pos)),
+                                     np.array(self.size())/2.0)) 
+        return np.linalg.norm(np.maximum(q, 0), axis=0) + np.minimum(np.maximum(q[0], np.maximum(q[1], q[2])), 0.0)

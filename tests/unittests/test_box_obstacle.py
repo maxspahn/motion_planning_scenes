@@ -149,3 +149,22 @@ def test_distance():
     assert distance == pytest.approx(distance_truth)
 
 
+def test_multi_distance():
+    obst_dict = {
+        'type': 'box',
+        'geometry': {
+            'position':[-0.1, 0.5, 0.7],
+            'length': 0.3,
+            'width': 0.7,
+            'height': 0.8,
+        }
+    }
+    box_obst = BoxObstacle(name='simpleBox', content_dict=obst_dict)
+    points = np.array([[0.5, 0.8, 0.4], [0.5, 1.8, -0.2]])
+    distances = box_obst.distance(points)
+    print(distances)
+    assert isinstance(distances, np.ndarray)
+    distances_truth = np.array([0.45, np.sqrt(0.45**2+0.95**2+0.5**2)])
+    assert distances[0] == pytest.approx(distances_truth[0])
+    assert distances[1] == pytest.approx(distances_truth[1])
+

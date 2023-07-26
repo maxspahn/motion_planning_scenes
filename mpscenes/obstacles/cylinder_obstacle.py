@@ -120,6 +120,13 @@ class CylinderObstacle(CollisionObstacle):
 
     def distance(self, position) -> float:
         pos = self.position_into_obstacle_frame(position)
-        pos[2] += self.size()[1]/2
-        d = np.absolute(np.array([np.linalg.norm(pos[0:2]), pos[2]])) - np.array(self.size())
-        return np.minimum(np.maximum(d[0], d[1]), 0.0) + np.linalg.norm(np.maximum(d, 0.0))
+        if len(pos.shape) > 1:
+            pos[2, :] += self.size()[1]/2
+            norm_pos_2 = np.linalg.norm(pos[0:2, :], axis=0)
+            abs_val = np.absolute(np.stack((norm_pos_2, pos[2, :])))
+            d = np.transpose(np.subtract(np.transpose(abs_val), np.array(self.size())))
+            return np.minimum(np.maximum(d[0, :], d[1, :]), 0.0) + np.linalg.norm(np.maximum(d, 0.0), axis=0)
+        else:
+            pos[2] += self.size()[1]/2
+            d = np.absolute(np.array([np.linalg.norm(pos[0:2]), pos[2]])) - np.array(self.size())
+            return np.minimum(np.maximum(d[0], d[1]), 0.0) + np.linalg.norm(np.maximum(d, 0.0))

@@ -107,4 +107,20 @@ def test_distance():
     distance_truth = np.sqrt(0.1**2 + (np.sqrt(0.6**2 + 0.7**2) - 0.1)**2)
     assert distance == pytest.approx(distance_truth)
 
+def test_multi_distance():
+    obst_dict = {
+        'type': 'cylinder',
+        'geometry': {
+            'position':[-0.1, 0.1, 0.2],
+            'radius': 0.1,
+            'height': 0.2,
+        }
+    }
+    cylinder_obst = CylinderObstacle(name='simpleCylinder', content_dict=obst_dict)
+    points = np.tile(np.array([0.5, 0.8, 0.4]), (10, 1))
+    distances = cylinder_obst.distance(points)
+    assert isinstance(distances, np.ndarray)
+    distance_truth = np.sqrt(0.1**2 + (np.sqrt(0.6**2 + 0.7**2) - 0.1)**2)
+    assert distances[0] == pytest.approx(distance_truth)
+    assert distances[9] == pytest.approx(distance_truth)
 
