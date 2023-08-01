@@ -122,9 +122,13 @@ class CollisionObstacle(MPComponent):
     def movable(self) -> bool:
         return self._config.movable
 
-    def position_into_obstacle_frame(self, positions: np.ndarray) -> np.ndarray:
+    def position_into_obstacle_frame(self, positions: np.ndarray, **kwargs) -> np.ndarray:
+        if 't' in kwargs:
+            t = kwargs.get('t')
+        else:
+            t = 0
         transformation_matrix = quaternion_to_homogeneous_matrix(
-            self.position(), self.orientation()
+            self.position(t=t), self.orientation()
         )
         if len(positions.shape) > 1:
             nb_points = positions.shape[0]
