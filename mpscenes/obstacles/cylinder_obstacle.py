@@ -118,8 +118,8 @@ class CylinderObstacle(CollisionObstacle):
     def csv(self, file_name, samples=100):
         pass
 
-    def distance(self, position) -> float:
-        pos = self.position_into_obstacle_frame(position)
+    def distance(self, position: np.ndarray, **kwargs) -> float:
+        pos = self.position_into_obstacle_frame(position, **kwargs)
         if len(pos.shape) > 1:
             pos[2, :] += self.size()[1]/2
             norm_pos_2 = np.linalg.norm(pos[0:2, :], axis=0)
