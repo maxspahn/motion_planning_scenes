@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mpscenes"
-version = "0.4.5"
+version = "0.4.6"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
 readme = "README.md"
@@ -24,6 +24,12 @@ optional = true
 pylint = "^2.12"
 pytest = "^6.2.5"
 black = "^22.6.0"
+
+
+[tool.poetry.group.doc.dependencies]
+sphinx = "*"
+sphinx-rtd-theme = "^2.0.0"
+sphinxcontrib-napoleon = "^0.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

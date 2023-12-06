@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional
-import numpy as np
-from omegaconf import OmegaConf
+from typing import Optional, List
 
+from omegaconf import OmegaConf
+import numpy as np
 from mpscenes.obstacles.collision_obstacle import CollisionObstacle, CollisionObstacleConfig, GeometryConfig
+
 
 
 @dataclass
@@ -13,12 +14,15 @@ class BoxGeometryConfig(GeometryConfig):
     This configuration class holds information about position
     and size of the box obstacle.
 
-    Parameters:
+    Attributes:
     ------------
 
-    length: float: Length of the box
-    width: float: Width of the box
-    height: float: Height of the box
+    length: float
+        Length of the box
+    width: float
+        Width of the box
+    height: float
+        Height of the box
     """
 
     length: float = 1.0
@@ -33,7 +37,7 @@ class BoxObstacleConfig(CollisionObstacleConfig):
     This configuration class holds information about the position, size
     and randomization of a rectengular obstacle.
 
-    Parameters:
+    Attributes:
     ------------
 
     geometry : BoxGeometryConfig : Geometry of the box
@@ -47,22 +51,22 @@ class BoxObstacleConfig(CollisionObstacleConfig):
 
 
 class BoxObstacle(CollisionObstacle):
+    _config: BoxObstacleConfig
+
     def __init__(self, **kwargs):
-        if not 'schema' in kwargs:
+        if 'schema' not in kwargs:
             schema = OmegaConf.structured(BoxObstacleConfig)
             kwargs['schema'] = schema
         super().__init__(**kwargs)
         self.check_completeness()
 
-    def size(self):
+    def size(self) -> List[float]:
+        """Get size of box obstacle, length, width, height."""
         return [
             self.length(),
             self.width(),
             self.height(),
         ]
-
-    def dimension(self):
-        return len(self._config.geometry.position)
 
     def limit_low(self):
         if self._config.low:
@@ -86,25 +90,29 @@ class BoxObstacle(CollisionObstacle):
         else:
             return [np.ones(self.dimension()) * 1, 1, 1, 1]
 
-    def position(self, **kwargs) -> np.ndarray:
-        return np.array(self._config.geometry.position)
-
-    def velocity(self, **kwargs) -> np.ndarray:
-        return np.zeros(self.dimension())
-
-    def acceleration(self, **kwargs) -> np.ndarray:
-        return np.zeros(self.dimension())
-
-    def length(self):
+    def length(self) -> float:
+        """
+        Get the length of the obstacle.
+        """
         return self._config.geometry.length
 
-    def width(self):
+    def width(self) -> float:
+        """
+        Get the width of the obstacle.
+        """
         return self._config.geometry.width
 
-    def height(self):
+    def height(self) -> float:
+        """
+        Get the height of the obstacle.
+        """
         return self._config.geometry.height
 
-    def shuffle(self):
+    def shuffle(self) -> None:
+        """
+        Randomize the obstacle by shuffling the position, length, width and
+        height.
+        """
         random_pos = np.random.uniform(
             self.limit_low()[0], self.limit_high()[0], self.dimension()
         )
@@ -122,13 +130,13 @@ class BoxObstacle(CollisionObstacle):
         self._config.geometry.width = float(random_width)
         self._config.geometry.height = float(random_height)
 
-    def movable(self):
-        return self._config.movable
-
-    def csv(self, file_name, samples=100):
-        pass
-
     def distance(self, position: np.ndarray, **kwargs) -> float:
+        """
+        Get distance between point and the box obstacleself.
+
+        The point is transformed into the main axes of the obstacle. Then, the
+        halfplanes are used to compute the distance.
+        """
         pos = self.position_into_obstacle_frame(position, **kwargs)
         q = np.transpose(np.subtract(np.transpose(np.absolute(pos)),
                                      np.array(self.size())/2.0)) 

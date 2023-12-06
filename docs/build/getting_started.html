@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started &mdash; mpscenes  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Welcome to mpscenes’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            mpscenes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pre-requisites">Pre-requisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-from-pypi">Installation from pypi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-from-source">Installation from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-installation-with-poetry">Optional: Installation with poetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-dependencies">Installing dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mpscenes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<p>This is the guide to understand how motion planning components are defined in
+the package.</p>
+<section id="pre-requisites">
+<h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python &gt;=3.8</p></li>
+<li><p>pip3</p></li>
+</ul>
+</section>
+<section id="installation-from-pypi">
+<h2>Installation from pypi<a class="headerlink" href="#installation-from-pypi" title="Permalink to this heading"></a></h2>
+<p>The package is uploaded to pypi so you can install it using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>mpscenes
+</pre></div>
+</div>
+</section>
+<section id="installation-from-source">
+<h2>Installation from source<a class="headerlink" href="#installation-from-source" title="Permalink to this heading"></a></h2>
+<p>You first have to download the repository</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:maxspahn/motion_planning_scenes.git
+</pre></div>
+</div>
+<p>Then, you can install the package using pip as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The code can be installed in editible mode using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Note that we recommend using poetry in this case.</p>
+</section>
+<section id="optional-installation-with-poetry">
+<h2>Optional: Installation with poetry<a class="headerlink" href="#optional-installation-with-poetry" title="Permalink to this heading"></a></h2>
+<p>If you want to use <a class="reference external" href="https://python-poetry.org/docs/">poetry</a>, you have to install it
+first. See their webpage for instructions <a class="reference external" href="https://python-poetry.org/docs/">docs</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>install
+</pre></div>
+</div>
+<p>The virtual environment is entered by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>shell
+</pre></div>
+</div>
+<p>Inside the virtual environment you can access all the examples.</p>
+</section>
+<section id="installing-dependencies">
+<h2>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this heading"></a></h2>
+<p>Dependencies should be installed through pip or poetry, see below.</p>
+<p>Using pip, you can use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Using poetry</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>install
+</pre></div>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<p>Obstacles and goals are defined as dictionaries. You could potentially also load
+them in as yaml files, but the parsing is not part of this package. The examples
+will be based on python dicts.</p>
+<p>A simple spherical obstacle with radius can be constructed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sphere&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+      <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="n">obstacle_1</span> <span class="o">=</span> <span class="n">SphereObstacle</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;obstacle_1&quot;</span><span class="p">,</span> <span class="n">content_dict</span><span class="o">=</span><span class="n">config_dict</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>A box (cuboid) obstacle, that can be moved by robots, can be created as shown
+below. Note, that we specify the limits for randomization here.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;position&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;movable&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;high&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s1">&#39;position&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;position&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">obstacle_2</span> <span class="o">=</span> <span class="n">BoxObstacle</span><span class="p">(</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;obstacle_2&quot;</span><span class="p">,</span> <span class="n">content_dict</span><span class="o">=</span><span class="n">config_dict</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>A dynamic obstacle can be defined as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sphere&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;trajectory&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2.0 - 0.1 * t&quot;</span><span class="p">,</span> <span class="s2">&quot;-0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.1&quot;</span><span class="p">],</span>
+      <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mf">0.2</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="n">obstacle_3</span> <span class="o">=</span> <span class="n">DynamicSphereObstacle</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;obstacle_3&quot;</span><span class="p">,</span> <span class="n">content_dict</span><span class="o">=</span><span class="n">config_dict</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to mpscenes’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Max Spahn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
