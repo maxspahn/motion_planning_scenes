@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "mpscenes"
-version = "0.4.4"
+version = "0.4.5"
 description = "Generic motion planning scenes, including goals and obstacles."
 authors = ["Max <m.spahn@tudelft.nl>"]
+readme = "README.md"
+homepage = "https://github.com/maxspahn/motion_planning_scenes.git"
+repository = "https://github.com/maxspahn/motion_planning_scenes.git"
   
 
 [tool.poetry.dependencies]
