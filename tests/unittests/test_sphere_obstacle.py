@@ -63,7 +63,7 @@ def test_distance():
     distance = sphere_obst.distance(point)
     assert isinstance(distance, float)
     distance_truth = np.linalg.norm(np.array([0.1, 0.2, 0.4]) - point) - 0.2
-    assert pytest.approx(distance, distance_truth)
+    assert distance == pytest.approx(distance_truth)
 
 def test_multi_distance():
     obst_dict= {'type': 'sphere', 'geometry': {'position': [0.1, 0.2, 0.4], 'radius': 0.2}}
@@ -74,7 +74,7 @@ def test_multi_distance():
     assert isinstance(distance[0], float)
     assert isinstance(distance[1], float)
     distance_truth = np.linalg.norm(np.array([0.1, 0.2, 0.4]) - points[0]) - 0.2
-    assert pytest.approx(distance[0], distance_truth)
-    assert pytest.approx(distance[1], distance_truth)
+    assert distance[0] == pytest.approx(distance_truth)
+    assert distance[1] == pytest.approx(distance_truth)
 
 

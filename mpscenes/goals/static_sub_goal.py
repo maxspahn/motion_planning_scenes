@@ -1,7 +1,6 @@
 from typing import List, Optional, Any
 from dataclasses import dataclass
 import numpy as np
-from pyquaternion import Quaternion
 from omegaconf import OmegaConf
 
 from mpscenes.goals.sub_goal import SubGoal, SubGoalConfig

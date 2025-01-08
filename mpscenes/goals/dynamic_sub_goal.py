@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import List, Optional, Any
 import numpy as np
 from omegaconf import OmegaConf
-from pyquaternion import Quaternion
 from mpscenes.goals.sub_goal import SubGoal, SubGoalConfig
 from mpscenes.common.errors import DimensionNotSuitableForEnv, TrajectoryNotSupported
 from mpscenes.common.analytic_trajectory import AnalyticTrajectory

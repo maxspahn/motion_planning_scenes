@@ -126,9 +126,9 @@ class BoxObstacle(CollisionObstacle):
             self.limit_low()[3], self.limit_high()[3], 1
         )
         self._config.geometry.position = random_pos.tolist()
-        self._config.geometry.length = float(random_length)
-        self._config.geometry.width = float(random_width)
-        self._config.geometry.height = float(random_height)
+        self._config.geometry.length = float(random_length[0])
+        self._config.geometry.width = float(random_width[0])
+        self._config.geometry.height = float(random_height[0])
 
     def distance(self, position: np.ndarray, **kwargs) -> float:
         """

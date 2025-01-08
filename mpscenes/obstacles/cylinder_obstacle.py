@@ -109,8 +109,8 @@ class CylinderObstacle(CollisionObstacle):
             self.limit_low()[2], self.limit_high()[2], 1
         )
         self._config.geometry.position = random_pos.tolist()
-        self._config.geometry.radius= float(random_radius)
-        self._config.geometry.height = float(random_height)
+        self._config.geometry.radius= float(random_radius[0])
+        self._config.geometry.height = float(random_height[0])
 
     def movable(self):
         return self._config.movable

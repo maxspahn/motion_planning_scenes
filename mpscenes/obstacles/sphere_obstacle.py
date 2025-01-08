@@ -86,7 +86,7 @@ class SphereObstacle(CollisionObstacle):
             self.limit_low()[1], self.limit_high()[1], 1
         )
         self._config.geometry.position = random_pos.tolist()
-        self._config.geometry.radius = float(random_radius)
+        self._config.geometry.radius = float(random_radius[0])
 
 
     def csv(self, file_name, samples=100):
